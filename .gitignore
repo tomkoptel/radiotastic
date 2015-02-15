@@ -50,5 +50,4 @@ com_crashlytics_export_strings.xml
 .DS_Store
 *.yaml
 *.db
-app/src/androidTest/java/com/jaspersoft/android/jaspermobile/test/acceptance/library/LibraryPage2Test.java
 secret_gradle.properties

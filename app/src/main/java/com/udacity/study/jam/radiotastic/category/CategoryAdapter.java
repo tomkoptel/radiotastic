@@ -14,20 +14,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class CategoryAdapter extends
         RecyclerView.Adapter<CategoryAdapter.ItemViewHolder> {
 
-    private List<String> mData = new ArrayList<>();
+    private List<CategoryItem> mData;
 
     public CategoryAdapter() {
-        mData.add("Category 1");
-        mData.add("Category 2");
+    }
+
+    public void setDataset(List<CategoryItem> data) {
+        mData = data;
+        // This isn't working
+        notifyItemRangeInserted(0, data.size());
     }
 
     @Override
@@ -39,14 +43,14 @@ public class CategoryAdapter extends
 
     @Override
     public void onBindViewHolder(ItemViewHolder viewHolder, int position) {
-        String item = mData.get(position);
-        viewHolder.labelTextView.setText(item);
-        viewHolder.descTextView.setText("");
+        CategoryItem item = mData.get(position);
+        viewHolder.labelTextView.setText(item.getName());
+        viewHolder.descTextView.setText(item.getDescription());
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData == null ? 0 : mData.size();
     }
 
     public final static class ItemViewHolder extends RecyclerView.ViewHolder {

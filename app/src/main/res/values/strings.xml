@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Radiotastic</string>
+    <!--API constants-->
+    <string name="api_endpoint">http://api.dirble.com/v1</string>
+    <string name="api_key">3179ce3b92882458ecc077f99c64e053b25fef2d</string>
 
 </resources>

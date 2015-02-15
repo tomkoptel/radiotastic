@@ -9,8 +9,8 @@
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/station_list_fragment"
-    android:name="com.udacity.study.jam.radiotastic.station.StationListFragment"
+    android:id="@+id/category_list_fragment"
+    android:name="com.udacity.study.jam.radiotastic.category.CategoryListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:layout="@android:layout/list_content"
