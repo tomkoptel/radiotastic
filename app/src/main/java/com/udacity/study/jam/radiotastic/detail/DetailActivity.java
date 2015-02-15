@@ -6,31 +6,32 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic;
+package com.udacity.study.jam.radiotastic.detail;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.udacity.study.jam.radiotastic.station.StationListFragment;
+import com.udacity.study.jam.radiotastic.R;
 
+public class DetailActivity extends ActionBarActivity {
 
-public class StationsActivity extends ActionBarActivity {
-    public static String CATEGORY_ID_EXTRA = "categoryID";
-    private int categoryId;
+    public static final String STATION_ID_EXTRA = "stationID";
+    private int mStationID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stations);
+        setContentView(R.layout.activity_detail);
 
-        if (getIntent() != null && getIntent().hasExtra(CATEGORY_ID_EXTRA)) {
-            categoryId = getIntent().getIntExtra(CATEGORY_ID_EXTRA, 0);
+        if (getIntent() != null && getIntent().hasExtra(STATION_ID_EXTRA)) {
+            mStationID = getIntent().getIntExtra(STATION_ID_EXTRA, 0);
         }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, StationListFragment.init(categoryId))
+                    .replace(R.id.content, DetailFragment.init(mStationID))
                     .commit();
         }
     }
+
 }

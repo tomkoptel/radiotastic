@@ -10,4 +10,5 @@
         %1$s</xliff:g> Bit rate: <xliff:g id="bit_rate">%2$s</xliff:g></string>
     <!--Activity titles-->
     <string name="stations_activity_title">Stations</string>
+    <string name="station_activity_title">Station details</string>
 </resources>

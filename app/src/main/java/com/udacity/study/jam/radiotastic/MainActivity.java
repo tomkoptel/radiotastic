@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.category.CategoryListFragment;
+import com.udacity.study.jam.radiotastic.detail.DetailFragment;
 import com.udacity.study.jam.radiotastic.station.StationListFragment;
+import com.udacity.study.jam.radiotastic.station.StationsActivity;
 
 
-public class MainActivity extends ActionBarActivity implements CategoryListFragment.Callback {
+public class MainActivity extends ActionBarActivity
+        implements CategoryListFragment.Callback, StationListFragment.Callback {
 
     private boolean mTwoPane;
 
@@ -29,6 +32,15 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
             Intent newIntent = new Intent(this, StationsActivity.class);
             newIntent.putExtra(StationsActivity.CATEGORY_ID_EXTRA, categoryID);
             startActivity(newIntent);
+        }
+    }
+
+    @Override
+    public void onStationSelected(int stationID) {
+        if (mTwoPane) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_content, DetailFragment.init(stationID))
+                    .commit();
         }
     }
 

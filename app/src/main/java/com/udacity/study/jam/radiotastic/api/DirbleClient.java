@@ -9,6 +9,7 @@
 package com.udacity.study.jam.radiotastic.api;
 
 import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.StationData;
 import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.List;
@@ -25,5 +26,9 @@ public interface DirbleClient {
     @GET("/stations/apikey/{api-key}/id/{category_id}")
     void listStations(@Path("api-key") String apiKey, @Path("category_id") int categoryID,
                       Callback<List<StationItem>> callback);
+
+    @GET("/station/apikey/{api-key}/id/{station_id}")
+    void getStationData(@Path("api-key") String apiKey, @Path("station_id") int stationID,
+                      Callback<StationData> callback);
 
 }

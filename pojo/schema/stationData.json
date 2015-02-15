@@ -1,0 +1,13 @@
+{
+    "description": "Get information on a station by id-number. You will get normal information such as streamurl, website url and description but also which directories/categories the stations is added to and a songhistory if the station support it.",
+    "type": "object",
+    "properties": {
+        "id": { "type": "integer" },
+        "status": { "type": "integer" },
+        "urlid": { "type": "string" },
+        "name": { "type": "string" },
+        "website": { "type": "string" },
+        "streamurl": { "type": "string" },
+        "description": { "type": "string" }
+    }
+}

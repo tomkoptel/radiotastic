@@ -17,13 +17,14 @@ import android.widget.TextView;
 import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 
+import java.util.Collections;
 import java.util.List;
 
 
 public class CategoryAdapter extends
         RecyclerView.Adapter<CategoryAdapter.ItemViewHolder> {
 
-    private List<CategoryItem> mData;
+    private List<CategoryItem> mData = Collections.emptyList();
 
     public CategoryAdapter() {
     }
@@ -50,7 +51,7 @@ public class CategoryAdapter extends
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        return mData.size();
     }
 
     public CategoryItem getItem(int position) {

@@ -18,12 +18,13 @@ import android.widget.TextView;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.StationItem;
 
+import java.util.Collections;
 import java.util.List;
 
 public class StationAdapter extends
         RecyclerView.Adapter<StationAdapter.ListItemViewHolder> {
 
-    private List<StationItem> mData;
+    private List<StationItem> mData = Collections.emptyList();
 
     public StationAdapter() {
     }
@@ -52,7 +53,11 @@ public class StationAdapter extends
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        return mData.size();
+    }
+
+    public StationItem getItem(int position) {
+        return mData.get(position);
     }
 
     public final static class ListItemViewHolder extends RecyclerView.ViewHolder {

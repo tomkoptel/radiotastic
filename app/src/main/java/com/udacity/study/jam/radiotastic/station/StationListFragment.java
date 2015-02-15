@@ -102,7 +102,7 @@ public class StationListFragment extends Fragment {
                 .setClient(new AppUrlConnectionClient())
                 .build();
         DirbleClient client = restAdapter.create(DirbleClient.class);
-        Timber.i("Requesting primary categories");
+        Timber.i("Requesting stations for category: " + mCategoryId);
         client.listStations(
                 ApiKey.INSTANCE.get(getActivity()),
                 mCategoryId,
@@ -128,9 +128,17 @@ public class StationListFragment extends Fragment {
         public boolean onSingleTapConfirmed(MotionEvent event) {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
+            StationItem stationItem = mAdapter.getItem(position);
+            if (getActivity() instanceof Callback) {
+                ((Callback) getActivity()).onStationSelected(stationItem.getId());
+            }
             Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
             return super.onSingleTapConfirmed(event);
         }
+    }
+
+    public static interface Callback {
+        void onStationSelected(int stationID);
     }
 
 }
