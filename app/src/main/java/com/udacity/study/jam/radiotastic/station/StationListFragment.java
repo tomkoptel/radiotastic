@@ -22,13 +22,44 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.StationItem;
+import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
+import com.udacity.study.jam.radiotastic.api.ApiKey;
+import com.udacity.study.jam.radiotastic.api.DirbleClient;
+import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
+import java.util.List;
+
+import retrofit.RestAdapter;
+import retrofit.client.Response;
+import timber.log.Timber;
+
 public class StationListFragment extends Fragment {
+    private static final String CATEGORY_ID_ARG = "categoryID";
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
     private StationAdapter mAdapter;
+    private int mCategoryId;
+
+    public static StationListFragment init(int categoryID) {
+        Bundle args = new Bundle();
+        args.putInt(CATEGORY_ID_ARG, categoryID);
+        StationListFragment stationListFragment = new StationListFragment();
+        stationListFragment.setArguments(args);
+        return stationListFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null && args.containsKey(CATEGORY_ID_ARG)) {
+            mCategoryId = args.getInt(CATEGORY_ID_ARG);
+        }
+    }
 
     @Nullable
     @Override
@@ -63,11 +94,31 @@ public class StationListFragment extends Fragment {
                 new RecyclerViewGestureListener());
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(new ApiEndpoint(getActivity()))
+                .setClient(new AppUrlConnectionClient())
+                .build();
+        DirbleClient client = restAdapter.create(DirbleClient.class);
+        Timber.i("Requesting primary categories");
+        client.listStations(
+                ApiKey.INSTANCE.get(getActivity()),
+                mCategoryId,
+                new LogableSimpleCallback<List<StationItem>>() {
+                    @Override
+                    public void semanticSuccess(List<StationItem> stationItems, Response response) {
+                        mAdapter.setDataset(stationItems);
+                    }
+                });
+    }
+
     private class ItemTouchListener extends SimpleOnItemTouchListener {
         @Override
         public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
             gestureDetectorCompat.onTouchEvent(motionEvent);
-            return true;
+            return false;
         }
     }
 

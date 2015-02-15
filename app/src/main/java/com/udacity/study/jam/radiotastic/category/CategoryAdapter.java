@@ -53,6 +53,10 @@ public class CategoryAdapter extends
         return mData == null ? 0 : mData.size();
     }
 
+    public CategoryItem getItem(int position) {
+        return mData.get(position);
+    }
+
     public final static class ItemViewHolder extends RecyclerView.ViewHolder {
         private final TextView labelTextView;
         private final TextView descTextView;

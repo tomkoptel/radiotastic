@@ -19,8 +19,8 @@ public final class AppUrlConnectionClient extends UrlConnectionClient {
     @Override
     protected HttpURLConnection openConnection(Request request) throws IOException {
         HttpURLConnection connection = super.openConnection(request);
-        connection.setConnectTimeout((int) TimeUnit.MINUTES.toMillis(2));
-        connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(30));
+        connection.setReadTimeout((int) TimeUnit.MINUTES.toMillis(2));
+        connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(30));
         return connection;
     }
 }

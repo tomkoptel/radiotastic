@@ -115,7 +115,15 @@ public class CategoryListFragment extends Fragment {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
             Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
+            CategoryItem categoryItem = mAdapter.getItem(position);
+            if (getActivity() instanceof Callback) {
+                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
+            }
             return super.onSingleTapConfirmed(event);
         }
+    }
+
+    public static interface Callback {
+        void onCategorySelected(int categoryID);
     }
 }

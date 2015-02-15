@@ -1,0 +1,12 @@
+    {
+    "description": "Get Stations in a Category.",
+    "type": "object",
+    "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "streamurl": { "type": "string" },
+        "country": { "type": "string" },
+        "bitrate": { "type": "string" },
+        "status": { "type": "integer" }
+    }
+}
