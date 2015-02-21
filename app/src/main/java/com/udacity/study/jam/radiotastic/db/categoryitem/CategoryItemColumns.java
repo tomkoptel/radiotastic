@@ -22,7 +22,7 @@ public class CategoryItemColumns implements BaseColumns {
     /**
      * Represents id of object which resides on backend.
      */
-    public static final String EXTERNAL_ID = "external_id";
+    public static final String CATEGORY_ID = "category_id";
 
     /**
      * Name of category
@@ -37,7 +37,7 @@ public class CategoryItemColumns implements BaseColumns {
     // @formatter:off
     public static final String[] ALL_COLUMNS = new String[] {
             _ID,
-            EXTERNAL_ID,
+            CATEGORY_ID,
             NAME,
             DESCRIPTION
     };
@@ -46,7 +46,7 @@ public class CategoryItemColumns implements BaseColumns {
     public static boolean hasColumns(String[] projection) {
         if (projection == null) return true;
         for (String c : projection) {
-            if (c == EXTERNAL_ID || c.contains("." + EXTERNAL_ID)) return true;
+            if (c == CATEGORY_ID || c.contains("." + CATEGORY_ID)) return true;
             if (c == NAME || c.contains("." + NAME)) return true;
             if (c == DESCRIPTION || c.contains("." + DESCRIPTION)) return true;
         }

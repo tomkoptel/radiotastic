@@ -33,7 +33,7 @@ public class DatabaseTest extends AndroidTestCase {
         SQLiteDatabase db = AppSQLiteOpenHelper.getInstance(mContext).getWritableDatabase();
         CategoryItemContentValues categoryItemContentValues = new CategoryItemContentValues();
         ContentValues values = categoryItemContentValues
-                .putExternalId(10)
+                .putCategoryId(10)
                 .putName("name")
                 .putDescription("desc")
                 .values();

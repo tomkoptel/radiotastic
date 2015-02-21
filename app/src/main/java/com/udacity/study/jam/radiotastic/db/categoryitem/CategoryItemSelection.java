@@ -52,33 +52,33 @@ public class CategoryItemSelection extends AbstractSelection<CategoryItemSelecti
         return this;
     }
 
-    public CategoryItemSelection externalId(long... value) {
-        addEquals(CategoryItemColumns.EXTERNAL_ID, toObjectArray(value));
+    public CategoryItemSelection categoryId(long... value) {
+        addEquals(CategoryItemColumns.CATEGORY_ID, toObjectArray(value));
         return this;
     }
 
-    public CategoryItemSelection externalIdNot(long... value) {
-        addNotEquals(CategoryItemColumns.EXTERNAL_ID, toObjectArray(value));
+    public CategoryItemSelection categoryIdNot(long... value) {
+        addNotEquals(CategoryItemColumns.CATEGORY_ID, toObjectArray(value));
         return this;
     }
 
-    public CategoryItemSelection externalIdGt(long value) {
-        addGreaterThan(CategoryItemColumns.EXTERNAL_ID, value);
+    public CategoryItemSelection categoryIdGt(long value) {
+        addGreaterThan(CategoryItemColumns.CATEGORY_ID, value);
         return this;
     }
 
-    public CategoryItemSelection externalIdGtEq(long value) {
-        addGreaterThanOrEquals(CategoryItemColumns.EXTERNAL_ID, value);
+    public CategoryItemSelection categoryIdGtEq(long value) {
+        addGreaterThanOrEquals(CategoryItemColumns.CATEGORY_ID, value);
         return this;
     }
 
-    public CategoryItemSelection externalIdLt(long value) {
-        addLessThan(CategoryItemColumns.EXTERNAL_ID, value);
+    public CategoryItemSelection categoryIdLt(long value) {
+        addLessThan(CategoryItemColumns.CATEGORY_ID, value);
         return this;
     }
 
-    public CategoryItemSelection externalIdLtEq(long value) {
-        addLessThanOrEquals(CategoryItemColumns.EXTERNAL_ID, value);
+    public CategoryItemSelection categoryIdLtEq(long value) {
+        addLessThanOrEquals(CategoryItemColumns.CATEGORY_ID, value);
         return this;
     }
 

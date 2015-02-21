@@ -31,8 +31,8 @@ public class CategoryItemContentValues extends AbstractContentValues {
     /**
      * Represents id of object which resides on backend.
      */
-    public CategoryItemContentValues putExternalId(long value) {
-        mContentValues.put(CategoryItemColumns.EXTERNAL_ID, value);
+    public CategoryItemContentValues putCategoryId(long value) {
+        mContentValues.put(CategoryItemColumns.CATEGORY_ID, value);
         return this;
     }
 

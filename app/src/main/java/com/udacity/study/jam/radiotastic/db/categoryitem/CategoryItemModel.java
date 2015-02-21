@@ -15,7 +15,7 @@ public interface CategoryItemModel extends BaseModel {
     /**
      * Represents id of object which resides on backend.
      */
-    long getExternalId();
+    long getCategoryId();
 
     /**
      * Name of category

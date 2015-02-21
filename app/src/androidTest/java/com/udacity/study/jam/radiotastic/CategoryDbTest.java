@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.test.AndroidTestCase;
 
 import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
@@ -39,37 +40,31 @@ public class CategoryDbTest extends AndroidTestCase {
     // Constraints assertions
 
     public void testExternalIdIsUnique() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("Name");
-
-        ContentValues contentValues = categoryContentValues.values();
+        ContentValues contentValues = createValidContentValues();
         Uri firstUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI, contentValues);
         assertThat(firstUri, is(notNullValue()));
 
-        ContentValues notUniqueContentValues = categoryContentValues.putName("Name 1").values();
+        ContentValues notUniqueContentValues = createValidContentValues();
+        notUniqueContentValues.put(CategoryItemColumns.NAME, "Name 1");
         Uri newUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI, notUniqueContentValues);
         assertThat(newUri, is(nullValue()));
     }
 
     public void testNameIsUnique() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("Name");
-
-        ContentValues contentValues = categoryContentValues.values();
+        ContentValues contentValues = createValidContentValues();
         Uri firstUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI, contentValues);
         assertThat(firstUri, is(notNullValue()));
 
-        ContentValues notUniqueContentValues = categoryContentValues.putExternalId(11).values();
+
+        ContentValues notUniqueContentValues = createValidContentValues();
+        notUniqueContentValues.put(CategoryItemColumns.CATEGORY_ID, 11);
         Uri newUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI, notUniqueContentValues);
         assertThat(newUri, is(nullValue()));
     }
 
     public void testNameIsNotNull() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("");
-
         String name = null;
-        ContentValues contentValues = categoryContentValues.values();
+        ContentValues contentValues = createValidContentValues();
         contentValues.put(CategoryItemColumns.NAME, name);
 
         try {
@@ -83,34 +78,37 @@ public class CategoryDbTest extends AndroidTestCase {
     // CRUD assertions
 
     public void testInsert() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("Name");
-
         Uri newUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI,
-                categoryContentValues.values());
+                createValidContentValues());
         assertThat(newUri, is(notNullValue()));
         assertThat(ContentUris.parseId(newUri), is(not(0l)));
     }
 
     public void testUpdate() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("Name");
+        ContentValues initialContentValues = createValidContentValues();
         Uri newUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI,
-                categoryContentValues.values());
+                createValidContentValues());
 
-        categoryContentValues.putDescription("Description");
+        initialContentValues.put(CategoryItemColumns.DESCRIPTION, "Description");
 
-        int numberOfUpdatedRows = mContext.getContentResolver().update(newUri, categoryContentValues.values(), null, null);
+        int numberOfUpdatedRows = mContext.getContentResolver()
+                .update(newUri, initialContentValues, null, null);
         assertThat(numberOfUpdatedRows, is(1));
     }
 
     public void testDelete() {
-        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
-        categoryContentValues.putExternalId(10).putDescriptionNull().putName("Name");
         Uri newUri = mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI,
-                categoryContentValues.values());
+                createValidContentValues());
 
         int numberOfDeleted = mContext.getContentResolver().delete(newUri, null, null);
         assertThat(numberOfDeleted, is(1));
+    }
+
+    @NonNull
+    private ContentValues createValidContentValues() {
+        CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
+        categoryContentValues.putCategoryId(10).putDescriptionNull().putName("Name");
+
+        return categoryContentValues.values();
     }
 }

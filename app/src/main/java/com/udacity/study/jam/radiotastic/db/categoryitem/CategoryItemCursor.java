@@ -29,10 +29,10 @@ public class CategoryItemCursor extends AbstractCursor implements CategoryItemMo
     /**
      * Represents id of object which resides on backend.
      */
-    public long getExternalId() {
-        Long res = getLongOrNull(CategoryItemColumns.EXTERNAL_ID);
+    public long getCategoryId() {
+        Long res = getLongOrNull(CategoryItemColumns.CATEGORY_ID);
         if (res == null)
-            throw new NullPointerException("The value of 'external_id' in the database was null, which is not allowed according to the model definition");
+            throw new NullPointerException("The value of 'category_id' in the database was null, which is not allowed according to the model definition");
         return res;
     }
 

@@ -26,15 +26,15 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE_TABLE_CATEGORY_ITEM = "CREATE TABLE IF NOT EXISTS "
             + CategoryItemColumns.TABLE_NAME + " ( "
             + CategoryItemColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + CategoryItemColumns.EXTERNAL_ID + " INTEGER NOT NULL, "
+            + CategoryItemColumns.CATEGORY_ID + " INTEGER NOT NULL, "
             + CategoryItemColumns.NAME + " TEXT NOT NULL, "
             + CategoryItemColumns.DESCRIPTION + " TEXT "
-            + ", CONSTRAINT unique_external_id UNIQUE (external_id) ON CONFLICT IGNORE"
+            + ", CONSTRAINT unique_external_id UNIQUE (category_id) ON CONFLICT IGNORE"
             + ", CONSTRAINT unique_name UNIQUE (name) ON CONFLICT IGNORE"
             + " );";
 
-    public static final String SQL_CREATE_INDEX_CATEGORY_ITEM_EXTERNAL_ID = "CREATE INDEX IDX_CATEGORY_ITEM_EXTERNAL_ID "
-            + " ON " + CategoryItemColumns.TABLE_NAME + " ( " + CategoryItemColumns.EXTERNAL_ID + " );";
+    public static final String SQL_CREATE_INDEX_CATEGORY_ITEM_CATEGORY_ID = "CREATE INDEX IDX_CATEGORY_ITEM_CATEGORY_ID "
+            + " ON " + CategoryItemColumns.TABLE_NAME + " ( " + CategoryItemColumns.CATEGORY_ID + " );";
 
     public static final String SQL_CREATE_TABLE_STATION_DATA = "CREATE TABLE IF NOT EXISTS "
             + StationDataColumns.TABLE_NAME + " ( "
@@ -106,7 +106,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
         mOpenHelperCallbacks.onPreCreate(mContext, db);
         db.execSQL(SQL_CREATE_TABLE_CATEGORY_ITEM);
-        db.execSQL(SQL_CREATE_INDEX_CATEGORY_ITEM_EXTERNAL_ID);
+        db.execSQL(SQL_CREATE_INDEX_CATEGORY_ITEM_CATEGORY_ID);
         db.execSQL(SQL_CREATE_TABLE_STATION_DATA);
         db.execSQL(SQL_CREATE_INDEX_STATION_DATA_STATION_ID);
         mOpenHelperCallbacks.onPostCreate(mContext, db);

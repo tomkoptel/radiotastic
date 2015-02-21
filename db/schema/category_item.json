@@ -3,7 +3,7 @@
     "fields": [
         {
             "documentation": "Represents id of object which resides on backend.",
-            "name": "external_id",
+            "name": "category_id",
             "type": "Long",
             "nullable": false,
             "index": true,
@@ -23,7 +23,7 @@
     "constraints": [
         {
             "name": "unique_external_id",
-            "definition": "UNIQUE (external_id) ON CONFLICT IGNORE"
+            "definition": "UNIQUE (category_id) ON CONFLICT IGNORE"
         },
         {
             "name": "unique_name",
