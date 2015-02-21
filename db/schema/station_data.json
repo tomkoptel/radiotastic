@@ -1,5 +1,5 @@
 {
-    "documentation": "Station general info. This is enough to playback stream from it.",
+    "documentation": "Overall available information regarding station. Provides more robust info regarding station.",
     "fields": [
         {
             "documentation": "Represents id of object which resides on backend.",
