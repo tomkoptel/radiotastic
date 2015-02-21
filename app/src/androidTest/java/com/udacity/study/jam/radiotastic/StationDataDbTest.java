@@ -22,6 +22,7 @@ import com.udacity.study.jam.radiotastic.db.stationdata.StationStatus;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -94,7 +95,7 @@ public class StationDataDbTest extends AndroidTestCase {
             mContext.getContentResolver().insert(StationDataColumns.CONTENT_URI, notValidContentValues);
             fail(field + " should not be null");
         } catch (SQLiteConstraintException ex) {
-            assertThat(ex.getMessage(), is("station_data." + field + " may not be NULL (code 19)"));
+            assertThat(ex.getMessage(), containsString("NOT NULL constraint failed"));
         }
     }
 

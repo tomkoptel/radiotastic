@@ -21,6 +21,7 @@ import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemContentValu
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 
@@ -75,7 +76,7 @@ public class CategoryDbTest extends AndroidTestCase {
             mContext.getContentResolver().insert(CategoryItemColumns.CONTENT_URI, contentValues);
             fail("Should not accept null value for name");
         } catch (SQLiteConstraintException exception) {
-            assertThat(exception.getMessage(), is("category_item.name may not be NULL (code 19)"));
+            assertThat(exception.getMessage(), containsString("NOT NULL constraint failed"));
         }
     }
 
@@ -102,7 +103,6 @@ public class CategoryDbTest extends AndroidTestCase {
         int numberOfUpdatedRows = mContext.getContentResolver().update(newUri, categoryContentValues.values(), null, null);
         assertThat(numberOfUpdatedRows, is(1));
     }
-
 
     public void testDelete() {
         CategoryItemContentValues categoryContentValues = new CategoryItemContentValues();
