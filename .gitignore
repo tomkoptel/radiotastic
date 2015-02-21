@@ -50,4 +50,4 @@ com_crashlytics_export_strings.xml
 .DS_Store
 *.yaml
 *.db
-secret_gradle.properties
+db/gen

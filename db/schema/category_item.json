@@ -1,0 +1,33 @@
+{
+    "documentation": "A category being which represents group of stations.",
+    "fields": [
+        {
+            "documentation": "Represents id of object which resides on backend.",
+            "name": "external_id",
+            "type": "Long",
+            "nullable": false,
+            "index": true,
+        },
+        {
+            "documentation": "Name of category",
+            "name": "name",
+            "type": "String",
+            "nullable": false
+        },
+        {
+            "name": "description",
+            "type": "String",
+            "nullable": true
+        }
+    ],
+    "constraints": [
+        {
+            "name": "unique_external_id",
+            "definition": "UNIQUE (external_id) ON CONFLICT IGNORE"
+        },
+        {
+            "name": "unique_name",
+            "definition": "UNIQUE (name) ON CONFLICT IGNORE"
+        },
+    ]
+}
