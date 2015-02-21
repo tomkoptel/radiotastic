@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.udacity.study.jam.radiotastic.BuildConfig;
 import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
+import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
 
 public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = AppSQLiteOpenHelper.class.getSimpleName();
@@ -34,6 +35,21 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_INDEX_CATEGORY_ITEM_EXTERNAL_ID = "CREATE INDEX IDX_CATEGORY_ITEM_EXTERNAL_ID "
             + " ON " + CategoryItemColumns.TABLE_NAME + " ( " + CategoryItemColumns.EXTERNAL_ID + " );";
+
+    public static final String SQL_CREATE_TABLE_STATION_DATA = "CREATE TABLE IF NOT EXISTS "
+            + StationDataColumns.TABLE_NAME + " ( "
+            + StationDataColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + StationDataColumns.STATION_ID + " INTEGER NOT NULL, "
+            + StationDataColumns.STATUS + " INTEGER NOT NULL, "
+            + StationDataColumns.NAME + " TEXT NOT NULL, "
+            + StationDataColumns.WEBSITE + " TEXT, "
+            + StationDataColumns.STREAMURL + " TEXT NOT NULL, "
+            + StationDataColumns.DESCRIPTION + " TEXT "
+            + ", CONSTRAINT unique_external_id UNIQUE (station_id) ON CONFLICT IGNORE"
+            + " );";
+
+    public static final String SQL_CREATE_INDEX_STATION_DATA_STATION_ID = "CREATE INDEX IDX_STATION_DATA_STATION_ID "
+            + " ON " + StationDataColumns.TABLE_NAME + " ( " + StationDataColumns.STATION_ID + " );";
 
     // @formatter:on
 
@@ -91,6 +107,8 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
         mOpenHelperCallbacks.onPreCreate(mContext, db);
         db.execSQL(SQL_CREATE_TABLE_CATEGORY_ITEM);
         db.execSQL(SQL_CREATE_INDEX_CATEGORY_ITEM_EXTERNAL_ID);
+        db.execSQL(SQL_CREATE_TABLE_STATION_DATA);
+        db.execSQL(SQL_CREATE_INDEX_STATION_DATA_STATION_ID);
         mOpenHelperCallbacks.onPostCreate(mContext, db);
     }
 

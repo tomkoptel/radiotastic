@@ -13,6 +13,7 @@ import android.util.Log;
 import com.udacity.study.jam.radiotastic.BuildConfig;
 import com.udacity.study.jam.radiotastic.db.base.BaseContentProvider;
 import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
+import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
 
 public class AppProvider extends BaseContentProvider {
     private static final String TAG = AppProvider.class.getSimpleName();
@@ -28,6 +29,9 @@ public class AppProvider extends BaseContentProvider {
     private static final int URI_TYPE_CATEGORY_ITEM = 0;
     private static final int URI_TYPE_CATEGORY_ITEM_ID = 1;
 
+    private static final int URI_TYPE_STATION_DATA = 2;
+    private static final int URI_TYPE_STATION_DATA_ID = 3;
+
 
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -35,6 +39,8 @@ public class AppProvider extends BaseContentProvider {
     static {
         URI_MATCHER.addURI(AUTHORITY, CategoryItemColumns.TABLE_NAME, URI_TYPE_CATEGORY_ITEM);
         URI_MATCHER.addURI(AUTHORITY, CategoryItemColumns.TABLE_NAME + "/#", URI_TYPE_CATEGORY_ITEM_ID);
+        URI_MATCHER.addURI(AUTHORITY, StationDataColumns.TABLE_NAME, URI_TYPE_STATION_DATA);
+        URI_MATCHER.addURI(AUTHORITY, StationDataColumns.TABLE_NAME + "/#", URI_TYPE_STATION_DATA_ID);
     }
 
     @Override
@@ -55,6 +61,11 @@ public class AppProvider extends BaseContentProvider {
                 return TYPE_CURSOR_DIR + CategoryItemColumns.TABLE_NAME;
             case URI_TYPE_CATEGORY_ITEM_ID:
                 return TYPE_CURSOR_ITEM + CategoryItemColumns.TABLE_NAME;
+
+            case URI_TYPE_STATION_DATA:
+                return TYPE_CURSOR_DIR + StationDataColumns.TABLE_NAME;
+            case URI_TYPE_STATION_DATA_ID:
+                return TYPE_CURSOR_ITEM + StationDataColumns.TABLE_NAME;
 
         }
         return null;
@@ -106,12 +117,21 @@ public class AppProvider extends BaseContentProvider {
                 res.orderBy = CategoryItemColumns.DEFAULT_ORDER;
                 break;
 
+            case URI_TYPE_STATION_DATA:
+            case URI_TYPE_STATION_DATA_ID:
+                res.table = StationDataColumns.TABLE_NAME;
+                res.idColumn = StationDataColumns._ID;
+                res.tablesWithJoins = StationDataColumns.TABLE_NAME;
+                res.orderBy = StationDataColumns.DEFAULT_ORDER;
+                break;
+
             default:
                 throw new IllegalArgumentException("The uri '" + uri + "' is not supported by this ContentProvider");
         }
 
         switch (matchedId) {
             case URI_TYPE_CATEGORY_ITEM_ID:
+            case URI_TYPE_STATION_DATA_ID:
                 id = uri.getLastPathSegment();
         }
         if (id != null) {

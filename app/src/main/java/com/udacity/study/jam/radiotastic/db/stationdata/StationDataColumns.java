@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.categoryitem;
+package com.udacity.study.jam.radiotastic.db.stationdata;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -8,10 +8,10 @@ import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
 import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
 
 /**
- * A category being which represents group of stations.
+ * Station general info. This is enough to playback stream from it.
  */
-public class CategoryItemColumns implements BaseColumns {
-    public static final String TABLE_NAME = "category_item";
+public class StationDataColumns implements BaseColumns {
+    public static final String TABLE_NAME = "station_data";
     public static final Uri CONTENT_URI = Uri.parse(AppProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
 
     /**
@@ -22,12 +22,18 @@ public class CategoryItemColumns implements BaseColumns {
     /**
      * Represents id of object which resides on backend.
      */
-    public static final String EXTERNAL_ID = "external_id";
+    public static final String STATION_ID = "station_id";
 
     /**
-     * Name of category
+     * Represents status of station. Either 1 UP or 0 DOWN
      */
+    public static final String STATUS = "status";
+
     public static final String NAME = "name";
+
+    public static final String WEBSITE = "website";
+
+    public static final String STREAMURL = "streamurl";
 
     public static final String DESCRIPTION = "description";
 
@@ -37,8 +43,11 @@ public class CategoryItemColumns implements BaseColumns {
     // @formatter:off
     public static final String[] ALL_COLUMNS = new String[] {
             _ID,
-            EXTERNAL_ID,
+            STATION_ID,
+            STATUS,
             NAME,
+            WEBSITE,
+            STREAMURL,
             DESCRIPTION
     };
     // @formatter:on
@@ -46,8 +55,11 @@ public class CategoryItemColumns implements BaseColumns {
     public static boolean hasColumns(String[] projection) {
         if (projection == null) return true;
         for (String c : projection) {
-            if (c == EXTERNAL_ID || c.contains("." + EXTERNAL_ID)) return true;
+            if (c == STATION_ID || c.contains("." + STATION_ID)) return true;
+            if (c == STATUS || c.contains("." + STATUS)) return true;
             if (c == NAME || c.contains("." + NAME)) return true;
+            if (c == WEBSITE || c.contains("." + WEBSITE)) return true;
+            if (c == STREAMURL || c.contains("." + STREAMURL)) return true;
             if (c == DESCRIPTION || c.contains("." + DESCRIPTION)) return true;
         }
         return false;
