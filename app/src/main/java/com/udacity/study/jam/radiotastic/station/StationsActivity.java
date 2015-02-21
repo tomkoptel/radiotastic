@@ -40,7 +40,7 @@ public class StationsActivity extends ActionBarActivity implements StationListFr
 
     @Override
     public void onStationSelected(int stationID) {
-        Intent newIntent = new Intent(this, StationsActivity.class);
+        Intent newIntent = new Intent(this, DetailActivity.class);
         newIntent.putExtra(DetailActivity.STATION_ID_EXTRA, stationID);
         startActivity(newIntent);
     }

@@ -23,6 +23,7 @@ import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
 import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 
 import retrofit.RestAdapter;
 import retrofit.client.Response;
@@ -34,6 +35,7 @@ public class DetailFragment extends Fragment {
     private TextView mName;
     private TextView mDescription;
     private int mStationId;
+    public String mStreamUrl;
 
     public static DetailFragment init(int stationId) {
         Bundle args = new Bundle();
@@ -57,6 +59,23 @@ public class DetailFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
         mName = (TextView) root.findViewById(R.id.name);
         mDescription = (TextView) root.findViewById(R.id.description);
+        root.findViewById(R.id.playAction)
+                .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mStreamUrl != null) {
+                    PlayerIntentService.startActionPlay(getActivity(), mStreamUrl);
+                }
+            }
+        });
+        root.findViewById(R.id.stopAction)
+                .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerIntentService.startActionStop(getActivity());
+            }
+        });
+
         return root;
     }
 
@@ -77,6 +96,7 @@ public class DetailFragment extends Fragment {
                     public void semanticSuccess(StationData data, Response response) {
                         mName.setText(data.getName());
                         mDescription.setText(data.getDescription());
+                        mStreamUrl = data.getStreamurl();
                     }
                 });
     }
