@@ -12,6 +12,7 @@ import android.util.Log;
 import com.udacity.study.jam.radiotastic.BuildConfig;
 import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
 import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
+import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
 
 public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = AppSQLiteOpenHelper.class.getSimpleName();
@@ -50,6 +51,21 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_INDEX_STATION_DATA_STATION_ID = "CREATE INDEX IDX_STATION_DATA_STATION_ID "
             + " ON " + StationDataColumns.TABLE_NAME + " ( " + StationDataColumns.STATION_ID + " );";
+
+    public static final String SQL_CREATE_TABLE_STATION_ITEM = "CREATE TABLE IF NOT EXISTS "
+            + StationItemColumns.TABLE_NAME + " ( "
+            + StationItemColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + StationItemColumns.STATION_ID + " INTEGER NOT NULL, "
+            + StationItemColumns.STATUS + " INTEGER NOT NULL, "
+            + StationItemColumns.NAME + " TEXT NOT NULL, "
+            + StationItemColumns.BITRATE + " TEXT NOT NULL, "
+            + StationItemColumns.STREAMURL + " TEXT NOT NULL, "
+            + StationItemColumns.COUNTRY + " TEXT NOT NULL "
+            + ", CONSTRAINT unique_external_id UNIQUE (station_id) ON CONFLICT IGNORE"
+            + " );";
+
+    public static final String SQL_CREATE_INDEX_STATION_ITEM_STATION_ID = "CREATE INDEX IDX_STATION_ITEM_STATION_ID "
+            + " ON " + StationItemColumns.TABLE_NAME + " ( " + StationItemColumns.STATION_ID + " );";
 
     // @formatter:on
 
@@ -109,6 +125,8 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_INDEX_CATEGORY_ITEM_CATEGORY_ID);
         db.execSQL(SQL_CREATE_TABLE_STATION_DATA);
         db.execSQL(SQL_CREATE_INDEX_STATION_DATA_STATION_ID);
+        db.execSQL(SQL_CREATE_TABLE_STATION_ITEM);
+        db.execSQL(SQL_CREATE_INDEX_STATION_ITEM_STATION_ID);
         mOpenHelperCallbacks.onPostCreate(mContext, db);
     }
 

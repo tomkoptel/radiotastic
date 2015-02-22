@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.stationdata;
+package com.udacity.study.jam.radiotastic.db.stationitem;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -9,10 +9,10 @@ import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
 
 /**
- * Overall available information regarding station. Provides more robust info regarding station.
+ * General station info. This is basic set of data enough for client to playback.
  */
-public class StationDataColumns implements BaseColumns {
-    public static final String TABLE_NAME = "station_data";
+public class StationItemColumns implements BaseColumns {
+    public static final String TABLE_NAME = "station_item";
     public static final Uri CONTENT_URI = Uri.parse(AppProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
 
     /**
@@ -32,11 +32,11 @@ public class StationDataColumns implements BaseColumns {
 
     public static final String NAME = "name";
 
-    public static final String WEBSITE = "website";
+    public static final String BITRATE = "bitrate";
 
     public static final String STREAMURL = "streamurl";
 
-    public static final String DESCRIPTION = "description";
+    public static final String COUNTRY = "country";
 
 
     public static final String DEFAULT_ORDER = TABLE_NAME + "." +_ID;
@@ -47,9 +47,9 @@ public class StationDataColumns implements BaseColumns {
             STATION_ID,
             STATUS,
             NAME,
-            WEBSITE,
+            BITRATE,
             STREAMURL,
-            DESCRIPTION
+            COUNTRY
     };
     // @formatter:on
 
@@ -59,9 +59,9 @@ public class StationDataColumns implements BaseColumns {
             if (c == STATION_ID || c.contains("." + STATION_ID)) return true;
             if (c == STATUS || c.contains("." + STATUS)) return true;
             if (c == NAME || c.contains("." + NAME)) return true;
-            if (c == WEBSITE || c.contains("." + WEBSITE)) return true;
+            if (c == BITRATE || c.contains("." + BITRATE)) return true;
             if (c == STREAMURL || c.contains("." + STREAMURL)) return true;
-            if (c == DESCRIPTION || c.contains("." + DESCRIPTION)) return true;
+            if (c == COUNTRY || c.contains("." + COUNTRY)) return true;
         }
         return false;
     }

@@ -1,0 +1,46 @@
+{
+    "documentation": "General station info. This is basic set of data enough for client to playback.",
+    "fields": [
+        {
+            "documentation": "Represents id of object which resides on backend.",
+            "name": "station_id",
+            "type": "Long",
+            "nullable": false,
+            "index": true,
+        },
+        {
+            "documentation": "Represents status of station. Either 1 UP or 0 DOWN",
+            "name": "status",
+            "type": "enum",
+            "enumName": "StationStatus",
+            "enumValues": ["DOWN", "UP"],
+            "nullable": false
+        },
+        {
+            "name": "name",
+            "type": "String",
+            "nullable": false
+        },
+        {
+            "name": "bitrate",
+            "type": "String",
+            "nullable": false
+        },
+        {
+            "name": "streamurl",
+            "type": "String",
+            "nullable": false
+        },
+        {
+            "name": "country",
+            "type": "String",
+            "nullable": false
+        },
+    ],
+    "constraints": [
+        {
+            "name": "unique_external_id",
+            "definition": "UNIQUE (station_id) ON CONFLICT IGNORE"
+        }
+    ]
+}

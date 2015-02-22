@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 import com.udacity.study.jam.radiotastic.db.AppProvider;
 import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
 import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
+import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
 
 /**
  * A category being which represents group of stations.
