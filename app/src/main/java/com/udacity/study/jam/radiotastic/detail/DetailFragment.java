@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationData;
+import com.udacity.study.jam.radiotastic.pojo.StationData;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;

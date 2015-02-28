@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationItem;
+import com.udacity.study.jam.radiotastic.pojo.StationItem;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;

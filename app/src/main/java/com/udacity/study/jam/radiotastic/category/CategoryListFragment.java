@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.pojo.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 import com.udacity.study.jam.radiotastic.api.ApiKey;

@@ -43,7 +43,7 @@ jsonSchema2Pojo {
 
     // Package name used for generated Java classes (for types where a fully qualified name has not
     // been supplied in the schema using the 'javaType' property).
-    targetPackage = 'com.udacity.study.jam.radiotastic'
+    targetPackage = 'com.udacity.study.jam.radiotastic.pojo'
 
     // Whether to use the java type long (or Long) instead of int (or Integer) when representing the
     // JSON Schema type 'integer'.

@@ -8,9 +8,9 @@
 
 package com.udacity.study.jam.radiotastic.api;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
-import com.udacity.study.jam.radiotastic.StationData;
-import com.udacity.study.jam.radiotastic.StationItem;
+import com.udacity.study.jam.radiotastic.pojo.CategoryItem;
+import com.udacity.study.jam.radiotastic.pojo.StationData;
+import com.udacity.study.jam.radiotastic.pojo.StationItem;
 
 import java.util.List;
 

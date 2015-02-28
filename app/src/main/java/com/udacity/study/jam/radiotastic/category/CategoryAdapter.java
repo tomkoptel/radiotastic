@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.pojo.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 
 import java.util.Collections;
