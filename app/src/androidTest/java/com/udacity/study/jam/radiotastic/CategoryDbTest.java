@@ -16,8 +16,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.test.AndroidTestCase;
 
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemContentValues;
+import com.udacity.study.jam.radiotastic.data.cache.db.categoryitem.CategoryItemColumns;
+import com.udacity.study.jam.radiotastic.data.cache.db.categoryitem.CategoryItemContentValues;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;

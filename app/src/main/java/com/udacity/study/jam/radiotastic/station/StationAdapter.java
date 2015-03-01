@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.pojo.StationItem;
+import com.udacity.study.jam.radiotastic.data.entity.StationEntityItem;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +24,12 @@ import java.util.List;
 public class StationAdapter extends
         RecyclerView.Adapter<StationAdapter.ListItemViewHolder> {
 
-    private List<StationItem> mData = Collections.emptyList();
+    private List<StationEntityItem> mData = Collections.emptyList();
 
     public StationAdapter() {
     }
 
-    public void setDataset(List<StationItem> data) {
+    public void setDataset(List<StationEntityItem> data) {
         mData = data;
         // This isn't working
         notifyItemRangeInserted(0, data.size());
@@ -44,7 +44,7 @@ public class StationAdapter extends
 
     @Override
     public void onBindViewHolder(ListItemViewHolder viewHolder, int position) {
-        StationItem item = mData.get(position);
+        StationEntityItem item = mData.get(position);
         Context context = viewHolder.labelTextView.getContext();
         viewHolder.labelTextView.setText(item.getName());
         viewHolder.descTextView.setText(context.getString(R.string.format_station_desc,
@@ -56,7 +56,7 @@ public class StationAdapter extends
         return mData.size();
     }
 
-    public StationItem getItem(int position) {
+    public StationEntityItem getItem(int position) {
         return mData.get(position);
     }
 

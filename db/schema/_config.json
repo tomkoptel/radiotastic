@@ -1,8 +1,8 @@
 {
     "syntaxVersion": 3,
-    "projectPackageId": "com.udacity.study.jam.radiotastic",
-    "authority": "com.udacity.study.jam.radiotastic.db.provider",
-    "providerJavaPackage": "com.udacity.study.jam.radiotastic.db",
+    "projectPackageId": "com.udacity.study.jam.radiotastic.data",
+    "authority": "com.udacity.study.jam.radiotastic.data.cache.db.provider",
+    "providerJavaPackage": "com.udacity.study.jam.radiotastic.data.cache.db",
     "providerClassName": "AppProvider",
     "sqliteOpenHelperClassName": "AppSQLiteOpenHelper",
     "sqliteOpenHelperCallbacksClassName": "AppSQLiteOpenHelperCallbacks",

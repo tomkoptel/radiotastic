@@ -1,3 +1,4 @@
-include ':app'
 include ':pojo'
 include ':domain'
+include ':data'
+include ':app'

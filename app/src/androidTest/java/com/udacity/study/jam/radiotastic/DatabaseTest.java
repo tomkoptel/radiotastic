@@ -13,9 +13,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
-import com.udacity.study.jam.radiotastic.db.AppSQLiteOpenHelper;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemContentValues;
+import com.udacity.study.jam.radiotastic.data.cache.db.AppSQLiteOpenHelper;
+import com.udacity.study.jam.radiotastic.data.cache.db.categoryitem.CategoryItemColumns;
+import com.udacity.study.jam.radiotastic.data.cache.db.categoryitem.CategoryItemContentValues;
 
 import java.util.Map;
 import java.util.Set;

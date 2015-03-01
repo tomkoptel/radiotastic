@@ -17,12 +17,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.pojo.StationData;
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
-import com.udacity.study.jam.radiotastic.api.DirbleClient;
-import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.data.entity.StationEntityData;
+import com.udacity.study.jam.radiotastic.data.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.data.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiEndpoint;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiKey;
+import com.udacity.study.jam.radiotastic.data.network.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 
 import retrofit.RestAdapter;
@@ -91,9 +91,9 @@ public class DetailFragment extends Fragment {
         client.getStationData(
                 ApiKey.INSTANCE.get(getActivity()),
                 mStationId,
-                new LogableSimpleCallback<StationData>() {
+                new LogableSimpleCallback<StationEntityData>() {
                     @Override
-                    public void semanticSuccess(StationData data, Response response) {
+                    public void semanticSuccess(StationEntityData data, Response response) {
                         mName.setText(data.getName());
                         mDescription.setText(data.getDescription());
                         mStreamUrl = data.getStreamurl();

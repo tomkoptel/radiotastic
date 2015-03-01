@@ -16,9 +16,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.test.AndroidTestCase;
 
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemContentValues;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationStatus;
+import com.udacity.study.jam.radiotastic.data.cache.db.stationitem.StationItemColumns;
+import com.udacity.study.jam.radiotastic.data.cache.db.stationitem.StationItemContentValues;
+import com.udacity.study.jam.radiotastic.data.cache.db.stationitem.StationStatus;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -39,8 +39,8 @@
         </service>
 
         <provider
-            android:name="com.udacity.study.jam.radiotastic.db.AppProvider"
-            android:authorities="com.udacity.study.jam.radiotastic.db.provider"
+            android:name="com.udacity.study.jam.radiotastic.data.cache.db.AppProvider"
+            android:authorities="com.udacity.study.jam.radiotastic.data.cache.db.provider"
             android:exported="false" />
 
     </application>

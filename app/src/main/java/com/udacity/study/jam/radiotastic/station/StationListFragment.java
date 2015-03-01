@@ -22,12 +22,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.pojo.StationItem;
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
-import com.udacity.study.jam.radiotastic.api.DirbleClient;
-import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.data.entity.StationEntityItem;
+import com.udacity.study.jam.radiotastic.data.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.data.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiEndpoint;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiKey;
+import com.udacity.study.jam.radiotastic.data.network.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import java.util.List;
@@ -106,9 +106,9 @@ public class StationListFragment extends Fragment {
         client.listStations(
                 ApiKey.INSTANCE.get(getActivity()),
                 mCategoryId,
-                new LogableSimpleCallback<List<StationItem>>() {
+                new LogableSimpleCallback<List<StationEntityItem>>() {
                     @Override
-                    public void semanticSuccess(List<StationItem> stationItems, Response response) {
+                    public void semanticSuccess(List<StationEntityItem> stationItems, Response response) {
                         mAdapter.setDataset(stationItems);
                     }
                 });
@@ -128,7 +128,7 @@ public class StationListFragment extends Fragment {
         public boolean onSingleTapConfirmed(MotionEvent event) {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
-            StationItem stationItem = mAdapter.getItem(position);
+            StationEntityItem stationItem = mAdapter.getItem(position);
             if (getActivity() instanceof Callback) {
                 ((Callback) getActivity()).onStationSelected(stationItem.getId());
             }

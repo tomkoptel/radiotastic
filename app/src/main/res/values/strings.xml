@@ -1,10 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Radiotastic</string>
 
-    <!--API constants-->
-    <string name="api_endpoint">http://api.dirble.com/v1</string>
-    <string name="api_key">3179ce3b92882458ecc077f99c64e053b25fef2d</string>
-
     <!--Station list item description-->
     <string name="format_station_desc">Country: <xliff:g id="country">
         %1$s</xliff:g> Bit rate: <xliff:g id="bit_rate">%2$s</xliff:g></string>

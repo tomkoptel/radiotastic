@@ -21,13 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.udacity.study.jam.radiotastic.pojo.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
-import com.udacity.study.jam.radiotastic.api.DirbleClient;
-import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
+import com.udacity.study.jam.radiotastic.data.entity.CategoryEntity;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiEndpoint;
+import com.udacity.study.jam.radiotastic.data.network.api.ApiKey;
+import com.udacity.study.jam.radiotastic.data.network.api.DirbleClient;
+import com.udacity.study.jam.radiotastic.data.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.data.network.LogableSimpleCallback;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import java.util.List;
@@ -92,9 +92,9 @@ public class CategoryListFragment extends Fragment {
         DirbleClient client = restAdapter.create(DirbleClient.class);
         Timber.i("Requesting primary categories");
         client.listPrimaryCategories(ApiKey.INSTANCE.get(getActivity()),
-                new LogableSimpleCallback<List<CategoryItem>>() {
+                new LogableSimpleCallback<List<CategoryEntity>>() {
                     @Override
-                    public void semanticSuccess(List<CategoryItem> categoryItems, Response response) {
+                    public void semanticSuccess(List<CategoryEntity> categoryItems, Response response) {
                         mAdapter.setDataset(categoryItems);
                     }
                 });
@@ -115,7 +115,7 @@ public class CategoryListFragment extends Fragment {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
             Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
-            CategoryItem categoryItem = mAdapter.getItem(position);
+            CategoryEntity categoryItem = mAdapter.getItem(position);
             if (getActivity() instanceof Callback) {
                 ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
             }

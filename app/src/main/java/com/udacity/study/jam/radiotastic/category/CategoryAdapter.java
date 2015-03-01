@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.udacity.study.jam.radiotastic.pojo.CategoryItem;
+import com.udacity.study.jam.radiotastic.data.entity.CategoryEntity;
 import com.udacity.study.jam.radiotastic.R;
 
 import java.util.Collections;
@@ -24,12 +24,12 @@ import java.util.List;
 public class CategoryAdapter extends
         RecyclerView.Adapter<CategoryAdapter.ItemViewHolder> {
 
-    private List<CategoryItem> mData = Collections.emptyList();
+    private List<CategoryEntity> mData = Collections.emptyList();
 
     public CategoryAdapter() {
     }
 
-    public void setDataset(List<CategoryItem> data) {
+    public void setDataset(List<CategoryEntity> data) {
         mData = data;
         // This isn't working
         notifyItemRangeInserted(0, data.size());
@@ -44,7 +44,7 @@ public class CategoryAdapter extends
 
     @Override
     public void onBindViewHolder(ItemViewHolder viewHolder, int position) {
-        CategoryItem item = mData.get(position);
+        CategoryEntity item = mData.get(position);
         viewHolder.labelTextView.setText(item.getName());
         viewHolder.descTextView.setText(item.getDescription());
     }
@@ -54,7 +54,7 @@ public class CategoryAdapter extends
         return mData.size();
     }
 
-    public CategoryItem getItem(int position) {
+    public CategoryEntity getItem(int position) {
         return mData.get(position);
     }
 
