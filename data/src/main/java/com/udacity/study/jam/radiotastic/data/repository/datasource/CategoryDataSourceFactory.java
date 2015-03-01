@@ -8,15 +8,20 @@
 
 package com.udacity.study.jam.radiotastic.data.repository.datasource;
 
-import com.udacity.study.jam.radiotastic.Category;
+import android.app.Activity;
 
-import java.util.Collection;
+public class CategoryDataSourceFactory {
+    private final Activity mActivity;
 
-public interface CategoryDataSource {
-    interface CategoryListCallback {
-        void onCategoriesEntityListLoaded(Collection<Category> categoryCollection);
-        void onError(Exception exception);
+    public CategoryDataSourceFactory(Activity activity) {
+        mActivity = activity;
     }
 
-    void getCategoriesEntityList(CategoryListCallback categoryListCallback);
+    public CategoryDataSource getNetworkDataSource() {
+        return new DirbleCategoryDataSource(mActivity);
+    }
+
+    public CategoryDataSource getDatabaseDataSource() {
+        return new DbCategoryDataSource(mActivity);
+    }
 }
