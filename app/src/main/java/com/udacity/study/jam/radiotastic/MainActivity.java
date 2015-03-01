@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.udacity.study.jam.radiotastic.category.CategoryListFragment;
-import com.udacity.study.jam.radiotastic.detail.DetailFragment;
-import com.udacity.study.jam.radiotastic.station.StationListFragment;
-import com.udacity.study.jam.radiotastic.station.StationsActivity;
+import com.udacity.study.jam.radiotastic.view.activity.StationsActivity;
+import com.udacity.study.jam.radiotastic.view.fragment.CategoryListFragment;
+import com.udacity.study.jam.radiotastic.view.fragment.StationDetailFragment;
+import com.udacity.study.jam.radiotastic.view.fragment.StationListFragment;
 
 
 public class MainActivity extends ActionBarActivity
@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCategorySelected(int categoryID) {
+    public void onCategorySelected(long categoryID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.sub_content, StationListFragment.init(categoryID))
@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity
     public void onStationSelected(int stationID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_content, DetailFragment.init(stationID))
+                    .replace(R.id.detail_content, StationDetailFragment.init(stationID))
                     .commit();
         }
     }

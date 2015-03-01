@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.detail;
+package com.udacity.study.jam.radiotastic.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,7 +29,7 @@ import retrofit.RestAdapter;
 import retrofit.client.Response;
 import timber.log.Timber;
 
-public class DetailFragment extends Fragment {
+public class StationDetailFragment extends Fragment {
     private static final String STATION_ID_ARG = "stationID";
 
     private TextView mName;
@@ -37,10 +37,10 @@ public class DetailFragment extends Fragment {
     private int mStationId;
     public String mStreamUrl;
 
-    public static DetailFragment init(int stationId) {
+    public static StationDetailFragment init(int stationId) {
         Bundle args = new Bundle();
         args.putInt(STATION_ID_ARG, stationId);
-        DetailFragment detailFragment = new DetailFragment();
+        StationDetailFragment detailFragment = new StationDetailFragment();
         detailFragment.setArguments(args);
         return detailFragment;
     }

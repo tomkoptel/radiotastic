@@ -6,14 +6,14 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.station;
+package com.udacity.study.jam.radiotastic.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.detail.DetailActivity;
+import com.udacity.study.jam.radiotastic.view.fragment.StationListFragment;
 
 
 public class StationsActivity extends ActionBarActivity implements StationListFragment.Callback {

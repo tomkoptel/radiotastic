@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.category;
+package com.udacity.study.jam.radiotastic.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.udacity.study.jam.radiotastic.data.entity.CategoryEntity;
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.model.CategoryModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,13 +26,13 @@ import java.util.List;
 public class CategoryAdapter extends
         RecyclerView.Adapter<CategoryAdapter.ItemViewHolder> {
 
-    private List<CategoryEntity> mData = Collections.emptyList();
+    private List<CategoryModel> mData = Collections.emptyList();
 
     public CategoryAdapter() {
     }
 
-    public void setDataset(List<CategoryEntity> data) {
-        mData = data;
+    public void setDataset(Collection<CategoryModel> data) {
+        mData = new ArrayList<CategoryModel>(data);
         // This isn't working
         notifyItemRangeInserted(0, data.size());
     }
@@ -44,7 +46,7 @@ public class CategoryAdapter extends
 
     @Override
     public void onBindViewHolder(ItemViewHolder viewHolder, int position) {
-        CategoryEntity item = mData.get(position);
+        CategoryModel item = mData.get(position);
         viewHolder.labelTextView.setText(item.getName());
         viewHolder.descTextView.setText(item.getDescription());
     }
@@ -54,7 +56,7 @@ public class CategoryAdapter extends
         return mData.size();
     }
 
-    public CategoryEntity getItem(int position) {
+    public CategoryModel getItem(int position) {
         return mData.get(position);
     }
 

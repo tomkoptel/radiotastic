@@ -6,12 +6,13 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.detail;
+package com.udacity.study.jam.radiotastic.view.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.view.fragment.StationDetailFragment;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -29,7 +30,7 @@ public class DetailActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, DetailFragment.init(mStationID))
+                    .replace(R.id.content, StationDetailFragment.init(mStationID))
                     .commit();
         }
     }

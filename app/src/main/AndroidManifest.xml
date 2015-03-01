@@ -22,11 +22,11 @@
         </activity>
 
         <activity
-            android:name=".station.StationsActivity"
+            android:name=".view.activity.StationsActivity"
             android:label="@string/stations_activity_title" />
 
         <activity
-            android:name=".detail.DetailActivity"
+            android:name=".view.activity.DetailActivity"
             android:label="@string/station_activity_title" />
 
         <service

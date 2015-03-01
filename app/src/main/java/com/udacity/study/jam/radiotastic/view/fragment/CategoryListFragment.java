@@ -6,8 +6,9 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.station;
+package com.udacity.study.jam.radiotastic.view.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,52 +20,54 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.data.entity.StationEntityItem;
-import com.udacity.study.jam.radiotastic.data.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.data.network.LogableSimpleCallback;
-import com.udacity.study.jam.radiotastic.data.network.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.data.network.api.ApiKey;
-import com.udacity.study.jam.radiotastic.data.network.api.DirbleClient;
+import com.udacity.study.jam.radiotastic.UIThread;
+import com.udacity.study.jam.radiotastic.data.executor.JobExecutor;
+import com.udacity.study.jam.radiotastic.data.repository.CategoryDataRepository;
+import com.udacity.study.jam.radiotastic.executor.PostExecutionThread;
+import com.udacity.study.jam.radiotastic.executor.ThreadExecutor;
+import com.udacity.study.jam.radiotastic.interactor.GetCategoryListUseCase;
+import com.udacity.study.jam.radiotastic.interactor.GetCategoryListUseCaseImpl;
+import com.udacity.study.jam.radiotastic.model.CategoryModel;
+import com.udacity.study.jam.radiotastic.presenter.CategoryListPresenter;
+import com.udacity.study.jam.radiotastic.repository.CategoryRepository;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
+import com.udacity.study.jam.radiotastic.view.CategoryListView;
+import com.udacity.study.jam.radiotastic.view.adapter.CategoryAdapter;
 
-import java.util.List;
+import java.util.Collection;
 
-import retrofit.RestAdapter;
-import retrofit.client.Response;
 import timber.log.Timber;
 
-public class StationListFragment extends Fragment {
-    private static final String CATEGORY_ID_ARG = "categoryID";
+public class CategoryListFragment extends Fragment implements CategoryListView {
+    private static final String LOG_TAG = CategoryListFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
-    private StationAdapter mAdapter;
-    private int mCategoryId;
+    private CategoryAdapter mAdapter;
+    private CategoryListPresenter categoryListPresenter;
+    private Callback categorySelectedtListener;
 
-    public static StationListFragment init(int categoryID) {
-        Bundle args = new Bundle();
-        args.putInt(CATEGORY_ID_ARG, categoryID);
-        StationListFragment stationListFragment = new StationListFragment();
-        stationListFragment.setArguments(args);
-        return stationListFragment;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof Callback) {
+            this.categorySelectedtListener = (Callback) activity;
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(CATEGORY_ID_ARG)) {
-            mCategoryId = args.getInt(CATEGORY_ID_ARG);
-        }
+        Timber.tag(LOG_TAG);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_station_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_category_list, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
         return root;
     }
@@ -85,33 +88,46 @@ public class StationListFragment extends Fragment {
         // you can set the first visible item like this:
         recyclerView.setHasFixedSize(true);
 
-        mAdapter = new StationAdapter();
+        mAdapter = new CategoryAdapter();
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
 
         gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
                 new RecyclerViewGestureListener());
+
+
+        ThreadExecutor threadExecutor = JobExecutor.getInstance();
+        PostExecutionThread postExecutionThread = UIThread.getInstance();
+        CategoryRepository categoryRepository = new CategoryDataRepository();
+
+        GetCategoryListUseCase getCategoryListUseCase =
+                new GetCategoryListUseCaseImpl(categoryRepository,
+                        threadExecutor, postExecutionThread);
+        categoryListPresenter = new CategoryListPresenter(this, getCategoryListUseCase);
+        categoryListPresenter.init();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(new ApiEndpoint(getActivity()))
-                .setClient(new AppUrlConnectionClient())
-                .build();
-        DirbleClient client = restAdapter.create(DirbleClient.class);
-        Timber.i("Requesting stations for category: " + mCategoryId);
-        client.listStations(
-                ApiKey.INSTANCE.get(getActivity()),
-                mCategoryId,
-                new LogableSimpleCallback<List<StationEntityItem>>() {
-                    @Override
-                    public void semanticSuccess(List<StationEntityItem> stationItems, Response response) {
-                        mAdapter.setDataset(stationItems);
-                    }
-                });
+    public void onResume() {
+        super.onResume();
+        categoryListPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        categoryListPresenter.pause();
+    }
+
+    @Override
+    public void renderCategoryList(Collection<CategoryModel> categoryItems) {
+        mAdapter.setDataset(categoryItems);
+    }
+
+    @Override
+    public void viewUser(CategoryModel categoryModel) {
+        categorySelectedtListener.onCategorySelected(categoryModel.getId());
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
@@ -128,17 +144,15 @@ public class StationListFragment extends Fragment {
         public boolean onSingleTapConfirmed(MotionEvent event) {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
-            StationEntityItem stationItem = mAdapter.getItem(position);
-            if (getActivity() instanceof Callback) {
-                ((Callback) getActivity()).onStationSelected(stationItem.getId());
-            }
-            Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
+
+            CategoryModel categoryModel = mAdapter.getItem(position);
+            categoryListPresenter.onCategoryClicked(categoryModel);
+
             return super.onSingleTapConfirmed(event);
         }
     }
 
     public static interface Callback {
-        void onStationSelected(int stationID);
+        void onCategorySelected(long categoryID);
     }
-
 }

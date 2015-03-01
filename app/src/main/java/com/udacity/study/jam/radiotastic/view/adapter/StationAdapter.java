@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.station;
+package com.udacity.study.jam.radiotastic.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
