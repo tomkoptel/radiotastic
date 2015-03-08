@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.stationitem;
+package com.udacity.study.jam.radiotastic.db.station;
 
 import com.udacity.study.jam.radiotastic.db.base.BaseModel;
 
@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 /**
  * General station info. This is basic set of data enough for client to playback.
  */
-public interface StationItemModel extends BaseModel {
+public interface StationModel extends BaseModel {
 
     /**
      * Represents id of object which resides on backend.
@@ -51,4 +51,18 @@ public interface StationItemModel extends BaseModel {
      */
     @NonNull
     String getCountry();
+
+    /**
+     * Get the {@code website} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    String getWebsite();
+
+    /**
+     * Get the {@code description} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    String getDescription();
 }

@@ -14,8 +14,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
 import com.udacity.study.jam.radiotastic.db.AppSQLiteOpenHelper;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemContentValues;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryContentValues;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,17 +31,17 @@ public class DatabaseTest extends AndroidTestCase {
 
     public void testInsertReadDb() {
         SQLiteDatabase db = AppSQLiteOpenHelper.getInstance(mContext).getWritableDatabase();
-        CategoryItemContentValues categoryItemContentValues = new CategoryItemContentValues();
+        CategoryContentValues categoryItemContentValues = new CategoryContentValues();
         ContentValues values = categoryItemContentValues
                 .putCategoryId(10)
                 .putName("name")
                 .putDescription("desc")
                 .values();
-        long rowId = db.insert(CategoryItemColumns.TABLE_NAME, null, values);
+        long rowId = db.insert(CategoryColumns.TABLE_NAME, null, values);
         assertTrue(rowId != -1);
 
-        Cursor cursor = db.query(CategoryItemColumns.TABLE_NAME,
-                CategoryItemColumns.ALL_COLUMNS, null, null, null, null, null);
+        Cursor cursor = db.query(CategoryColumns.TABLE_NAME,
+                CategoryColumns.ALL_COLUMNS, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             validateCursor(cursor, values);
         } else {

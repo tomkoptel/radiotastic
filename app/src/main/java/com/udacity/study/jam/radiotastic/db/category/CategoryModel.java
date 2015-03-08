@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.categoryitem;
+package com.udacity.study.jam.radiotastic.db.category;
 
 import com.udacity.study.jam.radiotastic.db.base.BaseModel;
 
@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 /**
  * A category being which represents group of stations.
  */
-public interface CategoryItemModel extends BaseModel {
+public interface CategoryModel extends BaseModel {
 
     /**
      * Represents id of object which resides on backend.

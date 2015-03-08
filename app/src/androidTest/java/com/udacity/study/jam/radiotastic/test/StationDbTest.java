@@ -16,9 +16,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.test.AndroidTestCase;
 
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemContentValues;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationStatus;
+import com.udacity.study.jam.radiotastic.db.station.StationColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationContentValues;
+import com.udacity.study.jam.radiotastic.db.station.StationStatus;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,13 +27,13 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class StationItemDbTest extends AndroidTestCase {
+public class StationDbTest extends AndroidTestCase {
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mContext.getContentResolver().delete(StationItemColumns.CONTENT_URI, null, null);
-        Cursor cursor = mContext.getContentResolver().query(StationItemColumns.CONTENT_URI,
+        mContext.getContentResolver().delete(StationColumns.CONTENT_URI, null, null);
+        Cursor cursor = mContext.getContentResolver().query(StationColumns.CONTENT_URI,
                 new String[]{"_id"}, null, null, null);
         assertThat(cursor.getCount(), is(0));
     }
@@ -42,29 +42,29 @@ public class StationItemDbTest extends AndroidTestCase {
 
     public void testStationIdIsUnique() {
         ContentValues validContentValues = createValidContentValues();
-        Uri firstUri = mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI, validContentValues);
+        Uri firstUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI, validContentValues);
         assertThat(firstUri, is(notNullValue()));
 
 
         ContentValues duplicateContentValues = createValidContentValues();
-        Uri nextUri = mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI, duplicateContentValues);
+        Uri nextUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI, duplicateContentValues);
         assertThat(nextUri, is(nullValue()));
     }
 
     public void testStatusIsNotNull() {
-        assertFieldToBeNotNull(StationItemColumns.STATUS);
+        assertFieldToBeNotNull(StationColumns.STATUS);
     }
 
     public void testNameIsNotNull() {
-        assertFieldToBeNotNull(StationItemColumns.NAME);
+        assertFieldToBeNotNull(StationColumns.NAME);
     }
 
     public void testBitRateIsNotNull() {
-        assertFieldToBeNotNull(StationItemColumns.BITRATE);
+        assertFieldToBeNotNull(StationColumns.BITRATE);
     }
 
     public void testCountryIsNotNull() {
-        assertFieldToBeNotNull(StationItemColumns.COUNTRY);
+        assertFieldToBeNotNull(StationColumns.COUNTRY);
     }
 
     private void assertFieldToBeNotNull(String field) {
@@ -73,7 +73,7 @@ public class StationItemDbTest extends AndroidTestCase {
         notValidContentValues.put(field, value);
 
         try {
-            mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI, notValidContentValues);
+            mContext.getContentResolver().insert(StationColumns.CONTENT_URI, notValidContentValues);
             fail(field + " should not be null");
         } catch (SQLiteConstraintException ex) {
             assertThat(ex.getMessage(), containsString("NOT NULL constraint failed"));
@@ -83,7 +83,7 @@ public class StationItemDbTest extends AndroidTestCase {
     // CRUD assertions
 
     public void testInsert() {
-        Uri newUri = mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI,
+        Uri newUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI,
                 createValidContentValues());
         assertThat(newUri, is(notNullValue()));
         assertThat(ContentUris.parseId(newUri), is(not(0l)));
@@ -91,17 +91,17 @@ public class StationItemDbTest extends AndroidTestCase {
 
     public void testUpdate() {
         ContentValues initialValues = createValidContentValues();
-        Uri newUri = mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI,
+        Uri newUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI,
                 initialValues);
 
-        initialValues.put(StationItemColumns.COUNTRY, "UA");
+        initialValues.put(StationColumns.COUNTRY, "UA");
 
         int numberOfUpdatedRows = mContext.getContentResolver().update(newUri, initialValues, null, null);
         assertThat(numberOfUpdatedRows, is(1));
     }
 
     public void testDelete() {
-        Uri newUri = mContext.getContentResolver().insert(StationItemColumns.CONTENT_URI,
+        Uri newUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI,
                 createValidContentValues());
 
         int numberOfDeleted = mContext.getContentResolver().delete(newUri, null, null);
@@ -110,7 +110,7 @@ public class StationItemDbTest extends AndroidTestCase {
 
     @NonNull
     private ContentValues createValidContentValues() {
-        StationItemContentValues stationItemContentValues = new StationItemContentValues();
+        StationContentValues stationItemContentValues = new StationContentValues();
         stationItemContentValues
                 .putStationId(10)
                 .putName("name")

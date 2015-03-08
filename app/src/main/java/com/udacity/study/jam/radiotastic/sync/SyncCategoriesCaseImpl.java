@@ -21,8 +21,8 @@ import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.api.RadioApi;
 import com.udacity.study.jam.radiotastic.data.transform.CategoryCursorTransformer;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemCursor;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.domain.SyncCategoriesCase;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
     public void run() {
         final Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
         final ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(CategoryItemColumns.CONTENT_URI, CategoryItemColumns.ALL_COLUMNS, null, null, null);
+        Cursor cursor = contentResolver.query(CategoryColumns.CONTENT_URI, CategoryColumns.ALL_COLUMNS, null, null, null);
         try {
             contentResolver.applyBatch(
                     context.getString(R.string.content_authority),
@@ -78,13 +78,13 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
         }
 
         Uri itemUri;
-        Uri tableUri = CategoryItemColumns.CONTENT_URI;
+        Uri tableUri = CategoryColumns.CONTENT_URI;
         double canonicalId;
         CategoryItem dbItem;
-        CategoryItemCursor itemCursor;
+        CategoryCursor itemCursor;
         try {
             while (cursor.moveToNext()) {
-                itemCursor = new CategoryItemCursor(cursor);
+                itemCursor = new CategoryCursor(cursor);
                 dbItem = transformer.transform(itemCursor);
 
                 itemUri = Uri.withAppendedPath(tableUri, String.valueOf(itemCursor.getId()));
@@ -101,8 +101,8 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
                         syncResult.stats.numUpdates++;
                         batch.add(
                                 ContentProviderOperation.newUpdate(itemUri)
-                                        .withValue(CategoryItemColumns.DESCRIPTION, webItem.getDescription())
-                                        .withValue(CategoryItemColumns.NAME, webItem.getName())
+                                        .withValue(CategoryColumns.DESCRIPTION, webItem.getDescription())
+                                        .withValue(CategoryColumns.NAME, webItem.getName())
                                         .build()
                         );
                     }
@@ -115,9 +115,9 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
         for (CategoryItem webItem : map.values()) {
             syncResult.stats.numInserts++;
             batch.add(ContentProviderOperation.newInsert(tableUri)
-                    .withValue(CategoryItemColumns.DESCRIPTION, webItem.getDescription())
-                    .withValue(CategoryItemColumns.NAME, webItem.getName())
-                    .withValue(CategoryItemColumns.CATEGORY_ID, webItem.getId())
+                    .withValue(CategoryColumns.DESCRIPTION, webItem.getDescription())
+                    .withValue(CategoryColumns.NAME, webItem.getName())
+                    .withValue(CategoryColumns.CATEGORY_ID, webItem.getId())
                     .build());
         }
 

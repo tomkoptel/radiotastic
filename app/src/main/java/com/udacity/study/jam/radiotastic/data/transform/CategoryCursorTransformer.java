@@ -11,19 +11,19 @@ package com.udacity.study.jam.radiotastic.data.transform;
 import android.database.Cursor;
 
 import com.udacity.study.jam.radiotastic.CategoryItem;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemCursor;
+import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class CategoryCursorTransformer {
     public Collection<CategoryItem> transform(Cursor cursor) {
-        CategoryItemCursor categoryItemCursor;
+        CategoryCursor categoryItemCursor;
         CategoryItem categoryItem;
 
         Collection<CategoryItem> collection = new ArrayList<CategoryItem>(cursor.getCount());
         while (cursor.moveToNext()) {
-            categoryItemCursor = new CategoryItemCursor(cursor);
+            categoryItemCursor = new CategoryCursor(cursor);
             categoryItem = transform(categoryItemCursor);
             collection.add(categoryItem);
         }
@@ -31,7 +31,7 @@ public class CategoryCursorTransformer {
         return collection;
     }
 
-    public CategoryItem transform(CategoryItemCursor categoryItemCursor) {
+    public CategoryItem transform(CategoryCursor categoryItemCursor) {
         return new CategoryItem()
                 .withId(categoryItemCursor.getCategoryId())
                 .withDescription(categoryItemCursor.getDescription())

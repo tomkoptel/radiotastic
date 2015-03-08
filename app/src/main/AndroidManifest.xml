@@ -50,7 +50,7 @@
 
         <!-- Authenticator -->
         <service
-            android:name=".sync.RadiotasticAuthenticatorService"
+            android:name=".test.sync.RadiotasticAuthenticatorService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -62,7 +62,7 @@
 
         <!-- Sync -->
         <service
-            android:name=".sync.RadiotasticSyncService"
+            android:name=".test.sync.RadiotasticSyncService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />

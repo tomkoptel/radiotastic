@@ -1,18 +1,17 @@
-package com.udacity.study.jam.radiotastic.db.stationitem;
+package com.udacity.study.jam.radiotastic.db.station;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.udacity.study.jam.radiotastic.db.AppProvider;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationColumns;
 
 /**
  * General station info. This is basic set of data enough for client to playback.
  */
-public class StationItemColumns implements BaseColumns {
-    public static final String TABLE_NAME = "station_item";
+public class StationColumns implements BaseColumns {
+    public static final String TABLE_NAME = "station";
     public static final Uri CONTENT_URI = Uri.parse(AppProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
 
     /**
@@ -38,6 +37,10 @@ public class StationItemColumns implements BaseColumns {
 
     public static final String COUNTRY = "country";
 
+    public static final String WEBSITE = "website";
+
+    public static final String DESCRIPTION = "description";
+
 
     public static final String DEFAULT_ORDER = TABLE_NAME + "." +_ID;
 
@@ -49,19 +52,23 @@ public class StationItemColumns implements BaseColumns {
             NAME,
             BITRATE,
             STREAMURL,
-            COUNTRY
+            COUNTRY,
+            WEBSITE,
+            DESCRIPTION
     };
     // @formatter:on
 
     public static boolean hasColumns(String[] projection) {
         if (projection == null) return true;
         for (String c : projection) {
-            if (c == STATION_ID || c.contains("." + STATION_ID)) return true;
-            if (c == STATUS || c.contains("." + STATUS)) return true;
-            if (c == NAME || c.contains("." + NAME)) return true;
-            if (c == BITRATE || c.contains("." + BITRATE)) return true;
-            if (c == STREAMURL || c.contains("." + STREAMURL)) return true;
-            if (c == COUNTRY || c.contains("." + COUNTRY)) return true;
+            if (c.equals(STATION_ID) || c.contains("." + STATION_ID)) return true;
+            if (c.equals(STATUS) || c.contains("." + STATUS)) return true;
+            if (c.equals(NAME) || c.contains("." + NAME)) return true;
+            if (c.equals(BITRATE) || c.contains("." + BITRATE)) return true;
+            if (c.equals(STREAMURL) || c.contains("." + STREAMURL)) return true;
+            if (c.equals(COUNTRY) || c.contains("." + COUNTRY)) return true;
+            if (c.equals(WEBSITE) || c.contains("." + WEBSITE)) return true;
+            if (c.equals(DESCRIPTION) || c.contains("." + DESCRIPTION)) return true;
         }
         return false;
     }

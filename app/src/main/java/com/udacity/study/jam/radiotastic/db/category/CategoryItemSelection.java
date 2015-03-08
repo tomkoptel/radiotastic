@@ -1,6 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.categoryitem;
-
-import java.util.Date;
+package com.udacity.study.jam.radiotastic.db.category;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -14,7 +12,7 @@ import com.udacity.study.jam.radiotastic.db.base.AbstractSelection;
 public class CategoryItemSelection extends AbstractSelection<CategoryItemSelection> {
     @Override
     protected Uri baseUri() {
-        return CategoryItemColumns.CONTENT_URI;
+        return CategoryColumns.CONTENT_URI;
     }
 
     /**
@@ -26,119 +24,119 @@ public class CategoryItemSelection extends AbstractSelection<CategoryItemSelecti
      *            order, which may be unordered.
      * @return A {@code CategoryItemCursor} object, which is positioned before the first entry, or null.
      */
-    public CategoryItemCursor query(ContentResolver contentResolver, String[] projection, String sortOrder) {
+    public CategoryCursor query(ContentResolver contentResolver, String[] projection, String sortOrder) {
         Cursor cursor = contentResolver.query(uri(), projection, sel(), args(), sortOrder);
         if (cursor == null) return null;
-        return new CategoryItemCursor(cursor);
+        return new CategoryCursor(cursor);
     }
 
     /**
      * Equivalent of calling {@code query(contentResolver, projection, null)}.
      */
-    public CategoryItemCursor query(ContentResolver contentResolver, String[] projection) {
+    public CategoryCursor query(ContentResolver contentResolver, String[] projection) {
         return query(contentResolver, projection, null);
     }
 
     /**
      * Equivalent of calling {@code query(contentResolver, projection, null, null)}.
      */
-    public CategoryItemCursor query(ContentResolver contentResolver) {
+    public CategoryCursor query(ContentResolver contentResolver) {
         return query(contentResolver, null, null);
     }
 
 
     public CategoryItemSelection id(long... value) {
-        addEquals("category_item." + CategoryItemColumns._ID, toObjectArray(value));
+        addEquals("category_item." + CategoryColumns._ID, toObjectArray(value));
         return this;
     }
 
     public CategoryItemSelection categoryId(long... value) {
-        addEquals(CategoryItemColumns.CATEGORY_ID, toObjectArray(value));
+        addEquals(CategoryColumns.CATEGORY_ID, toObjectArray(value));
         return this;
     }
 
     public CategoryItemSelection categoryIdNot(long... value) {
-        addNotEquals(CategoryItemColumns.CATEGORY_ID, toObjectArray(value));
+        addNotEquals(CategoryColumns.CATEGORY_ID, toObjectArray(value));
         return this;
     }
 
     public CategoryItemSelection categoryIdGt(long value) {
-        addGreaterThan(CategoryItemColumns.CATEGORY_ID, value);
+        addGreaterThan(CategoryColumns.CATEGORY_ID, value);
         return this;
     }
 
     public CategoryItemSelection categoryIdGtEq(long value) {
-        addGreaterThanOrEquals(CategoryItemColumns.CATEGORY_ID, value);
+        addGreaterThanOrEquals(CategoryColumns.CATEGORY_ID, value);
         return this;
     }
 
     public CategoryItemSelection categoryIdLt(long value) {
-        addLessThan(CategoryItemColumns.CATEGORY_ID, value);
+        addLessThan(CategoryColumns.CATEGORY_ID, value);
         return this;
     }
 
     public CategoryItemSelection categoryIdLtEq(long value) {
-        addLessThanOrEquals(CategoryItemColumns.CATEGORY_ID, value);
+        addLessThanOrEquals(CategoryColumns.CATEGORY_ID, value);
         return this;
     }
 
     public CategoryItemSelection name(String... value) {
-        addEquals(CategoryItemColumns.NAME, value);
+        addEquals(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection nameNot(String... value) {
-        addNotEquals(CategoryItemColumns.NAME, value);
+        addNotEquals(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection nameLike(String... value) {
-        addLike(CategoryItemColumns.NAME, value);
+        addLike(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection nameContains(String... value) {
-        addContains(CategoryItemColumns.NAME, value);
+        addContains(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection nameStartsWith(String... value) {
-        addStartsWith(CategoryItemColumns.NAME, value);
+        addStartsWith(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection nameEndsWith(String... value) {
-        addEndsWith(CategoryItemColumns.NAME, value);
+        addEndsWith(CategoryColumns.NAME, value);
         return this;
     }
 
     public CategoryItemSelection description(String... value) {
-        addEquals(CategoryItemColumns.DESCRIPTION, value);
+        addEquals(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 
     public CategoryItemSelection descriptionNot(String... value) {
-        addNotEquals(CategoryItemColumns.DESCRIPTION, value);
+        addNotEquals(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 
     public CategoryItemSelection descriptionLike(String... value) {
-        addLike(CategoryItemColumns.DESCRIPTION, value);
+        addLike(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 
     public CategoryItemSelection descriptionContains(String... value) {
-        addContains(CategoryItemColumns.DESCRIPTION, value);
+        addContains(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 
     public CategoryItemSelection descriptionStartsWith(String... value) {
-        addStartsWith(CategoryItemColumns.DESCRIPTION, value);
+        addStartsWith(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 
     public CategoryItemSelection descriptionEndsWith(String... value) {
-        addEndsWith(CategoryItemColumns.DESCRIPTION, value);
+        addEndsWith(CategoryColumns.DESCRIPTION, value);
         return this;
     }
 }

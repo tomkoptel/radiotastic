@@ -12,9 +12,8 @@ import android.util.Log;
 
 import com.udacity.study.jam.radiotastic.BuildConfig;
 import com.udacity.study.jam.radiotastic.db.base.BaseContentProvider;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationColumns;
 
 public class AppProvider extends BaseContentProvider {
     private static final String TAG = AppProvider.class.getSimpleName();
@@ -27,26 +26,21 @@ public class AppProvider extends BaseContentProvider {
     public static final String AUTHORITY = "com.udacity.study.jam.radiotastic.db.provider";
     public static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
-    private static final int URI_TYPE_CATEGORY_ITEM = 0;
-    private static final int URI_TYPE_CATEGORY_ITEM_ID = 1;
+    private static final int URI_TYPE_CATEGORY = 0;
+    private static final int URI_TYPE_CATEGORY_ID = 1;
 
-    private static final int URI_TYPE_STATION_DATA = 2;
-    private static final int URI_TYPE_STATION_DATA_ID = 3;
-
-    private static final int URI_TYPE_STATION_ITEM = 4;
-    private static final int URI_TYPE_STATION_ITEM_ID = 5;
+    private static final int URI_TYPE_STATION = 2;
+    private static final int URI_TYPE_STATION_ID = 3;
 
 
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        URI_MATCHER.addURI(AUTHORITY, CategoryItemColumns.TABLE_NAME, URI_TYPE_CATEGORY_ITEM);
-        URI_MATCHER.addURI(AUTHORITY, CategoryItemColumns.TABLE_NAME + "/#", URI_TYPE_CATEGORY_ITEM_ID);
-        URI_MATCHER.addURI(AUTHORITY, StationDataColumns.TABLE_NAME, URI_TYPE_STATION_DATA);
-        URI_MATCHER.addURI(AUTHORITY, StationDataColumns.TABLE_NAME + "/#", URI_TYPE_STATION_DATA_ID);
-        URI_MATCHER.addURI(AUTHORITY, StationItemColumns.TABLE_NAME, URI_TYPE_STATION_ITEM);
-        URI_MATCHER.addURI(AUTHORITY, StationItemColumns.TABLE_NAME + "/#", URI_TYPE_STATION_ITEM_ID);
+        URI_MATCHER.addURI(AUTHORITY, CategoryColumns.TABLE_NAME, URI_TYPE_CATEGORY);
+        URI_MATCHER.addURI(AUTHORITY, CategoryColumns.TABLE_NAME + "/#", URI_TYPE_CATEGORY_ID);
+        URI_MATCHER.addURI(AUTHORITY, StationColumns.TABLE_NAME, URI_TYPE_STATION);
+        URI_MATCHER.addURI(AUTHORITY, StationColumns.TABLE_NAME + "/#", URI_TYPE_STATION_ID);
     }
 
     @Override
@@ -63,20 +57,15 @@ public class AppProvider extends BaseContentProvider {
     public String getType(Uri uri) {
         int match = URI_MATCHER.match(uri);
         switch (match) {
-            case URI_TYPE_CATEGORY_ITEM:
-                return TYPE_CURSOR_DIR + CategoryItemColumns.TABLE_NAME;
-            case URI_TYPE_CATEGORY_ITEM_ID:
-                return TYPE_CURSOR_ITEM + CategoryItemColumns.TABLE_NAME;
+            case URI_TYPE_CATEGORY:
+                return TYPE_CURSOR_DIR + CategoryColumns.TABLE_NAME;
+            case URI_TYPE_CATEGORY_ID:
+                return TYPE_CURSOR_ITEM + CategoryColumns.TABLE_NAME;
 
-            case URI_TYPE_STATION_DATA:
-                return TYPE_CURSOR_DIR + StationDataColumns.TABLE_NAME;
-            case URI_TYPE_STATION_DATA_ID:
-                return TYPE_CURSOR_ITEM + StationDataColumns.TABLE_NAME;
-
-            case URI_TYPE_STATION_ITEM:
-                return TYPE_CURSOR_DIR + StationItemColumns.TABLE_NAME;
-            case URI_TYPE_STATION_ITEM_ID:
-                return TYPE_CURSOR_ITEM + StationItemColumns.TABLE_NAME;
+            case URI_TYPE_STATION:
+                return TYPE_CURSOR_DIR + StationColumns.TABLE_NAME;
+            case URI_TYPE_STATION_ID:
+                return TYPE_CURSOR_ITEM + StationColumns.TABLE_NAME;
 
         }
         return null;
@@ -120,28 +109,20 @@ public class AppProvider extends BaseContentProvider {
         String id = null;
         int matchedId = URI_MATCHER.match(uri);
         switch (matchedId) {
-            case URI_TYPE_CATEGORY_ITEM:
-            case URI_TYPE_CATEGORY_ITEM_ID:
-                res.table = CategoryItemColumns.TABLE_NAME;
-                res.idColumn = CategoryItemColumns._ID;
-                res.tablesWithJoins = CategoryItemColumns.TABLE_NAME;
-                res.orderBy = CategoryItemColumns.DEFAULT_ORDER;
+            case URI_TYPE_CATEGORY:
+            case URI_TYPE_CATEGORY_ID:
+                res.table = CategoryColumns.TABLE_NAME;
+                res.idColumn = CategoryColumns._ID;
+                res.tablesWithJoins = CategoryColumns.TABLE_NAME;
+                res.orderBy = CategoryColumns.DEFAULT_ORDER;
                 break;
 
-            case URI_TYPE_STATION_DATA:
-            case URI_TYPE_STATION_DATA_ID:
-                res.table = StationDataColumns.TABLE_NAME;
-                res.idColumn = StationDataColumns._ID;
-                res.tablesWithJoins = StationDataColumns.TABLE_NAME;
-                res.orderBy = StationDataColumns.DEFAULT_ORDER;
-                break;
-
-            case URI_TYPE_STATION_ITEM:
-            case URI_TYPE_STATION_ITEM_ID:
-                res.table = StationItemColumns.TABLE_NAME;
-                res.idColumn = StationItemColumns._ID;
-                res.tablesWithJoins = StationItemColumns.TABLE_NAME;
-                res.orderBy = StationItemColumns.DEFAULT_ORDER;
+            case URI_TYPE_STATION:
+            case URI_TYPE_STATION_ID:
+                res.table = StationColumns.TABLE_NAME;
+                res.idColumn = StationColumns._ID;
+                res.tablesWithJoins = StationColumns.TABLE_NAME;
+                res.orderBy = StationColumns.DEFAULT_ORDER;
                 break;
 
             default:
@@ -149,9 +130,8 @@ public class AppProvider extends BaseContentProvider {
         }
 
         switch (matchedId) {
-            case URI_TYPE_CATEGORY_ITEM_ID:
-            case URI_TYPE_STATION_DATA_ID:
-            case URI_TYPE_STATION_ITEM_ID:
+            case URI_TYPE_CATEGORY_ID:
+            case URI_TYPE_STATION_ID:
                 id = uri.getLastPathSegment();
         }
         if (id != null) {

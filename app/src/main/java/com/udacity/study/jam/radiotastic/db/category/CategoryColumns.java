@@ -1,18 +1,17 @@
-package com.udacity.study.jam.radiotastic.db.categoryitem;
+package com.udacity.study.jam.radiotastic.db.category;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.udacity.study.jam.radiotastic.db.AppProvider;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.stationdata.StationDataColumns;
-import com.udacity.study.jam.radiotastic.db.stationitem.StationItemColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationColumns;
 
 /**
  * A category being which represents group of stations.
  */
-public class CategoryItemColumns implements BaseColumns {
-    public static final String TABLE_NAME = "category_item";
+public class CategoryColumns implements BaseColumns {
+    public static final String TABLE_NAME = "category";
     public static final Uri CONTENT_URI = Uri.parse(AppProvider.CONTENT_URI_BASE + "/" + TABLE_NAME);
 
     /**
@@ -47,9 +46,9 @@ public class CategoryItemColumns implements BaseColumns {
     public static boolean hasColumns(String[] projection) {
         if (projection == null) return true;
         for (String c : projection) {
-            if (c == CATEGORY_ID || c.contains("." + CATEGORY_ID)) return true;
-            if (c == NAME || c.contains("." + NAME)) return true;
-            if (c == DESCRIPTION || c.contains("." + DESCRIPTION)) return true;
+            if (c.equals(CATEGORY_ID) || c.contains("." + CATEGORY_ID)) return true;
+            if (c.equals(NAME) || c.contains("." + NAME)) return true;
+            if (c.equals(DESCRIPTION) || c.contains("." + DESCRIPTION)) return true;
         }
         return false;
     }

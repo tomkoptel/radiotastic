@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.categoryitem;
+package com.udacity.study.jam.radiotastic.db.category;
 
 import java.util.Date;
 
@@ -9,10 +9,10 @@ import android.support.annotation.Nullable;
 import com.udacity.study.jam.radiotastic.db.base.AbstractCursor;
 
 /**
- * Cursor wrapper for the {@code category_item} table.
+ * Cursor wrapper for the {@code category} table.
  */
-public class CategoryItemCursor extends AbstractCursor implements CategoryItemModel {
-    public CategoryItemCursor(Cursor cursor) {
+public class CategoryCursor extends AbstractCursor implements CategoryModel {
+    public CategoryCursor(Cursor cursor) {
         super(cursor);
     }
 
@@ -20,7 +20,7 @@ public class CategoryItemCursor extends AbstractCursor implements CategoryItemMo
      * Primary key.
      */
     public long getId() {
-        Long res = getLongOrNull(CategoryItemColumns._ID);
+        Long res = getLongOrNull(CategoryColumns._ID);
         if (res == null)
             throw new NullPointerException("The value of '_id' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -30,7 +30,7 @@ public class CategoryItemCursor extends AbstractCursor implements CategoryItemMo
      * Represents id of object which resides on backend.
      */
     public long getCategoryId() {
-        Long res = getLongOrNull(CategoryItemColumns.CATEGORY_ID);
+        Long res = getLongOrNull(CategoryColumns.CATEGORY_ID);
         if (res == null)
             throw new NullPointerException("The value of 'category_id' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -42,7 +42,7 @@ public class CategoryItemCursor extends AbstractCursor implements CategoryItemMo
      */
     @NonNull
     public String getName() {
-        String res = getStringOrNull(CategoryItemColumns.NAME);
+        String res = getStringOrNull(CategoryColumns.NAME);
         if (res == null)
             throw new NullPointerException("The value of 'name' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -54,7 +54,7 @@ public class CategoryItemCursor extends AbstractCursor implements CategoryItemMo
      */
     @Nullable
     public String getDescription() {
-        String res = getStringOrNull(CategoryItemColumns.DESCRIPTION);
+        String res = getStringOrNull(CategoryColumns.DESCRIPTION);
         return res;
     }
 }

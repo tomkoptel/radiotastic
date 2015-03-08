@@ -1,4 +1,4 @@
-package com.udacity.study.jam.radiotastic.db.stationitem;
+package com.udacity.study.jam.radiotastic.db.station;
 
 import java.util.Date;
 
@@ -9,10 +9,10 @@ import android.support.annotation.Nullable;
 import com.udacity.study.jam.radiotastic.db.base.AbstractCursor;
 
 /**
- * Cursor wrapper for the {@code station_item} table.
+ * Cursor wrapper for the {@code station} table.
  */
-public class StationItemCursor extends AbstractCursor implements StationItemModel {
-    public StationItemCursor(Cursor cursor) {
+public class StationCursor extends AbstractCursor implements StationModel {
+    public StationCursor(Cursor cursor) {
         super(cursor);
     }
 
@@ -20,7 +20,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      * Primary key.
      */
     public long getId() {
-        Long res = getLongOrNull(StationItemColumns._ID);
+        Long res = getLongOrNull(StationColumns._ID);
         if (res == null)
             throw new NullPointerException("The value of '_id' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -30,7 +30,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      * Represents id of object which resides on backend.
      */
     public long getStationId() {
-        Long res = getLongOrNull(StationItemColumns.STATION_ID);
+        Long res = getLongOrNull(StationColumns.STATION_ID);
         if (res == null)
             throw new NullPointerException("The value of 'station_id' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -42,7 +42,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      */
     @NonNull
     public StationStatus getStatus() {
-        Integer intValue = getIntegerOrNull(StationItemColumns.STATUS);
+        Integer intValue = getIntegerOrNull(StationColumns.STATUS);
         if (intValue == null)
             throw new NullPointerException("The value of 'status' in the database was null, which is not allowed according to the model definition");
         return StationStatus.values()[intValue];
@@ -54,7 +54,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      */
     @NonNull
     public String getName() {
-        String res = getStringOrNull(StationItemColumns.NAME);
+        String res = getStringOrNull(StationColumns.NAME);
         if (res == null)
             throw new NullPointerException("The value of 'name' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -66,7 +66,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      */
     @NonNull
     public String getBitrate() {
-        String res = getStringOrNull(StationItemColumns.BITRATE);
+        String res = getStringOrNull(StationColumns.BITRATE);
         if (res == null)
             throw new NullPointerException("The value of 'bitrate' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -78,7 +78,7 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      */
     @NonNull
     public String getStreamurl() {
-        String res = getStringOrNull(StationItemColumns.STREAMURL);
+        String res = getStringOrNull(StationColumns.STREAMURL);
         if (res == null)
             throw new NullPointerException("The value of 'streamurl' in the database was null, which is not allowed according to the model definition");
         return res;
@@ -90,9 +90,29 @@ public class StationItemCursor extends AbstractCursor implements StationItemMode
      */
     @NonNull
     public String getCountry() {
-        String res = getStringOrNull(StationItemColumns.COUNTRY);
+        String res = getStringOrNull(StationColumns.COUNTRY);
         if (res == null)
             throw new NullPointerException("The value of 'country' in the database was null, which is not allowed according to the model definition");
+        return res;
+    }
+
+    /**
+     * Get the {@code website} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    public String getWebsite() {
+        String res = getStringOrNull(StationColumns.WEBSITE);
+        return res;
+    }
+
+    /**
+     * Get the {@code description} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    public String getDescription() {
+        String res = getStringOrNull(StationColumns.DESCRIPTION);
         return res;
     }
 }

@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.sync;
+package com.udacity.study.jam.radiotastic.test.sync;
 
 import android.content.ContentResolver;
 import android.content.SyncResult;
@@ -17,11 +17,13 @@ import android.test.AndroidTestCase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.udacity.study.jam.radiotastic.CategoryItem;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemColumns;
-import com.udacity.study.jam.radiotastic.db.categoryitem.CategoryItemContentValues;
-import com.udacity.study.jam.radiotastic.util.CursorAssert;
-import com.udacity.study.jam.radiotastic.util.MockRadioApi;
-import com.udacity.study.jam.radiotastic.util.TestResource;
+import com.udacity.study.jam.radiotastic.api.RadioApi;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryContentValues;
+import com.udacity.study.jam.radiotastic.sync.SyncCategoriesCaseImpl;
+import com.udacity.study.jam.radiotastic.sync.SyncTask;
+import com.udacity.study.jam.radiotastic.test.util.CursorAssert;
+import com.udacity.study.jam.radiotastic.test.util.TestResource;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -38,13 +40,13 @@ public class CategoriesSyncTest extends AndroidTestCase {
 
     private ContentResolver contentResolver;
 
-    private static final Uri CONTENT_URI = CategoryItemColumns.CONTENT_URI;
-    private static final String[] ALL_COLUMNS = CategoryItemColumns.ALL_COLUMNS;
+    private static final Uri CONTENT_URI = CategoryColumns.CONTENT_URI;
+    private static final String[] ALL_COLUMNS = CategoryColumns.ALL_COLUMNS;
     private static final String SELECT_BY_CATEGORY_ID =
-            CategoryItemColumns.CATEGORY_ID + "=?";
+            CategoryColumns.CATEGORY_ID + "=?";
 
     @Mock
-    MockRadioApi mockApi;
+    RadioApi mockApi;
 
     @Override
     public void setUp() throws Exception {
@@ -103,7 +105,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
     private void populateDbWithCategories() {
         Collection<CategoryItem> initialItems = createCategories("categories");
         for (CategoryItem item : initialItems) {
-            CategoryItemContentValues cv = new CategoryItemContentValues()
+            CategoryContentValues cv = new CategoryContentValues()
                     .putCategoryId((long) item.getId())
                     .putName(item.getName())
                     .putDescription(item.getDescription());
@@ -115,7 +117,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
         for (CategoryItem item : items) {
             Cursor cursor = contentResolver.query(CONTENT_URI, ALL_COLUMNS, SELECT_BY_CATEGORY_ID,
                     new String[] {String.valueOf(item.getId())}, null);
-            CategoryItemContentValues cv = new CategoryItemContentValues()
+            CategoryContentValues cv = new CategoryContentValues()
                     .putCategoryId((long) item.getId())
                     .putName(item.getName())
                     .putDescription(item.getDescription());
