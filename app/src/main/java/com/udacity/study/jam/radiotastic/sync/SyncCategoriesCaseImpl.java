@@ -15,6 +15,7 @@ import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.udacity.study.jam.radiotastic.CategoryItem;
@@ -52,7 +53,7 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
     }
 
     @Override
-    public void run() {
+    public void execute(Bundle args) {
         final Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
         final ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(CategoryColumns.CONTENT_URI, CategoryColumns.ALL_COLUMNS, null, null, null);

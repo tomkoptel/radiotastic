@@ -8,5 +8,8 @@
 
 package com.udacity.study.jam.radiotastic.sync;
 
-public interface SyncTask extends Runnable {
+import android.os.Bundle;
+
+public interface SyncTask {
+    void execute(Bundle args);
 }

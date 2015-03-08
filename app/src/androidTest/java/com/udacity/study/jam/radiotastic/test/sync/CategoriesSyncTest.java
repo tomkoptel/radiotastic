@@ -66,7 +66,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
         SyncResult syncResult = new SyncResult();
         SyncTask categoriesSync = new SyncCategoriesCaseImpl(getContext(), syncResult, mockApi);
 
-        categoriesSync.run();
+        categoriesSync.execute(null);
         assertThat((int) syncResult.stats.numInserts, is(items.size()));
 
         assertItemsAgainstDb(items);
@@ -81,7 +81,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
         SyncResult syncResult = new SyncResult();
         SyncTask categoriesSync = new SyncCategoriesCaseImpl(getContext(), syncResult, mockApi);
 
-        categoriesSync.run();
+        categoriesSync.execute(null);
         assertThat((int) syncResult.stats.numUpdates, is(2));
 
         assertItemsAgainstDb(items);
@@ -96,7 +96,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
         SyncResult syncResult = new SyncResult();
         SyncTask categoriesSync = new SyncCategoriesCaseImpl(getContext(), syncResult, mockApi);
 
-        categoriesSync.run();
+        categoriesSync.execute(null);
         assertThat((int) syncResult.stats.numDeletes, is(2));
 
         assertItemsAgainstDb(items);
