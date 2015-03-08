@@ -8,8 +8,8 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
-import android.accounts.Account;
+import android.os.Bundle;
 
-public interface GetAccountUseCase {
-    public Account execute();
+public interface ImmediateSyncCase {
+    void start(Bundle args);
 }

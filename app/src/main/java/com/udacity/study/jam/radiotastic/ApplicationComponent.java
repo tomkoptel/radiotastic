@@ -8,7 +8,10 @@
 
 package com.udacity.study.jam.radiotastic;
 
+import android.content.Context;
+
 import com.udacity.study.jam.radiotastic.di.component.AppGraph;
+import com.udacity.study.jam.radiotastic.di.module.AccountModule;
 import com.udacity.study.jam.radiotastic.di.module.SystemServicesModule;
 
 import javax.inject.Singleton;
@@ -17,16 +20,17 @@ import dagger.Component;
 
 @Singleton
 @Component(
-        modules = {SystemServicesModule.class}
+        modules = {SystemServicesModule.class, AccountModule.class}
 )
 public interface ApplicationComponent extends AppGraph {
     /**
      * An initializer that creates the graph from an application.
      */
     final static class Initializer {
-        static AppGraph init(MainApplication app) {
+        public static AppGraph init(Context context) {
             return Dagger_ApplicationComponent.builder()
-                    .systemServicesModule(new SystemServicesModule(app))
+                    .systemServicesModule(new SystemServicesModule(
+                            MainApplication.get(context)))
                     .build();
         }
 

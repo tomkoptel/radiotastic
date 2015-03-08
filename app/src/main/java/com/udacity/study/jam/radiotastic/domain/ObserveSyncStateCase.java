@@ -8,6 +8,11 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
-public interface SyncAccountUseCase {
-    void execute();
+public interface ObserveSyncStateCase {
+    interface SyncStatusCallBack {
+        void onStatusChanged(boolean syncIsActive);
+    }
+    void create(SyncStatusCallBack statusCallBack);
+    void resume();
+    void pause();
 }

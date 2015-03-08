@@ -9,6 +9,13 @@
             "index": true,
         },
         {
+            "documentation": "Represents id of asscociated category with specific station.",
+            "name": "category_id",
+            "type": "Long",
+            "nullable": false,
+            "index": true,
+        },
+        {
             "documentation": "Represents status of station. Either 1 UP or 0 DOWN",
             "name": "status",
             "type": "enum",
@@ -39,18 +46,20 @@
         {
             "name": "website",
             "type": "String",
-            "nullable": true
+            "nullable": true,
+            "defaultValue": ""
         },
         {
             "name": "description",
             "type": "String",
-            "nullable": true
+            "nullable": true,
+            "defaultValue": ""
         },
     ],
     "constraints": [
         {
-            "name": "unique_external_id",
-            "definition": "UNIQUE (station_id) ON CONFLICT IGNORE"
+            "name": "unique_station_category_id_combination",
+            "definition": "UNIQUE (station_id, category_id) ON CONFLICT IGNORE"
         }
     ]
 }

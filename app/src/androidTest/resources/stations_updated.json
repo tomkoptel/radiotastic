@@ -1,0 +1,38 @@
+[
+    {
+        "id": 11858,
+        "name": "Classic  Jazz Paris  France Updated",
+        "website": "Updated",
+        "streamurl": "Updated http://classicandjazz.ice.infomaniak.ch:80/classicandjazz-128.mp3",
+        "country": "FR Updated",
+        "bitrate": "128 Updated",
+        "status": 0
+    },
+    {
+        "id": 11813,
+        "name": "Radiopowermix Updated",
+        "website": "http://RadioPowerMix.de Updated",
+        "streamurl": "Updated http://85.214.21.96:7001",
+        "country": "DE Updated",
+        "bitrate": "128 Updated",
+        "status": 0
+    },
+    {
+        "id": 11767,
+        "name": "Whisperings Solo Piano Radio",
+        "website": "",
+        "streamurl": "http://pianosolo.streamguys.net:80/live",
+        "country": "US",
+        "bitrate": "96",
+        "status": 1
+    },
+    {
+        "id": 11667,
+        "name": "ZUC Radio Classique",
+        "website": "http://radio.zuc.fr",
+        "streamurl": "http://listen.radionomy.com/zucradioclassique",
+        "country": "AF",
+        "bitrate": "128",
+        "status": 1
+    }
+]

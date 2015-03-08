@@ -12,14 +12,16 @@ import android.content.Context;
 import android.content.SyncResult;
 
 import com.udacity.study.jam.radiotastic.api.RadioApi;
-import com.udacity.study.jam.radiotastic.sync.SyncCategoriesCaseImpl;
 import com.udacity.study.jam.radiotastic.domain.SyncCategoriesCase;
+import com.udacity.study.jam.radiotastic.domain.SyncStationsCase;
+import com.udacity.study.jam.radiotastic.sync.SyncCategoriesCaseImpl;
+import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class SyncModule {
+final public class SyncModule {
     private final SyncResult syncResult;
 
     public SyncModule(SyncResult syncResult) {
@@ -29,5 +31,10 @@ public class SyncModule {
     @Provides
     SyncCategoriesCase provideSyncCategoriesCase(Context context, RadioApi radioApi) {
         return new SyncCategoriesCaseImpl(context, syncResult, radioApi);
+    }
+
+    @Provides
+    SyncStationsCase provideSyncStationsCase(Context context, RadioApi radioApi) {
+        return new SyncStationsCaseImpl(context, syncResult, radioApi);
     }
 }

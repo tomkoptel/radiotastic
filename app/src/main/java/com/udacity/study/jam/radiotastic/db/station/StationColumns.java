@@ -25,6 +25,11 @@ public class StationColumns implements BaseColumns {
     public static final String STATION_ID = "station_id";
 
     /**
+     * Represents id of asscociated category with specific station.
+     */
+    public static final String CATEGORY_ID = "category_id";
+
+    /**
      * Represents status of station. Either 1 UP or 0 DOWN
      */
     public static final String STATUS = "status";
@@ -48,6 +53,7 @@ public class StationColumns implements BaseColumns {
     public static final String[] ALL_COLUMNS = new String[] {
             _ID,
             STATION_ID,
+            CATEGORY_ID,
             STATUS,
             NAME,
             BITRATE,
@@ -62,6 +68,7 @@ public class StationColumns implements BaseColumns {
         if (projection == null) return true;
         for (String c : projection) {
             if (c.equals(STATION_ID) || c.contains("." + STATION_ID)) return true;
+            if (c.equals(CATEGORY_ID) || c.contains("." + CATEGORY_ID)) return true;
             if (c.equals(STATUS) || c.contains("." + STATUS)) return true;
             if (c.equals(NAME) || c.contains("." + NAME)) return true;
             if (c.equals(BITRATE) || c.contains("." + BITRATE)) return true;

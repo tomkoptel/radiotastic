@@ -6,10 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.sync;
+package com.udacity.study.jam.radiotastic.domain;
 
-import android.os.Bundle;
+import android.accounts.Account;
 
-public interface SyncTask {
-    void execute(Bundle args);
+public interface GetAccountCase {
+    public Account get();
 }

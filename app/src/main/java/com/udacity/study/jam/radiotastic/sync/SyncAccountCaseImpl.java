@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.data;
+package com.udacity.study.jam.radiotastic.sync;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
@@ -16,33 +16,29 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
-import com.udacity.study.jam.radiotastic.domain.SyncAccountUseCase;
+import com.udacity.study.jam.radiotastic.domain.GetAccountCase;
+import com.udacity.study.jam.radiotastic.domain.SyncAccountCase;
 
 import javax.inject.Inject;
 
-public class SyncAccountUseCaseImpl implements SyncAccountUseCase {
+public class SyncAccountCaseImpl implements SyncAccountCase {
 
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
-    private final GetAccountUseCase getAccountUseCase;
 
-    @Inject Context mContext;
+    private final GetAccountCase getAccountUseCase;
+    private final Context context;
 
     @Inject
-    public SyncAccountUseCaseImpl(GetAccountUseCase getAccountUseCase) {
+    public SyncAccountCaseImpl(Context context, GetAccountCase getAccountUseCase) {
+        this.context = context;
         this.getAccountUseCase = getAccountUseCase;
     }
 
     @Override
-    public void execute() {
-        Account account = getAccountUseCase.execute();
-        configurePeriodicSync(account);
-        ContentResolver.setSyncAutomatically(account, mContext.getString(R.string.content_authority), true);
-    }
-
-    private void configurePeriodicSync(Account account) {
-        String authority = mContext.getString(R.string.content_authority);
+    public void start() {
+        Account account = getAccountUseCase.get();
+        String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             SyncRequest syncRequest = new SyncRequest.Builder()
                     .syncPeriodic(SYNC_INTERVAL, SYNC_FLEXTIME)
@@ -53,6 +49,7 @@ public class SyncAccountUseCaseImpl implements SyncAccountUseCase {
         } else {
             ContentResolver.addPeriodicSync(account, authority, new Bundle(), SYNC_INTERVAL);
         }
+        ContentResolver.setSyncAutomatically(account, authority, true);
     }
 
 }

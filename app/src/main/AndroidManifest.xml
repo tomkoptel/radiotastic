@@ -6,6 +6,7 @@
     <!-- Permissions required by the sync adapter -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <!-- Permissions required by the authenticator adapter -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
@@ -50,7 +51,7 @@
 
         <!-- Authenticator -->
         <service
-            android:name=".test.sync.RadiotasticAuthenticatorService"
+            android:name=".sync.authenticator.RadiotasticAuthenticatorService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -62,7 +63,7 @@
 
         <!-- Sync -->
         <service
-            android:name=".test.sync.RadiotasticSyncService"
+            android:name=".sync.internal.RadiotasticSyncService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />

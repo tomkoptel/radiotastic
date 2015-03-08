@@ -36,10 +36,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onStationSelected(int stationID) {
+    public void onStationSelected(double stationID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_content, DetailFragment.init(stationID))
+                    .replace(R.id.detail_content, DetailFragment.init((int) stationID))
                     .commit();
         }
     }

@@ -82,6 +82,36 @@ public class StationSelection extends AbstractSelection<StationSelection> {
         return this;
     }
 
+    public StationSelection categoryId(long... value) {
+        addEquals(StationColumns.CATEGORY_ID, toObjectArray(value));
+        return this;
+    }
+
+    public StationSelection categoryIdNot(long... value) {
+        addNotEquals(StationColumns.CATEGORY_ID, toObjectArray(value));
+        return this;
+    }
+
+    public StationSelection categoryIdGt(long value) {
+        addGreaterThan(StationColumns.CATEGORY_ID, value);
+        return this;
+    }
+
+    public StationSelection categoryIdGtEq(long value) {
+        addGreaterThanOrEquals(StationColumns.CATEGORY_ID, value);
+        return this;
+    }
+
+    public StationSelection categoryIdLt(long value) {
+        addLessThan(StationColumns.CATEGORY_ID, value);
+        return this;
+    }
+
+    public StationSelection categoryIdLtEq(long value) {
+        addLessThanOrEquals(StationColumns.CATEGORY_ID, value);
+        return this;
+    }
+
     public StationSelection status(StationStatus... value) {
         addEquals(StationColumns.STATUS, value);
         return this;

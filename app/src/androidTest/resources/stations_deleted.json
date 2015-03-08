@@ -1,0 +1,20 @@
+[
+    {
+        "id": 11858,
+        "name": "Classic  Jazz Paris  France",
+        "website": "",
+        "streamurl": "http://classicandjazz.ice.infomaniak.ch:80/classicandjazz-128.mp3",
+        "country": "FR",
+        "bitrate": "128",
+        "status": 1
+    },
+    {
+        "id": 11813,
+        "name": "Radiopowermix",
+        "website": "http://RadioPowerMix.de",
+        "streamurl": "http://85.214.21.96:7001",
+        "country": "DE",
+        "bitrate": "128",
+        "status": 1
+    }
+]

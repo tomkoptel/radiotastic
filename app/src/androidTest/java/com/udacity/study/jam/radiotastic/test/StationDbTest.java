@@ -40,7 +40,7 @@ public class StationDbTest extends AndroidTestCase {
 
     // Constraints assertions
 
-    public void testStationIdIsUnique() {
+    public void testStationAndCategoryIdsUnqiqueAsPair() {
         ContentValues validContentValues = createValidContentValues();
         Uri firstUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI, validContentValues);
         assertThat(firstUri, is(notNullValue()));
@@ -113,6 +113,7 @@ public class StationDbTest extends AndroidTestCase {
         StationContentValues stationItemContentValues = new StationContentValues();
         stationItemContentValues
                 .putStationId(10)
+                .putCategoryId(10)
                 .putName("name")
                 .putStatus(StationStatus.DOWN)
                 .putStreamurl("stream")

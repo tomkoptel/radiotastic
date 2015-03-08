@@ -8,6 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
-public interface ImmediateSyncUseCase {
-    void execute();
+public interface SyncAccountCase {
+    void start();
 }

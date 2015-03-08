@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.sync;
+package com.udacity.study.jam.radiotastic.sync.authenticator;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

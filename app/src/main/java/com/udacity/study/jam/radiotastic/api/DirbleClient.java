@@ -13,7 +13,6 @@ import com.udacity.study.jam.radiotastic.StationDetails;
 import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.Collection;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -29,7 +28,10 @@ public interface DirbleClient {
 
     @GET("/stations/apikey/{api-key}/id/{category_id}")
     void listStations(@Path("api-key") String apiKey, @Path("category_id") int categoryID,
-                      Callback<List<StationItem>> callback);
+                      Callback<Collection<StationItem>> callback);
+
+    @GET("/stations/apikey/{api-key}/id/{category_id}")
+    Collection<StationItem> listStations(@Path("api-key") String apiKey, @Path("category_id") String categoryID);
 
     @GET("/station/apikey/{api-key}/id/{station_id}")
     void getStationData(@Path("api-key") String apiKey, @Path("station_id") int stationID,
