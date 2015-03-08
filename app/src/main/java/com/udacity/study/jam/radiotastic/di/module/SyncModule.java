@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.SyncResult;
 
 import com.udacity.study.jam.radiotastic.api.RadioApi;
-import com.udacity.study.jam.radiotastic.data.SyncCategoriesCaseImpl;
+import com.udacity.study.jam.radiotastic.sync.SyncCategoriesCaseImpl;
 import com.udacity.study.jam.radiotastic.domain.SyncCategoriesCase;
 
 import dagger.Module;

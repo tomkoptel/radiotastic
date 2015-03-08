@@ -119,6 +119,6 @@ public class CategoryListFragment extends Fragment {
     }
 
     public static interface Callback {
-        void onCategorySelected(int categoryID);
+        void onCategorySelected(double categoryID);
     }
 }

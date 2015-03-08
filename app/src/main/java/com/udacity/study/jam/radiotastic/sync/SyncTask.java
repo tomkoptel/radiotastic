@@ -6,9 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.domain;
+package com.udacity.study.jam.radiotastic.sync;
 
-import com.udacity.study.jam.radiotastic.sync.SyncTask;
-
-public interface SyncCategoriesCase extends SyncTask {
+public interface SyncTask extends Runnable {
 }

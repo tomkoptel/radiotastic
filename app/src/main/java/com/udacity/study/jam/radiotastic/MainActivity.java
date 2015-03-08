@@ -23,10 +23,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCategorySelected(int categoryID) {
+    public void onCategorySelected(double categoryID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.sub_content, StationListFragment.init(categoryID))
+                    .replace(R.id.sub_content, StationListFragment.init((int) categoryID))
                     .commit();
         } else {
             Intent newIntent = new Intent(this, StationsActivity.class);

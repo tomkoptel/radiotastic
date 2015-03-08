@@ -6,11 +6,13 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.udacity.study.jam.radiotastic"
+        applicationId PACKAGE_NAME
+        testApplicationId TEST_PACKAGE_NAME
         minSdkVersion 10
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner INSTRUMENTATION_RUNNER
     }
 
     buildTypes {
@@ -26,9 +28,13 @@ android {
 }
 
 dependencies {
-    compile project(':pojo')
+    compile (project(':pojo')) {
+        exclude group: 'com.google.code.gson'
+    }
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile('com.android.support:recyclerview-v7:21.0.3') {
+        exclude group: 'com.android.support'
+    }
 
     // DI framework
     compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
@@ -48,5 +54,11 @@ dependencies {
 
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support'
+    }
+    androidTestCompile('org.mockito:mockito-core:1.9.5') {
+        exclude group: "org.hamcrest"
+    }
+    androidTestCompile('com.google.dexmaker:dexmaker-mockito:1.0') {
+        exclude group: "org.mockito"
     }
 }

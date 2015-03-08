@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic;
+package com.udacity.study.jam.radiotastic.test;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
