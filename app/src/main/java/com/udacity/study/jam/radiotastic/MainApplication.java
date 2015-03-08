@@ -9,19 +9,37 @@
 package com.udacity.study.jam.radiotastic;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.udacity.study.jam.radiotastic.di.component.AppGraph;
 
 import timber.log.Timber;
 
 public class MainApplication extends Application {
+    private AppGraph mComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        buildComponentAndInject();
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }
+    }
+
+    public void buildComponentAndInject() {
+        mComponent = ApplicationComponent.Initializer.init(this);
+    }
+
+    public static MainApplication get(Context context) {
+        return (MainApplication) context.getApplicationContext();
+    }
+
+    public AppGraph component() {
+        return mComponent;
     }
 
     /**

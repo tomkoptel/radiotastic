@@ -12,6 +12,7 @@ import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.StationData;
 import com.udacity.study.jam.radiotastic.StationItem;
 
+import java.util.Collection;
 import java.util.List;
 
 import retrofit.Callback;
@@ -21,7 +22,10 @@ import retrofit.http.Path;
 public interface DirbleClient {
     @GET("/primaryCategories/apikey/{api-key}")
     void listPrimaryCategories(@Path("api-key") String apiKey,
-                               Callback<List<CategoryItem>> callback);
+                               Callback<Collection<CategoryItem>> callback);
+
+    @GET("/primaryCategories/apikey/{api-key}")
+    Collection<CategoryItem> listPrimaryCategories(@Path("api-key") String apiKey);
 
     @GET("/stations/apikey/{api-key}/id/{category_id}")
     void listStations(@Path("api-key") String apiKey, @Path("category_id") int categoryID,

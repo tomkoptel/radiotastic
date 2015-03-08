@@ -6,8 +6,16 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.di.component;
 
-public interface ApiKey {
-    String get();
+import com.udacity.study.jam.radiotastic.di.module.AccountCasesModule;
+import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
+
+import dagger.Component;
+
+@Component(
+        modules = {AccountCasesModule.class}
+)
+public interface AccountComponent {
+    GetAccountUseCase getAccountUseCase();
 }

@@ -6,8 +6,9 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.domain;
 
-public interface ApiKey {
-    String get();
+import com.udacity.study.jam.radiotastic.sync.SyncTask;
+
+public interface SyncCategoriesCase extends SyncTask {
 }

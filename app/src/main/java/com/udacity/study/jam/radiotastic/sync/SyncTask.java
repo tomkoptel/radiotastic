@@ -6,8 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.sync;
 
-public interface ApiKey {
-    String get();
+public interface SyncTask extends Runnable {
 }

@@ -6,8 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.di.component;
 
-public interface ApiKey {
-    String get();
+import com.udacity.study.jam.radiotastic.MainActivity;
+
+public interface AppGraph {
+    void inject(MainActivity activity);
 }

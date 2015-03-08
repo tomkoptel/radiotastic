@@ -24,16 +24,11 @@ import android.widget.Toast;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.StationItem;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
-import java.util.List;
-
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 import timber.log.Timber;
 
 public class StationListFragment extends Fragment {
@@ -103,15 +98,15 @@ public class StationListFragment extends Fragment {
                 .build();
         DirbleClient client = restAdapter.create(DirbleClient.class);
         Timber.i("Requesting stations for category: " + mCategoryId);
-        client.listStations(
-                ApiKey.INSTANCE.get(getActivity()),
-                mCategoryId,
-                new LogableSimpleCallback<List<StationItem>>() {
-                    @Override
-                    public void semanticSuccess(List<StationItem> stationItems, Response response) {
-                        mAdapter.setDataset(stationItems);
-                    }
-                });
+//        client.listStations(
+//                ApiKey.INSTANCE.get(getActivity()),
+//                mCategoryId,
+//                new LogableSimpleCallback<List<StationItem>>() {
+//                    @Override
+//                    public void semanticSuccess(List<StationItem> stationItems, Response response) {
+//                        mAdapter.setDataset(stationItems);
+//                    }
+//                });
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {

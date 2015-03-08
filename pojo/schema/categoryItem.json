@@ -2,7 +2,7 @@
     "description": "URL: primaryCategories/apikey/api-key This will only get the main, head categories.",
     "type": "object",
     "properties": {
-        "id": { "type": "integer" },
+        "id": { "type": "number" },
         "name": { "type": "string" },
         "description": { "type": "string" }
     }

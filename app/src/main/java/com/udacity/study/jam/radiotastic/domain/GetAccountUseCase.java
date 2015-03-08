@@ -6,8 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.domain;
 
-public interface ApiKey {
-    String get();
+import android.accounts.Account;
+
+public interface GetAccountUseCase {
+    public Account execute();
 }

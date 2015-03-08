@@ -8,6 +8,10 @@
 
 package com.udacity.study.jam.radiotastic.api;
 
-public interface ApiKey {
-    String get();
+import com.udacity.study.jam.radiotastic.CategoryItem;
+
+import java.util.Collection;
+
+public interface RadioApi {
+    Collection<CategoryItem> listPrimaryCategories();
 }

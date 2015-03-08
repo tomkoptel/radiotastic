@@ -6,8 +6,16 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.util;
 
-public interface ApiKey {
-    String get();
+import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.api.RadioApi;
+
+import java.util.Collection;
+
+public class MockRadioApi implements RadioApi {
+    @Override
+    public Collection<CategoryItem> listPrimaryCategories() {
+        return null;
+    }
 }

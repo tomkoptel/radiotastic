@@ -17,16 +17,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationData;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 import timber.log.Timber;
 
 public class DetailFragment extends Fragment {
@@ -88,16 +84,16 @@ public class DetailFragment extends Fragment {
                 .build();
         DirbleClient client = restAdapter.create(DirbleClient.class);
         Timber.i("Requesting station data for id: " + mStationId);
-        client.getStationData(
-                ApiKey.INSTANCE.get(getActivity()),
-                mStationId,
-                new LogableSimpleCallback<StationData>() {
-                    @Override
-                    public void semanticSuccess(StationData data, Response response) {
-                        mName.setText(data.getName());
-                        mDescription.setText(data.getDescription());
-                        mStreamUrl = data.getStreamurl();
-                    }
-                });
+//        client.getStationData(
+//                ApiKey.INSTANCE.get(getActivity()),
+//                mStationId,
+//                new LogableSimpleCallback<StationData>() {
+//                    @Override
+//                    public void semanticSuccess(StationData data, Response response) {
+//                        mName.setText(data.getName());
+//                        mDescription.setText(data.getDescription());
+//                        mStreamUrl = data.getStreamurl();
+//                    }
+//                });
     }
 }
