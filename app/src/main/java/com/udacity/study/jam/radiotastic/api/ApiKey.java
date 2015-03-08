@@ -8,14 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.api;
 
-import android.content.Context;
-
-import com.udacity.study.jam.radiotastic.R;
-
-public enum ApiKey {
-    INSTANCE;
-
-    public String get(Context context) {
-        return context.getString(R.string.api_key);
-    }
+public interface ApiKey {
+    String get();
 }

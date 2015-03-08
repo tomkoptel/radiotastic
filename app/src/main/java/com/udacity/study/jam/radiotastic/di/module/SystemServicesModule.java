@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.di.module;
 
 import android.app.Application;
 import android.content.Context;
@@ -31,7 +31,7 @@ final public class SystemServicesModule {
     }
 
     @Provides
-    Context provideContext(){
+    public Context provideContext(){
         return application;
     }
 

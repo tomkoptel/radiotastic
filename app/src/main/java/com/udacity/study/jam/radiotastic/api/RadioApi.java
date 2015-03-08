@@ -6,18 +6,12 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.api;
 
-import com.udacity.study.jam.radiotastic.data.GetAccountUseCaseImpl;
-import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
+import com.udacity.study.jam.radiotastic.CategoryItem;
 
-import dagger.Module;
-import dagger.Provides;
+import java.util.Collection;
 
-@Module
-final public class AccountCasesModule {
-    @Provides
-    public GetAccountUseCase provideGetAccountUseCase() {
-        return new GetAccountUseCaseImpl();
-    }
+public interface RadioApi {
+    Collection<CategoryItem> listPrimaryCategories();
 }

@@ -11,23 +11,17 @@ package com.udacity.study.jam.radiotastic;
 import android.app.Application;
 import android.content.Context;
 
-import com.udacity.study.jam.radiotastic.di.ApplicationComponent;
-import com.udacity.study.jam.radiotastic.di.Dagger_ApplicationComponent;
-import com.udacity.study.jam.radiotastic.di.SystemServicesModule;
+import com.udacity.study.jam.radiotastic.di.component.AppGraph;
 
 import timber.log.Timber;
 
 public class MainApplication extends Application {
-    private ApplicationComponent mComponent;
+    private AppGraph mComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mComponent = Dagger_ApplicationComponent.builder()
-                .systemServicesModule(new SystemServicesModule(this))
-                .build();
-        mComponent.injectApplication(this);
+        buildComponentAndInject();
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -36,8 +30,16 @@ public class MainApplication extends Application {
         }
     }
 
-    public static ApplicationComponent component(Context context) {
-        return ( (MainApplication) context.getApplicationContext()).mComponent;
+    public void buildComponentAndInject() {
+        mComponent = ApplicationComponent.Initializer.init(this);
+    }
+
+    public static MainApplication get(Context context) {
+        return (MainApplication) context.getApplicationContext();
+    }
+
+    public AppGraph component() {
+        return mComponent;
     }
 
     /**

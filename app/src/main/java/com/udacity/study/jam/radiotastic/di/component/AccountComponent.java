@@ -6,18 +6,16 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.di.component;
 
-import com.udacity.study.jam.radiotastic.domain.ImmediateSyncUseCase;
-import com.udacity.study.jam.radiotastic.domain.SyncAccountUseCase;
+import com.udacity.study.jam.radiotastic.di.module.AccountCasesModule;
+import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
 
 import dagger.Component;
 
 @Component(
-        modules = {SyncCasesModule.class},
-        dependencies = {ApplicationComponent.class, AccountCasesModule.class}
+        modules = {AccountCasesModule.class}
 )
-public interface SyncComponent {
-    SyncAccountUseCase syncAccountUseCase();
-    ImmediateSyncUseCase immediateSyncUseCase();
+public interface AccountComponent {
+    GetAccountUseCase getAccountUseCase();
 }

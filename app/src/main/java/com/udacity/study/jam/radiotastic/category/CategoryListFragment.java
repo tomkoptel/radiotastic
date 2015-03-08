@@ -24,16 +24,11 @@ import android.widget.Toast;
 import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.ApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
-import com.udacity.study.jam.radiotastic.network.LogableSimpleCallback;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
-import java.util.List;
-
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 import timber.log.Timber;
 
 public class CategoryListFragment extends Fragment {
@@ -91,13 +86,13 @@ public class CategoryListFragment extends Fragment {
                 .build();
         DirbleClient client = restAdapter.create(DirbleClient.class);
         Timber.i("Requesting primary categories");
-        client.listPrimaryCategories(ApiKey.INSTANCE.get(getActivity()),
-                new LogableSimpleCallback<List<CategoryItem>>() {
-                    @Override
-                    public void semanticSuccess(List<CategoryItem> categoryItems, Response response) {
-                        mAdapter.setDataset(categoryItems);
-                    }
-                });
+//        client.listPrimaryCategories(ApiKey.INSTANCE.get(getActivity()),
+//                new LogableSimpleCallback<List<CategoryItem>>() {
+//                    @Override
+//                    public void semanticSuccess(List<CategoryItem> categoryItems, Response response) {
+//                        mAdapter.setDataset(categoryItems);
+//                    }
+//                });
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {

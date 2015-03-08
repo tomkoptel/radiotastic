@@ -16,24 +16,18 @@ import android.content.SyncResult;
 import android.os.Bundle;
 
 import com.udacity.study.jam.radiotastic.MainApplication;
-import com.udacity.study.jam.radiotastic.di.Dagger_SyncComponent;
-import com.udacity.study.jam.radiotastic.di.SyncComponent;
+import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
 
 public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
-    private final SyncComponent mSyncComponent;
-
     public RadiotasticSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        MainApplication.component(context);
-        mSyncComponent =
-                Dagger_SyncComponent.builder()
-                        .applicationComponent(MainApplication.component(context))
-                        .build();
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        mSyncComponent.syncAccountUseCase().execute();
-        mSyncComponent.immediateSyncUseCase().execute();
+    public void onPerformSync(Account account, Bundle extras, String authority,
+                              ContentProviderClient provider, SyncResult syncResult) {
+        SyncComponent syncComponent = SyncComponent.Initializer.init(
+                MainApplication.get(getContext()), syncResult);
+        syncComponent.categoriesSync().run();
     }
 }

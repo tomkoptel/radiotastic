@@ -6,15 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.data;
 
-import com.udacity.study.jam.radiotastic.MainApplication;
-
-import dagger.Component;
-
-@Component(
-        modules = {SystemServicesModule.class}
-)
-public interface ApplicationComponent {
-    MainApplication injectApplication(MainApplication application);
+public interface SyncTask extends Runnable {
 }

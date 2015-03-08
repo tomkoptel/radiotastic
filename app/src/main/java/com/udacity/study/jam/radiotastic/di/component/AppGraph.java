@@ -6,16 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.di.component;
 
-import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
+import com.udacity.study.jam.radiotastic.MainActivity;
 
-import dagger.Component;
-
-@Component(
-        modules = {AccountCasesModule.class},
-        dependencies = {ApplicationComponent.class, SyncComponent.class}
-)
-public interface AccountComponent {
-    GetAccountUseCase getAccountUseCase();
+public interface AppGraph {
+    void inject(MainActivity activity);
 }

@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.di.module;
 
 import com.udacity.study.jam.radiotastic.data.ImmediateSyncUseCaseImpl;
 import com.udacity.study.jam.radiotastic.data.SyncAccountUseCaseImpl;

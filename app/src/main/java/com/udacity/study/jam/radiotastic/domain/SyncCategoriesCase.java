@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
-public interface SyncAccountUseCase {
-    void execute();
+import com.udacity.study.jam.radiotastic.data.SyncTask;
+
+public interface SyncCategoriesCase extends SyncTask {
 }

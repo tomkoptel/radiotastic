@@ -6,8 +6,20 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.domain;
+package com.udacity.study.jam.radiotastic.api;
 
-public interface SyncAccountUseCase {
-    void execute();
+import android.content.Context;
+
+import com.udacity.study.jam.radiotastic.R;
+
+public class DirbleApiKey implements ApiKey {
+    private final Context context;
+
+    public DirbleApiKey(Context context) {
+        this.context = context;
+    }
+
+    public String get() {
+        return context.getString(R.string.api_key);
+    }
 }

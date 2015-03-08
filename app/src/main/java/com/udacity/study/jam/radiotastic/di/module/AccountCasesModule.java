@@ -6,30 +6,18 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.di;
+package com.udacity.study.jam.radiotastic.di.module;
 
-
-import android.app.Application;
-import android.content.Context;
+import com.udacity.study.jam.radiotastic.data.GetAccountUseCaseImpl;
+import com.udacity.study.jam.radiotastic.domain.GetAccountUseCase;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-final public class ApplicationModule {
-    private final Application application;
-
-    public ApplicationModule(Application application) {
-        this.application = application;
-    }
-
+final public class AccountCasesModule {
     @Provides
-    Application application() {
-        return application;
-    }
-
-    @Provides
-    Context context() {
-        return application;
+    public GetAccountUseCase provideGetAccountUseCase() {
+        return new GetAccountUseCaseImpl();
     }
 }
