@@ -18,6 +18,11 @@ public interface StationModel extends BaseModel {
     long getStationId();
 
     /**
+     * Represents id of asscociated category with specific station.
+     */
+    long getCategoryId();
+
+    /**
      * Represents status of station. Either 1 UP or 0 DOWN
      * Cannot be {@code null}.
      */

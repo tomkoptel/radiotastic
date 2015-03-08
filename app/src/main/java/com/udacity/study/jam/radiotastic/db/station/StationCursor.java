@@ -37,6 +37,16 @@ public class StationCursor extends AbstractCursor implements StationModel {
     }
 
     /**
+     * Represents id of asscociated category with specific station.
+     */
+    public long getCategoryId() {
+        Long res = getLongOrNull(StationColumns.CATEGORY_ID);
+        if (res == null)
+            throw new NullPointerException("The value of 'category_id' in the database was null, which is not allowed according to the model definition");
+        return res;
+    }
+
+    /**
      * Represents status of station. Either 1 UP or 0 DOWN
      * Cannot be {@code null}.
      */

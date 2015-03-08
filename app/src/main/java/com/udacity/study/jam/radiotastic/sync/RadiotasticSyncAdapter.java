@@ -28,6 +28,6 @@ public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
         SyncComponent syncComponent = SyncComponent.Initializer.init(
                 MainApplication.get(getContext()), syncResult);
-        syncComponent.categoriesSync().run();
+        syncComponent.categoriesSync().execute(extras);
     }
 }

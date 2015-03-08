@@ -8,29 +8,10 @@
 
 package com.udacity.study.jam.radiotastic.data.transform;
 
-import android.database.Cursor;
-
 import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class CategoryCursorTransformer {
-    public Collection<CategoryItem> transform(Cursor cursor) {
-        CategoryCursor categoryItemCursor;
-        CategoryItem categoryItem;
-
-        Collection<CategoryItem> collection = new ArrayList<CategoryItem>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            categoryItemCursor = new CategoryCursor(cursor);
-            categoryItem = transform(categoryItemCursor);
-            collection.add(categoryItem);
-        }
-
-        return collection;
-    }
-
     public CategoryItem transform(CategoryCursor categoryItemCursor) {
         return new CategoryItem()
                 .withId(categoryItemCursor.getCategoryId())

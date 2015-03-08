@@ -9,6 +9,7 @@
 package com.udacity.study.jam.radiotastic.api;
 
 import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.Collection;
 
@@ -24,5 +25,10 @@ public class DirbleRadioApi implements RadioApi {
     @Override
     public Collection<CategoryItem> listPrimaryCategories() {
         return dirbleClient.listPrimaryCategories(apiKey.get());
+    }
+
+    @Override
+    public Collection<StationItem> listStations(String categoryId) {
+        return dirbleClient.listStations(apiKey.get(), categoryId);
     }
 }

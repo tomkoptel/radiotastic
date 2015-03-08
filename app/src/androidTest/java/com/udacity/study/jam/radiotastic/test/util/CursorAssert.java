@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static junit.framework.Assert.assertFalse;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 
 public class CursorAssert {
@@ -27,7 +27,7 @@ public class CursorAssert {
         for (Map.Entry<String, Object> entry : valueSet) {
             String columnName = entry.getKey();
             int idx = valueCursor.getColumnIndex(columnName);
-            assertFalse(idx == -1);
+            assertThat("Missing column: " + columnName, idx, is(not(-1)));
             String expectedValue = entry.getValue().toString();
             assertThat(expectedValue, is(valueCursor.getString(idx)));
         }

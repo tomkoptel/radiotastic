@@ -44,6 +44,9 @@ public class CategoriesSyncTest extends AndroidTestCase {
     private static final String[] ALL_COLUMNS = CategoryColumns.ALL_COLUMNS;
     private static final String SELECT_BY_CATEGORY_ID =
             CategoryColumns.CATEGORY_ID + "=?";
+    private static final String INSERT_BUCKET_SRC = "categories";
+    private static final String UPDATE_BUCKET_SRC = "categories_updated";
+    private static final String DELETE_BUCKET_SRC = "categories_deleted";
 
     @Mock
     RadioApi mockApi;
@@ -60,7 +63,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
     }
 
     public void testInserts() {
-        Collection<CategoryItem> items = createCategories("categories");
+        Collection<CategoryItem> items = createCategories(INSERT_BUCKET_SRC);
         when(mockApi.listPrimaryCategories()).thenReturn(items);
 
         SyncResult syncResult = new SyncResult();
@@ -75,7 +78,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
     public void testUpdates() {
         populateDbWithCategories();
 
-        Collection<CategoryItem> items = createCategories("categories_updated");
+        Collection<CategoryItem> items = createCategories(UPDATE_BUCKET_SRC);
         when(mockApi.listPrimaryCategories()).thenReturn(items);
 
         SyncResult syncResult = new SyncResult();
@@ -90,7 +93,7 @@ public class CategoriesSyncTest extends AndroidTestCase {
     public void testDeletes() {
         populateDbWithCategories();
 
-        Collection<CategoryItem> items = createCategories("categories_deleted");
+        Collection<CategoryItem> items = createCategories(DELETE_BUCKET_SRC);
         when(mockApi.listPrimaryCategories()).thenReturn(items);
 
         SyncResult syncResult = new SyncResult();
@@ -103,12 +106,9 @@ public class CategoriesSyncTest extends AndroidTestCase {
     }
 
     private void populateDbWithCategories() {
-        Collection<CategoryItem> initialItems = createCategories("categories");
+        Collection<CategoryItem> initialItems = createCategories(INSERT_BUCKET_SRC);
         for (CategoryItem item : initialItems) {
-            CategoryContentValues cv = new CategoryContentValues()
-                    .putCategoryId((long) item.getId())
-                    .putName(item.getName())
-                    .putDescription(item.getDescription());
+            CategoryContentValues cv = transform(item);
             contentResolver.insert(CONTENT_URI, cv.values());
         }
     }
@@ -117,12 +117,16 @@ public class CategoriesSyncTest extends AndroidTestCase {
         for (CategoryItem item : items) {
             Cursor cursor = contentResolver.query(CONTENT_URI, ALL_COLUMNS, SELECT_BY_CATEGORY_ID,
                     new String[] {String.valueOf(item.getId())}, null);
-            CategoryContentValues cv = new CategoryContentValues()
-                    .putCategoryId((long) item.getId())
-                    .putName(item.getName())
-                    .putDescription(item.getDescription());
+            CategoryContentValues cv = transform(item);
             CursorAssert.validateCursor(cursor, cv.values());
         }
+    }
+
+    private CategoryContentValues transform(CategoryItem item) {
+        return new CategoryContentValues()
+                .putCategoryId((long) item.getId())
+                .putName(item.getName())
+                .putDescription(item.getDescription());
     }
 
     private Collection<CategoryItem> createCategories(String src) {

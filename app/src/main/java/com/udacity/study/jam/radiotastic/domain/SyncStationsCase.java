@@ -6,14 +6,9 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.api;
+package com.udacity.study.jam.radiotastic.domain;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
-import com.udacity.study.jam.radiotastic.StationItem;
+import com.udacity.study.jam.radiotastic.sync.SyncTask;
 
-import java.util.Collection;
-
-public interface RadioApi {
-    Collection<CategoryItem> listPrimaryCategories();
-    Collection<StationItem> listStations(String categoryId);
+public interface SyncStationsCase extends SyncTask {
 }

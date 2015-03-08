@@ -40,6 +40,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
             + StationColumns.TABLE_NAME + " ( "
             + StationColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + StationColumns.STATION_ID + " INTEGER NOT NULL, "
+            + StationColumns.CATEGORY_ID + " INTEGER NOT NULL, "
             + StationColumns.STATUS + " INTEGER NOT NULL, "
             + StationColumns.NAME + " TEXT NOT NULL, "
             + StationColumns.BITRATE + " TEXT NOT NULL, "
@@ -47,11 +48,14 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
             + StationColumns.COUNTRY + " TEXT NOT NULL, "
             + StationColumns.WEBSITE + " TEXT, "
             + StationColumns.DESCRIPTION + " TEXT "
-            + ", CONSTRAINT unique_external_id UNIQUE (station_id) ON CONFLICT IGNORE"
+            + ", CONSTRAINT unique_station_category_id_combination UNIQUE (station_id, category_id) ON CONFLICT IGNORE"
             + " );";
 
     public static final String SQL_CREATE_INDEX_STATION_STATION_ID = "CREATE INDEX IDX_STATION_STATION_ID "
             + " ON " + StationColumns.TABLE_NAME + " ( " + StationColumns.STATION_ID + " );";
+
+    public static final String SQL_CREATE_INDEX_STATION_CATEGORY_ID = "CREATE INDEX IDX_STATION_CATEGORY_ID "
+            + " ON " + StationColumns.TABLE_NAME + " ( " + StationColumns.CATEGORY_ID + " );";
 
     // @formatter:on
 
@@ -111,6 +115,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_INDEX_CATEGORY_CATEGORY_ID);
         db.execSQL(SQL_CREATE_TABLE_STATION);
         db.execSQL(SQL_CREATE_INDEX_STATION_STATION_ID);
+        db.execSQL(SQL_CREATE_INDEX_STATION_CATEGORY_ID);
         mOpenHelperCallbacks.onPostCreate(mContext, db);
     }
 

@@ -133,7 +133,7 @@ public class StationListFragment extends Fragment {
     }
 
     public static interface Callback {
-        void onStationSelected(int stationID);
+        void onStationSelected(double stationID);
     }
 
 }
