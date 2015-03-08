@@ -9,7 +9,9 @@
 package com.udacity.study.jam.radiotastic.di.component;
 
 import com.udacity.study.jam.radiotastic.MainActivity;
+import com.udacity.study.jam.radiotastic.category.CategoryListFragment;
 
 public interface AppGraph {
     void inject(MainActivity activity);
+    void inject(CategoryListFragment listFragment);
 }

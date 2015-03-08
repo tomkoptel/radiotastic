@@ -54,8 +54,8 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
 
     @Override
     public void execute(Bundle args) {
-        final Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
-        final ContentResolver contentResolver = context.getContentResolver();
+        Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
+        ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(CategoryColumns.CONTENT_URI, CategoryColumns.ALL_COLUMNS, null, null, null);
         try {
             contentResolver.applyBatch(

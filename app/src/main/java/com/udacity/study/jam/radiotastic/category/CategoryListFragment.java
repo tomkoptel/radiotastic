@@ -21,28 +21,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
+import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.DirbleClient;
-import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
+import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
-import retrofit.RestAdapter;
-import timber.log.Timber;
+import javax.inject.Inject;
 
 public class CategoryListFragment extends Fragment {
-            private static final String LOG_TAG = CategoryListFragment.class.getSimpleName();
+    private static final String LOG_TAG = CategoryListFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
-    private CategoryAdapter mAdapter;
+    private Toast mToast;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Timber.tag(LOG_TAG);
-    }
+    @Inject
+    ImmediateSyncCase immediateSync;
+    @Inject
+    ObserveSyncStateCase observeAccountCase;
 
     @Nullable
     @Override
@@ -55,6 +52,18 @@ public class CategoryListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ApplicationComponent.Initializer.init(getActivity()).inject(this);
+
+        immediateSync.start(new Bundle());
+
+        mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
+        observeAccountCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
+            @Override
+            public void onStatusChanged(boolean syncIsActive) {
+                mToast.setText("Sync is: " + syncIsActive);
+                mToast.show();
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         // actually VERTICAL is the default,
@@ -68,9 +77,6 @@ public class CategoryListFragment extends Fragment {
         // you can set the first visible item like this:
         recyclerView.setHasFixedSize(true);
 
-        mAdapter = new CategoryAdapter();
-        recyclerView.setAdapter(mAdapter);
-
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
 
         gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
@@ -78,21 +84,15 @@ public class CategoryListFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(new ApiEndpoint(getActivity()))
-                .setClient(new AppUrlConnectionClient())
-                .build();
-        DirbleClient client = restAdapter.create(DirbleClient.class);
-        Timber.i("Requesting primary categories");
-//        client.listPrimaryCategories(ApiKey.INSTANCE.get(getActivity()),
-//                new LogableSimpleCallback<List<CategoryItem>>() {
-//                    @Override
-//                    public void semanticSuccess(List<CategoryItem> categoryItems, Response response) {
-//                        mAdapter.setDataset(categoryItems);
-//                    }
-//                });
+    public void onPause() {
+        super.onPause();
+        observeAccountCase.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        observeAccountCase.resume();
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
@@ -110,10 +110,10 @@ public class CategoryListFragment extends Fragment {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
             Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
-            CategoryItem categoryItem = mAdapter.getItem(position);
-            if (getActivity() instanceof Callback) {
-                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
-            }
+//            CategoryItem categoryItem = mAdapter.getItem(position);
+//            if (getActivity() instanceof Callback) {
+//                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
+//            }
             return super.onSingleTapConfirmed(event);
         }
     }

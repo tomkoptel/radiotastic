@@ -10,6 +10,6 @@ package com.udacity.study.jam.radiotastic.domain;
 
 import android.accounts.Account;
 
-public interface GetAccountUseCase {
-    public Account execute();
+public interface GetAccountCase {
+    public Account get();
 }

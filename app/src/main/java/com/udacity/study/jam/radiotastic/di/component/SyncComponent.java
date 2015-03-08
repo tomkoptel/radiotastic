@@ -8,9 +8,10 @@
 
 package com.udacity.study.jam.radiotastic.di.component;
 
-import android.app.Application;
+import android.content.Context;
 import android.content.SyncResult;
 
+import com.udacity.study.jam.radiotastic.MainApplication;
 import com.udacity.study.jam.radiotastic.di.module.RadioApiModule;
 import com.udacity.study.jam.radiotastic.di.module.SyncModule;
 import com.udacity.study.jam.radiotastic.di.module.SystemServicesModule;
@@ -34,9 +35,10 @@ public interface SyncComponent {
     SyncStationsCase stationsSync();
 
     final public static class Initializer {
-        static public SyncComponent init(Application app, SyncResult syncResult) {
+        static public SyncComponent init(Context context, SyncResult syncResult) {
             return Dagger_SyncComponent.builder()
-                    .systemServicesModule(new SystemServicesModule(app))
+                    .systemServicesModule(new SystemServicesModule(
+                            MainApplication.get(context)))
                     .syncModule(new SyncModule(syncResult))
                     .build();
         }

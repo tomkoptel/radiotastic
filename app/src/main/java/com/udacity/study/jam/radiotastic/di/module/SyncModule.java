@@ -21,7 +21,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class SyncModule {
+final public class SyncModule {
     private final SyncResult syncResult;
 
     public SyncModule(SyncResult syncResult) {

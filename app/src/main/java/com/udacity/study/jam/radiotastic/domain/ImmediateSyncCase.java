@@ -8,6 +8,8 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
-public interface ImmediateSyncUseCase {
-    void execute();
+import android.os.Bundle;
+
+public interface ImmediateSyncCase {
+    void start(Bundle args);
 }

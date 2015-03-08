@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.sync;
+package com.udacity.study.jam.radiotastic.sync.internal;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
-import com.udacity.study.jam.radiotastic.MainApplication;
 import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
 
 public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -26,8 +25,7 @@ public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        SyncComponent syncComponent = SyncComponent.Initializer.init(
-                MainApplication.get(getContext()), syncResult);
+        SyncComponent syncComponent = SyncComponent.Initializer.init(getContext(), syncResult);
         syncComponent.categoriesSync().execute(extras);
     }
 }
