@@ -52,6 +52,13 @@ dependencies {
     // Logging
     compile 'com.jakewharton.timber:timber:2.5.1'
 
+    // Custom toasts
+    compile 'com.github.kennyc1012:snackbar:1.1-SNAPSHOT:api8Release@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
+
+    // Network events
+    compile 'com.github.pwittchen:networkevents:1.0.3'
+
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support'
     }

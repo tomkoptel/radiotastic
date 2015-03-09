@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.category;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,12 +28,20 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.github.pwittchen.networkevents.library.ConnectivityStatus;
+import com.github.pwittchen.networkevents.library.NetworkEvents;
+import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
+import com.kenny.snackbar.SnackBar;
+import com.kenny.snackbar.SnackBarItem;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
+import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
@@ -51,9 +60,13 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     ImmediateSyncCase immediateSync;
     @Inject
     ObserveSyncStateCase observeSyncCase;
+    @Inject
+    NetworkStateManager networkStateManager;
 
     private boolean mSyncIsActive;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Bus bus;
+    private NetworkEvents networkEvents;
 
     @Nullable
     @Override
@@ -73,11 +86,11 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
 
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                immediateSync.start(null);
-            }
-        });
+                    @Override
+                    public void onRefresh() {
+                        immediateSync.start(null);
+                    }
+                });
 
         return root;
     }
@@ -86,6 +99,9 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ApplicationComponent.Initializer.init(getActivity()).inject(this);
+
+        bus = new Bus();
+        networkEvents = new NetworkEvents(getActivity(), bus);
 
         observeSyncCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
             @Override
@@ -127,18 +143,47 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         recyclerView.setAdapter(mAdapter);
 
         getActivity().getSupportLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        observeSyncCase.pause();
+        if (networkStateManager.isConnectedOrConnecting()) {
+            showNetMissingMessage();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         observeSyncCase.resume();
+        bus.register(this);
+        networkEvents.register();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        observeSyncCase.pause();
+        bus.unregister(this);
+        networkEvents.unregister();
+    }
+
+    @Subscribe
+    public void onConnectivityChanged(ConnectivityChanged event) {
+        if (event.getConnectivityStatus() == ConnectivityStatus.OFFLINE) {
+            showNetMissingMessage();
+        }
+    }
+
+    private void showNetMissingMessage() {
+        SnackBarItem sbi = new SnackBarItem.Builder()
+                .setActionClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+                    }
+                })
+                .setMessage("No internet connection!")
+                .setActionMessage("Settings")
+                .setDuration(5000).build();
+        SnackBar.show(getActivity(), sbi);
     }
 
     @Override
