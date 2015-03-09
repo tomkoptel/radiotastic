@@ -8,31 +8,29 @@
 
 package com.udacity.study.jam.radiotastic.category;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.R;
-
-import java.util.Collections;
-import java.util.List;
+import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 
 
-public class CategoryAdapter extends
-        RecyclerView.Adapter<CategoryAdapter.ItemViewHolder> {
+public class CategoryAdapter extends CursorRecyclerAdapter<CategoryAdapter.ItemViewHolder> {
 
-    private List<CategoryItem> mData = Collections.emptyList();
-
-    public CategoryAdapter() {
+    public CategoryAdapter(Context context, Cursor cursor) {
+        super(context, cursor);
     }
 
-    public void setDataset(List<CategoryItem> data) {
-        mData = data;
-        // This isn't working
-        notifyItemRangeInserted(0, data.size());
+    @Override
+    public void onBindViewHolder(ItemViewHolder viewHolder, Cursor cursor) {
+        CategoryCursor item = new CategoryCursor(cursor);
+        viewHolder.labelTextView.setText(item.getName());
+        viewHolder.descTextView.setText(item.getDescription());
     }
 
     @Override
@@ -40,22 +38,6 @@ public class CategoryAdapter extends
         View itemView = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_station_list, viewGroup, false);
         return new ItemViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(ItemViewHolder viewHolder, int position) {
-        CategoryItem item = mData.get(position);
-        viewHolder.labelTextView.setText(item.getName());
-        viewHolder.descTextView.setText(item.getDescription());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mData.size();
-    }
-
-    public CategoryItem getItem(int position) {
-        return mData.get(position);
     }
 
     public final static class ItemViewHolder extends RecyclerView.ViewHolder {

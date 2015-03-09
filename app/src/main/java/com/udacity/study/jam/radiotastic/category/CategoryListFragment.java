@@ -8,9 +8,13 @@
 
 package com.udacity.study.jam.radiotastic.category;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,22 +23,26 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import javax.inject.Inject;
 
-public class CategoryListFragment extends Fragment {
-    private static final String LOG_TAG = CategoryListFragment.class.getSimpleName();
+public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int LOAD_CATEGORIES = 100;
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
-    private Toast mToast;
+    private CategoryAdapter mAdapter;
+    private TextView emptyText;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -46,6 +54,7 @@ public class CategoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_category_list, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+        emptyText = (TextView) root.findViewById(android.R.id.empty);
         return root;
     }
 
@@ -54,14 +63,15 @@ public class CategoryListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ApplicationComponent.Initializer.init(getActivity()).inject(this);
 
-        immediateSync.start(new Bundle());
-
-        mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
         observeAccountCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
             @Override
-            public void onStatusChanged(boolean syncIsActive) {
-                mToast.setText("Sync is: " + syncIsActive);
-                mToast.show();
+            public void onStatusChanged(final boolean syncIsActive) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        emptyText.setText(syncIsActive ? "Sync is running..." : "");
+                    }
+                });
             }
         });
 
@@ -81,6 +91,11 @@ public class CategoryListFragment extends Fragment {
 
         gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
                 new RecyclerViewGestureListener());
+
+        mAdapter = new CategoryAdapter(getActivity(), null);
+        recyclerView.setAdapter(mAdapter);
+
+        getActivity().getSupportLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
     }
 
     @Override
@@ -93,6 +108,25 @@ public class CategoryListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         observeAccountCase.resume();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), CategoryColumns.CONTENT_URI,
+                CategoryColumns.ALL_COLUMNS, null, null, CategoryColumns.NAME + " ASC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() == 0) {
+            immediateSync.start(null);
+        } else {
+            mAdapter.swapCursor(data);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
@@ -109,7 +143,11 @@ public class CategoryListFragment extends Fragment {
         public boolean onSingleTapConfirmed(MotionEvent event) {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
-            Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
+            Cursor cursor = mAdapter.getCursor();
+            cursor.moveToPosition(position);
+            CategoryCursor categoryCursor = new CategoryCursor(cursor);
+            Toast.makeText(getActivity(), "Selected " + categoryCursor.getCategoryId(),
+                    Toast.LENGTH_SHORT).show();
 //            CategoryItem categoryItem = mAdapter.getItem(position);
 //            if (getActivity() instanceof Callback) {
 //                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());

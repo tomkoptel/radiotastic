@@ -32,7 +32,7 @@ public class ImmediateSyncCaseImpl implements ImmediateSyncCase {
     @Override
     public void start(Bundle args) {
         if (args == null) {
-            throw new IllegalArgumentException("Sync arguments can`t be null");
+            args = new Bundle();
         }
         args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
