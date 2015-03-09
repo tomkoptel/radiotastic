@@ -9,6 +9,7 @@
 package com.udacity.study.jam.radiotastic.sync;
 
 import android.accounts.Account;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncRequest;
@@ -40,16 +41,21 @@ public class SyncAccountCaseImpl implements SyncAccountCase {
         Account account = getAccountUseCase.get();
         String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            SyncRequest syncRequest = new SyncRequest.Builder()
-                    .syncPeriodic(SYNC_INTERVAL, SYNC_FLEXTIME)
-                    .setSyncAdapter(account, authority)
-                    .setExtras(new Bundle())
-                    .build();
-            ContentResolver.requestSync(syncRequest);
+            syncForKitkat(account, authority);
         } else {
             ContentResolver.addPeriodicSync(account, authority, new Bundle(), SYNC_INTERVAL);
         }
         ContentResolver.setSyncAutomatically(account, authority, true);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void syncForKitkat(Account account, String authority) {
+        SyncRequest syncRequest = new SyncRequest.Builder()
+                .syncPeriodic(SYNC_INTERVAL, SYNC_FLEXTIME)
+                .setSyncAdapter(account, authority)
+                .setExtras(new Bundle())
+                .build();
+        ContentResolver.requestSync(syncRequest);
     }
 
 }

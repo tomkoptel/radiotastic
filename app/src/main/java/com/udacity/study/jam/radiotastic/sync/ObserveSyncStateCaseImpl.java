@@ -19,8 +19,6 @@ import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.domain.GetAccountCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 public class ObserveSyncStateCaseImpl implements ObserveSyncStateCase {
@@ -70,17 +68,17 @@ public class ObserveSyncStateCaseImpl implements ObserveSyncStateCase {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return isSyncActiveHoneycomb();
         } else {
-            String authority = context.getString(R.string.content_authority);
-            List<SyncInfo> currentSyncs = ContentResolver.getCurrentSyncs();
-            boolean isActive = false;
-
-            for (SyncInfo syncInfo : currentSyncs) {
-                isActive |= (syncInfo != null
-                        && syncInfo.account.equals(getAccountCase.get())
-                        && syncInfo.authority.equals(authority));
-            }
-            return isActive;
+            return isSyncActiveGingerbread();
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private boolean isSyncActiveGingerbread() {
+        String authority = context.getString(R.string.content_authority);
+        SyncInfo syncInfo = ContentResolver.getCurrentSync();
+        return (syncInfo != null
+                && syncInfo.account.equals(getAccountCase.get())
+                && syncInfo.authority.equals(authority));
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
