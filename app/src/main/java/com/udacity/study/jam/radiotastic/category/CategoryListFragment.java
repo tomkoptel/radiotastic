@@ -16,6 +16,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -23,7 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
@@ -33,6 +34,7 @@ import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
+import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
 import javax.inject.Inject;
 
@@ -42,19 +44,41 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
     private CategoryAdapter mAdapter;
-    private TextView emptyText;
+    private DataImageView emptyImageView;
+    private ProgressBar progressBar;
 
     @Inject
     ImmediateSyncCase immediateSync;
     @Inject
-    ObserveSyncStateCase observeAccountCase;
+    ObserveSyncStateCase observeSyncCase;
+
+    private boolean mSyncIsActive;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_category_list, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-        emptyText = (TextView) root.findViewById(android.R.id.empty);
+        emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
+        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
+
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.holo_blue_dark,
+                R.color.holo_yellow_dark,
+                R.color.holo_green_dark,
+                R.color.holo_purple_dark,
+                R.color.holo_red_dark
+        );
+
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                immediateSync.start(null);
+            }
+        });
+
         return root;
     }
 
@@ -63,13 +87,20 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         ApplicationComponent.Initializer.init(getActivity()).inject(this);
 
-        observeAccountCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
+        observeSyncCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
             @Override
-            public void onStatusChanged(final boolean syncIsActive) {
+            public void onStatusChanged(boolean syncIsActive) {
+                mSyncIsActive = syncIsActive;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        emptyText.setText(syncIsActive ? "Sync is running..." : "");
+                        if (mAdapter.getCursor() == null) {
+                            emptyImageView.setImageType(
+                                    mSyncIsActive
+                                            ? DataImageView.Type.SYNC
+                                            : DataImageView.Type.NONE);
+                        }
+                        swipeRefreshLayout.setRefreshing(mSyncIsActive);
                     }
                 });
             }
@@ -101,13 +132,13 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onPause() {
         super.onPause();
-        observeAccountCase.pause();
+        observeSyncCase.pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        observeAccountCase.resume();
+        observeSyncCase.resume();
     }
 
     @Override
@@ -120,7 +151,16 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() == 0) {
             immediateSync.start(null);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mSyncIsActive) {
+                        emptyImageView.setImageType(DataImageView.Type.EMPTY);
+                    }
+                }
+            });
         } else {
+            emptyImageView.setImageType(DataImageView.Type.NONE);
             mAdapter.swapCursor(data);
         }
     }

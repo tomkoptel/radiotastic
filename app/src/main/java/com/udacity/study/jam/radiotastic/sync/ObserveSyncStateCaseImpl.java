@@ -72,7 +72,7 @@ public class ObserveSyncStateCaseImpl implements ObserveSyncStateCase {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private boolean isSyncActiveGingerbread() {
         String authority = context.getString(R.string.content_authority);
         SyncInfo syncInfo = ContentResolver.getCurrentSync();
