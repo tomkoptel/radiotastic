@@ -13,9 +13,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,48 +22,31 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.github.pwittchen.networkevents.library.ConnectivityStatus;
-import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
-import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
-import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
 import javax.inject.Inject;
 
-public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int LOAD_CATEGORIES = 100;
+public class CategoryListFragment extends Fragment implements CategoryPresenter.View {
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
     private CategoryAdapter mAdapter;
     private DataImageView emptyImageView;
-    private ProgressBar progressBar;
 
     @Inject
     ImmediateSyncCase immediateSync;
-    @Inject
-    ObserveSyncStateCase observeSyncCase;
-    @Inject
-    NetworkStateManager networkStateManager;
 
-    private boolean mSyncIsActive;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Bus bus;
-    private NetworkEvents networkEvents;
+    private CategoryPresenter categoryPresenter;
 
     @Nullable
     @Override
@@ -75,23 +55,6 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
         emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
-
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.holo_blue_dark,
-                R.color.holo_yellow_dark,
-                R.color.holo_green_dark,
-                R.color.holo_purple_dark,
-                R.color.holo_red_dark
-        );
-
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        immediateSync.start(null);
-                    }
-                });
-
         return root;
     }
 
@@ -100,28 +63,73 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
         ApplicationComponent.Initializer.init(getActivity()).inject(this);
 
-        bus = new Bus();
-        networkEvents = new NetworkEvents(getActivity(), bus);
+        categoryPresenter = new CategoryPresenter(this, this);
+        categoryPresenter.initialize();
 
-        observeSyncCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
-            @Override
-            public void onStatusChanged(boolean syncIsActive) {
-                mSyncIsActive = syncIsActive;
-                getActivity().runOnUiThread(new Runnable() {
+        initRecyclerView();
+        initSwipeRefresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        categoryPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        categoryPresenter.pause();
+    }
+
+    @Override
+    public void hideLoading() {
+        swipeRefreshLayout.setRefreshing(false);
+        emptyImageView.setImageType(DataImageView.Type.NONE);
+    }
+
+    @Override
+    public void showLoading() {
+        swipeRefreshLayout.setRefreshing(true);
+        emptyImageView.setImageType(DataImageView.Type.SYNC);
+    }
+
+    @Override
+    public void renderCategories(Cursor data) {
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void showConnectionErrorMessage() {
+        SnackBarItem sbi = new SnackBarItem.Builder()
+                .setActionClickListener(new View.OnClickListener() {
                     @Override
-                    public void run() {
-                        if (mAdapter.getCursor() == null) {
-                            emptyImageView.setImageType(
-                                    mSyncIsActive
-                                            ? DataImageView.Type.SYNC
-                                            : DataImageView.Type.NONE);
-                        }
-                        swipeRefreshLayout.setRefreshing(mSyncIsActive);
+                    public void onClick(View v) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
                     }
-                });
-            }
-        });
+                })
+                .setMessage("No internet connection!")
+                .setActionMessage("Settings")
+                .setDuration(5000).build();
+        SnackBar.show(getActivity(), sbi);
+    }
 
+    @Override
+    public void showEmptyCase() {
+        emptyImageView.setImageType(DataImageView.Type.EMPTY);
+    }
+
+    @Override
+    public boolean isReady() {
+        return isAdded();
+    }
+
+    @Override
+    public boolean isAlreadyLoaded() {
+        return mAdapter.getItemCount() > 0;
+    }
+
+    private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         // actually VERTICAL is the default,
         // just remember: LinearLayoutManager
@@ -141,77 +149,17 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
 
         mAdapter = new CategoryAdapter(getActivity(), null);
         recyclerView.setAdapter(mAdapter);
-
-        getActivity().getSupportLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
-
-        if (networkStateManager.isConnectedOrConnecting()) {
-            showNetMissingMessage();
-        }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        observeSyncCase.resume();
-        bus.register(this);
-        networkEvents.register();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        observeSyncCase.pause();
-        bus.unregister(this);
-        networkEvents.unregister();
-    }
-
-    @Subscribe
-    public void onConnectivityChanged(ConnectivityChanged event) {
-        if (event.getConnectivityStatus() == ConnectivityStatus.OFFLINE) {
-            showNetMissingMessage();
-        }
-    }
-
-    private void showNetMissingMessage() {
-        SnackBarItem sbi = new SnackBarItem.Builder()
-                .setActionClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-                    }
-                })
-                .setMessage("No internet connection!")
-                .setActionMessage("Settings")
-                .setDuration(5000).build();
-        SnackBar.show(getActivity(), sbi);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), CategoryColumns.CONTENT_URI,
-                CategoryColumns.ALL_COLUMNS, null, null, CategoryColumns.NAME + " ASC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data.getCount() == 0) {
-            immediateSync.start(null);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mSyncIsActive) {
-                        emptyImageView.setImageType(DataImageView.Type.EMPTY);
-                    }
-                }
-            });
-        } else {
-            emptyImageView.setImageType(DataImageView.Type.NONE);
-            mAdapter.swapCursor(data);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.holo_blue_dark,
+                R.color.holo_yellow_dark,
+                R.color.holo_green_dark,
+                R.color.holo_purple_dark,
+                R.color.holo_red_dark
+        );
+        swipeRefreshLayout.setOnRefreshListener(categoryPresenter);
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
@@ -229,10 +177,12 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
             Cursor cursor = mAdapter.getCursor();
-            cursor.moveToPosition(position);
-            CategoryCursor categoryCursor = new CategoryCursor(cursor);
-            Toast.makeText(getActivity(), "Selected " + categoryCursor.getCategoryId(),
-                    Toast.LENGTH_SHORT).show();
+            if (cursor != null) {
+                cursor.moveToPosition(position);
+                CategoryCursor categoryCursor = new CategoryCursor(cursor);
+                Toast.makeText(getActivity(), "Selected " + categoryCursor.getCategoryId(),
+                        Toast.LENGTH_SHORT).show();
+            }
 //            CategoryItem categoryItem = mAdapter.getItem(position);
 //            if (getActivity() instanceof Callback) {
 //                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
