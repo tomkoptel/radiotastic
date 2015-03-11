@@ -71,7 +71,7 @@ public class CategoryDbTest extends AndroidTestCase {
             mContext.getContentResolver().insert(CategoryColumns.CONTENT_URI, contentValues);
             fail("Should not accept null value for name");
         } catch (SQLiteConstraintException exception) {
-            assertThat(exception.getMessage(), containsString("NOT NULL constraint failed"));
+            assertThat(exception.getMessage(), containsString("NULL"));
         }
     }
 

@@ -30,12 +30,12 @@ public class DetailFragment extends Fragment {
 
     private TextView mName;
     private TextView mDescription;
-    private int mStationId;
+    private String mStationId;
     public String mStreamUrl;
 
-    public static DetailFragment init(int stationId) {
+    public static DetailFragment init(String stationId) {
         Bundle args = new Bundle();
-        args.putInt(STATION_ID_ARG, stationId);
+        args.putString(STATION_ID_ARG, stationId);
         DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(args);
         return detailFragment;
@@ -46,7 +46,7 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null && args.containsKey(STATION_ID_ARG)) {
-            mStationId = args.getInt(STATION_ID_ARG);
+            mStationId = args.getString(STATION_ID_ARG);
         }
     }
 

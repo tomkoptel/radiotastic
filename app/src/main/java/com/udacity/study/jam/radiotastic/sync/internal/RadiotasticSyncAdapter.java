@@ -16,6 +16,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 
 import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
+import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
 
 public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
     public RadiotasticSyncAdapter(Context context, boolean autoInitialize) {
@@ -26,6 +27,10 @@ public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         SyncComponent syncComponent = SyncComponent.Initializer.init(getContext(), syncResult);
-        syncComponent.categoriesSync().execute(extras);
+        if (extras.containsKey(SyncStationsCaseImpl.CATEGORY_ID_ARG)) {
+            syncComponent.stationsSync().execute(extras);
+        } else {
+            syncComponent.categoriesSync().execute(extras);
+        }
     }
 }

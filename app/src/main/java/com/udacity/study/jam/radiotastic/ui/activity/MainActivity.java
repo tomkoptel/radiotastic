@@ -23,10 +23,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onCategorySelected(double categoryID) {
+    public void onCategorySelected(String categoryID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.sub_content, StationListFragment.init((int) categoryID))
+                    .replace(R.id.sub_content, StationListFragment.init(categoryID))
                     .commit();
         } else {
             Intent newIntent = new Intent(this, StationsActivity.class);
@@ -36,10 +36,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onStationSelected(double stationID) {
+    public void onStationSelected(String stationID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_content, DetailFragment.init((int) stationID))
+                    .replace(R.id.detail_content, DetailFragment.init(stationID))
                     .commit();
         }
     }

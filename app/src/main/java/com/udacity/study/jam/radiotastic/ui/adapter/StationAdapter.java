@@ -9,6 +9,7 @@
 package com.udacity.study.jam.radiotastic.ui.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +17,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationItem;
-
-import java.util.Collections;
-import java.util.List;
+import com.udacity.study.jam.radiotastic.db.station.StationCursor;
 
 public class StationAdapter extends
-        RecyclerView.Adapter<StationAdapter.ListItemViewHolder> {
+        CursorRecyclerAdapter<StationAdapter.ListItemViewHolder> {
 
-    private List<StationItem> mData = Collections.emptyList();
-
-    public StationAdapter() {
-    }
-
-    public void setDataset(List<StationItem> data) {
-        mData = data;
-        // This isn't working
-        notifyItemRangeInserted(0, data.size());
+    public StationAdapter(Context context, Cursor cursor) {
+        super(context, cursor);
     }
 
     @Override
@@ -43,21 +34,10 @@ public class StationAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(ListItemViewHolder viewHolder, int position) {
-        StationItem item = mData.get(position);
-        Context context = viewHolder.labelTextView.getContext();
+    public void onBindViewHolder(ListItemViewHolder viewHolder, Cursor cursor) {
+        StationCursor item = new StationCursor(cursor);
         viewHolder.labelTextView.setText(item.getName());
-        viewHolder.descTextView.setText(context.getString(R.string.format_station_desc,
-                item.getCountry(), item.getBitrate()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mData.size();
-    }
-
-    public StationItem getItem(int position) {
-        return mData.get(position);
+        viewHolder.descTextView.setText(item.getBitrate());
     }
 
     public final static class ListItemViewHolder extends RecyclerView.ViewHolder {

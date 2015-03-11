@@ -40,11 +40,20 @@ public class StationDbTest extends AndroidTestCase {
 
     // Constraints assertions
 
+    public void testStationNameShouldNotBeEmpty() {
+        ContentValues validContentValues = createValidContentValues();
+        validContentValues.put(StationColumns.NAME, "");
+        try {
+            mContext.getContentResolver().insert(StationColumns.CONTENT_URI, validContentValues);
+            fail("Constraint for emptiness was ignored. Check table configuration.");
+        } catch (SQLiteConstraintException ex) {
+        }
+    }
+
     public void testStationAndCategoryIdsUnqiqueAsPair() {
         ContentValues validContentValues = createValidContentValues();
         Uri firstUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI, validContentValues);
         assertThat(firstUri, is(notNullValue()));
-
 
         ContentValues duplicateContentValues = createValidContentValues();
         Uri nextUri = mContext.getContentResolver().insert(StationColumns.CONTENT_URI, duplicateContentValues);
@@ -76,7 +85,7 @@ public class StationDbTest extends AndroidTestCase {
             mContext.getContentResolver().insert(StationColumns.CONTENT_URI, notValidContentValues);
             fail(field + " should not be null");
         } catch (SQLiteConstraintException ex) {
-            assertThat(ex.getMessage(), containsString("NOT NULL constraint failed"));
+            assertThat(ex.getMessage(), containsString("NULL"));
         }
     }
 

@@ -22,11 +22,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
-import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.ui.adapter.CategoryAdapter;
@@ -47,7 +45,7 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_category_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_entity_list, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
         emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
@@ -57,7 +55,6 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ApplicationComponent.Initializer.init(getActivity()).inject(this);
 
         categoryPresenter = new CategoryPresenter(this, this);
         categoryPresenter.initialize();
@@ -112,6 +109,7 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
 
     @Override
     public void showEmptyCase() {
+        swipeRefreshLayout.setRefreshing(false);
         emptyImageView.setImageType(DataImageView.Type.EMPTY);
     }
 
@@ -139,6 +137,16 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
         recyclerView.setHasFixedSize(true);
 
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0)
+                                ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
 
         gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
                 new RecyclerViewGestureListener());
@@ -176,18 +184,16 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
             if (cursor != null) {
                 cursor.moveToPosition(position);
                 CategoryCursor categoryCursor = new CategoryCursor(cursor);
-                Toast.makeText(getActivity(), "Selected " + categoryCursor.getCategoryId(),
-                        Toast.LENGTH_SHORT).show();
+                if (getActivity() instanceof Callback) {
+                    ((Callback) getActivity()).onCategorySelected(String.valueOf(categoryCursor.getCategoryId()));
+                }
             }
-//            CategoryItem categoryItem = mAdapter.getItem(position);
-//            if (getActivity() instanceof Callback) {
-//                ((Callback) getActivity()).onCategorySelected(categoryItem.getId());
-//            }
+
             return super.onSingleTapConfirmed(event);
         }
     }
 
     public static interface Callback {
-        void onCategorySelected(double categoryID);
+        void onCategorySelected(String categoryID);
     }
 }

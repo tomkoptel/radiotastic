@@ -17,7 +17,7 @@ import com.udacity.study.jam.radiotastic.ui.fragment.DetailFragment;
 public class DetailActivity extends ActionBarActivity {
 
     public static final String STATION_ID_EXTRA = "stationID";
-    private int mStationID;
+    private String mStationID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
 
         if (getIntent() != null && getIntent().hasExtra(STATION_ID_EXTRA)) {
-            mStationID = getIntent().getIntExtra(STATION_ID_EXTRA, 0);
+            mStationID = getIntent().getStringExtra(STATION_ID_EXTRA);
         }
 
         if (savedInstanceState == null) {

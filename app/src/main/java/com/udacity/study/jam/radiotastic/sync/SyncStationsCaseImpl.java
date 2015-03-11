@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.TextUtils;
 
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.StationItem;
@@ -130,13 +131,15 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
         }
 
         for (StationItem webItem : map.values()) {
-            syncResult.stats.numInserts++;
-            ContentValues contentValues = createContentValues(webItem);
-            contentValues.put(StationColumns.STATION_ID, webItem.getId());
-            contentValues.put(StationColumns.CATEGORY_ID, categoryId);
-            batch.add(ContentProviderOperation.newInsert(CONTENT_URI)
-                    .withValues(contentValues)
-                    .build());
+            if (!TextUtils.isEmpty(webItem.getName())) {
+                syncResult.stats.numInserts++;
+                ContentValues contentValues = createContentValues(webItem);
+                contentValues.put(StationColumns.STATION_ID, webItem.getId());
+                contentValues.put(StationColumns.CATEGORY_ID, categoryId);
+                batch.add(ContentProviderOperation.newInsert(CONTENT_URI)
+                        .withValues(contentValues)
+                        .build());
+            }
         }
 
         return batch;

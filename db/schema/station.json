@@ -60,6 +60,10 @@
         {
             "name": "unique_station_category_id_combination",
             "definition": "UNIQUE (station_id, category_id) ON CONFLICT IGNORE"
+        },
+        {
+            "name": "not_empty_station_name",
+            "definition": "CHECK(name <> '') ON CONFLICT IGNORE"
         }
     ]
 }

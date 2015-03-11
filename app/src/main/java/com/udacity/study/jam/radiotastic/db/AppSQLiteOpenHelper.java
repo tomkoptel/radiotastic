@@ -49,6 +49,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
             + StationColumns.WEBSITE + " TEXT, "
             + StationColumns.DESCRIPTION + " TEXT "
             + ", CONSTRAINT unique_station_category_id_combination UNIQUE (station_id, category_id) ON CONFLICT IGNORE"
+            + ", CONSTRAINT not_empty_station_name CHECK(name <> '') ON CONFLICT IGNORE"
             + " );";
 
     public static final String SQL_CREATE_INDEX_STATION_STATION_ID = "CREATE INDEX IDX_STATION_STATION_ID "

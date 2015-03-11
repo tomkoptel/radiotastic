@@ -8,10 +8,13 @@
 
 package com.udacity.study.jam.radiotastic.ui.fragment;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -19,30 +22,32 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.kenny.snackbar.SnackBar;
+import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationItem;
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
-import com.udacity.study.jam.radiotastic.api.DirbleClient;
-import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.db.station.StationCursor;
 import com.udacity.study.jam.radiotastic.ui.adapter.StationAdapter;
+import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
+import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
-import retrofit.RestAdapter;
-import timber.log.Timber;
-
-public class StationListFragment extends Fragment {
+public class StationListFragment extends Fragment implements StationPresenter.View {
     private static final String CATEGORY_ID_ARG = "categoryID";
 
     private RecyclerView recyclerView;
+    private DataImageView emptyImageView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     private GestureDetectorCompat gestureDetectorCompat;
     private StationAdapter mAdapter;
-    private int mCategoryId;
 
-    public static StationListFragment init(int categoryID) {
+    private StationPresenter stationPresenter;
+    private String mCategoryId;
+
+    public static StationListFragment init(String categoryID) {
         Bundle args = new Bundle();
-        args.putInt(CATEGORY_ID_ARG, categoryID);
+        args.putString(CATEGORY_ID_ARG, categoryID);
         StationListFragment stationListFragment = new StationListFragment();
         stationListFragment.setArguments(args);
         return stationListFragment;
@@ -53,15 +58,17 @@ public class StationListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null && args.containsKey(CATEGORY_ID_ARG)) {
-            mCategoryId = args.getInt(CATEGORY_ID_ARG);
+            mCategoryId = args.getString(CATEGORY_ID_ARG);
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_station_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_entity_list, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+        emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
+        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
         return root;
     }
 
@@ -69,6 +76,75 @@ public class StationListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        stationPresenter = new StationPresenter(this, this);
+        stationPresenter.setCategoryId(mCategoryId);
+        stationPresenter.initialize();
+
+        initRecyclerView();
+        initSwipeRefresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        stationPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stationPresenter.pause();
+    }
+
+    @Override
+    public void hideLoading() {
+        swipeRefreshLayout.setRefreshing(false);
+        emptyImageView.setImageType(DataImageView.Type.NONE);
+    }
+
+    @Override
+    public void showLoading() {
+        swipeRefreshLayout.setRefreshing(true);
+        emptyImageView.setImageType(DataImageView.Type.SYNC);
+    }
+
+    @Override
+    public void renderStations(Cursor data) {
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void showConnectionErrorMessage() {
+        SnackBarItem sbi = new SnackBarItem.Builder()
+                .setActionClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+                    }
+                })
+                .setMessage("No internet connection!")
+                .setActionMessage("Settings")
+                .setDuration(5000).build();
+        SnackBar.show(getActivity(), sbi);
+    }
+
+    @Override
+    public void showEmptyCase() {
+        swipeRefreshLayout.setRefreshing(false);
+        emptyImageView.setImageType(DataImageView.Type.EMPTY);
+    }
+
+    @Override
+    public boolean isReady() {
+        return isAdded();
+    }
+
+    @Override
+    public boolean isAlreadyLoaded() {
+        return mAdapter.getItemCount() > 0;
+    }
+
+    private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         // actually VERTICAL is the default,
         // just remember: LinearLayoutManager
@@ -81,33 +157,34 @@ public class StationListFragment extends Fragment {
         // you can set the first visible item like this:
         recyclerView.setHasFixedSize(true);
 
-        mAdapter = new StationAdapter();
+        mAdapter = new StationAdapter(getActivity(), null);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0)
+                                ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
 
         gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
                 new RecyclerViewGestureListener());
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(new ApiEndpoint(getActivity()))
-                .setClient(new AppUrlConnectionClient())
-                .build();
-        DirbleClient client = restAdapter.create(DirbleClient.class);
-        Timber.i("Requesting stations for category: " + mCategoryId);
-//        client.listStations(
-//                ApiKey.INSTANCE.get(getActivity()),
-//                mCategoryId,
-//                new LogableSimpleCallback<List<StationItem>>() {
-//                    @Override
-//                    public void semanticSuccess(List<StationItem> stationItems, Response response) {
-//                        mAdapter.setDataset(stationItems);
-//                    }
-//                });
+    private void initSwipeRefresh() {
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.holo_blue_dark,
+                R.color.holo_yellow_dark,
+                R.color.holo_green_dark,
+                R.color.holo_purple_dark,
+                R.color.holo_red_dark
+        );
+        swipeRefreshLayout.setOnRefreshListener(stationPresenter);
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
@@ -124,17 +201,20 @@ public class StationListFragment extends Fragment {
         public boolean onSingleTapConfirmed(MotionEvent event) {
             View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
             int position = recyclerView.getChildPosition(view);
-            StationItem stationItem = mAdapter.getItem(position);
-            if (getActivity() instanceof Callback) {
-                ((Callback) getActivity()).onStationSelected(stationItem.getId());
+            Cursor cursor = mAdapter.getCursor();
+            if (cursor != null) {
+                cursor.moveToPosition(position);
+                StationCursor stationCursor = new StationCursor(cursor);
+                if (getActivity() instanceof Callback) {
+                    ((Callback) getActivity()).onStationSelected(String.valueOf(stationCursor.getStationId()));
+                }
             }
-            Toast.makeText(getActivity(), "Selected " + position, Toast.LENGTH_SHORT).show();
             return super.onSingleTapConfirmed(event);
         }
     }
 
     public static interface Callback {
-        void onStationSelected(double stationID);
+        void onStationSelected(String stationID);
     }
 
 }
