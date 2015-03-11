@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.category;
+package com.udacity.study.jam.radiotastic.ui.fragment;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,11 +29,10 @@ import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
-import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
+import com.udacity.study.jam.radiotastic.ui.adapter.CategoryAdapter;
+import com.udacity.study.jam.radiotastic.ui.presenter.CategoryPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
-
-import javax.inject.Inject;
 
 public class CategoryListFragment extends Fragment implements CategoryPresenter.View {
 
@@ -41,9 +40,6 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     private GestureDetectorCompat gestureDetectorCompat;
     private CategoryAdapter mAdapter;
     private DataImageView emptyImageView;
-
-    @Inject
-    ImmediateSyncCase immediateSync;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private CategoryPresenter categoryPresenter;

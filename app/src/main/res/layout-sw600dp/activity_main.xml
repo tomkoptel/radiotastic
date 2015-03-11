@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/category_list_fragment"
-        android:name="com.udacity.study.jam.radiotastic.category.CategoryListFragment"
+        android:name="com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"

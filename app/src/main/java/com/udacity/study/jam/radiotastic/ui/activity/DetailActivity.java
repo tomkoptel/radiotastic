@@ -6,12 +6,13 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.detail;
+package com.udacity.study.jam.radiotastic.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.ui.fragment.DetailFragment;
 
 public class DetailActivity extends ActionBarActivity {
 

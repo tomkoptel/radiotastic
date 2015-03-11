@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.udacity.study.jam.radiotastic.category;
+package com.udacity.study.jam.radiotastic.ui.adapter;
 
 /*
  * Copyright (C) 2014 skyfish.jy@gmail.com

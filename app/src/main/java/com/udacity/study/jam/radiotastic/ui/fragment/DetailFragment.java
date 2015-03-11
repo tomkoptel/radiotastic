@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.detail;
+package com.udacity.study.jam.radiotastic.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

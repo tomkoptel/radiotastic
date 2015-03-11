@@ -1,13 +1,13 @@
-package com.udacity.study.jam.radiotastic;
+package com.udacity.study.jam.radiotastic.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.udacity.study.jam.radiotastic.category.CategoryListFragment;
-import com.udacity.study.jam.radiotastic.detail.DetailFragment;
-import com.udacity.study.jam.radiotastic.station.StationListFragment;
-import com.udacity.study.jam.radiotastic.station.StationsActivity;
+import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.DetailFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment;
 
 
 public class MainActivity extends ActionBarActivity

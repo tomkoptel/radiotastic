@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.category;
+package com.udacity.study.jam.radiotastic.ui.presenter;
 
 import android.database.Cursor;
 import android.os.Bundle;

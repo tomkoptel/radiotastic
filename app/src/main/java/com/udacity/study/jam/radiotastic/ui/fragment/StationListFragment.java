@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.udacity.study.jam.radiotastic.station;
+package com.udacity.study.jam.radiotastic.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +26,7 @@ import com.udacity.study.jam.radiotastic.StationItem;
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.network.AppUrlConnectionClient;
+import com.udacity.study.jam.radiotastic.ui.adapter.StationAdapter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import retrofit.RestAdapter;

@@ -5,7 +5,7 @@
  * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
-package com.udacity.study.jam.radiotastic.category;
+package com.udacity.study.jam.radiotastic.ui.presenter;
 
 /**
  * Abstract presenter to work as base for every presenter created in the application. This
