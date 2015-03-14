@@ -117,12 +117,14 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
                     map.remove(canonicalId);
 
                     if (!dbItem.equals(webItem)) {
-                        syncResult.stats.numUpdates++;
-                        batch.add(
-                                ContentProviderOperation.newUpdate(itemUri)
-                                        .withValues(createContentValues(webItem))
-                                        .build()
-                        );
+                        if (isItemValid(webItem)) {
+                            syncResult.stats.numUpdates++;
+                            batch.add(
+                                    ContentProviderOperation.newUpdate(itemUri)
+                                            .withValues(createContentValues(webItem))
+                                            .build()
+                            );
+                        }
                     }
                 }
             }
@@ -131,7 +133,7 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
         }
 
         for (StationItem webItem : map.values()) {
-            if (!TextUtils.isEmpty(webItem.getName())) {
+            if (isItemValid(webItem)) {
                 syncResult.stats.numInserts++;
                 ContentValues contentValues = createContentValues(webItem);
                 contentValues.put(StationColumns.STATION_ID, webItem.getId());
@@ -143,6 +145,10 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
         }
 
         return batch;
+    }
+
+    private boolean isItemValid(StationItem webItem) {
+        return !TextUtils.isEmpty(webItem.getName());
     }
 
     public ContentValues createContentValues(StationItem webItem) {
