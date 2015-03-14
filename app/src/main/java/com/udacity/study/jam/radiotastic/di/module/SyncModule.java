@@ -15,7 +15,10 @@ import com.udacity.study.jam.radiotastic.api.RadioApi;
 import com.udacity.study.jam.radiotastic.domain.SyncCategoriesCase;
 import com.udacity.study.jam.radiotastic.domain.SyncStationsCase;
 import com.udacity.study.jam.radiotastic.sync.SyncCategoriesCaseImpl;
+import com.udacity.study.jam.radiotastic.sync.SyncHelper;
 import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,5 +39,11 @@ final public class SyncModule {
     @Provides
     SyncStationsCase provideSyncStationsCase(Context context, RadioApi radioApi) {
         return new SyncStationsCaseImpl(context, syncResult, radioApi);
+    }
+
+    @Singleton
+    @Provides
+    SyncHelper provideSyncHelper() {
+        return new SyncHelper();
     }
 }

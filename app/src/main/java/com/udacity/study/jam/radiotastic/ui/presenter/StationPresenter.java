@@ -98,7 +98,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
                 StationColumns.CONTENT_URI,
                 ALL_COLUMNS,
                 selection.sel(),
-                new String[] {categoryId},
+                new String[]{categoryId},
                 StationColumns.NAME + " ASC");
     }
 
@@ -107,6 +107,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (data.getCount() > 0) {
             showStations(data);
         } else {
+            showEmptyView();
             startSyncIfPossible();
         }
     }
@@ -139,8 +140,6 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
                         } else {
                             if (mView.isAlreadyLoaded()) {
                                 mView.hideLoading();
-                            } else {
-                                mView.showEmptyCase();
                             }
                         }
                     }
@@ -158,7 +157,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (!mSyncIsActive) {
             Bundle args = new Bundle();
             args.putString(SyncStationsCaseImpl.CATEGORY_ID_ARG, categoryId);
-            immediateSync.start(args);
+            immediateSync.startRemoteSync(args);
         }
 
         if (!networkStateManager.isConnectedOrConnecting()) {
@@ -185,6 +184,15 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (categoryId == null) {
             throw new IllegalStateException("Remember setup category id");
         }
+    }
+
+    private void showEmptyView() {
+        mFragment.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showEmptyCase();
+            }
+        });
     }
 
     public interface View {

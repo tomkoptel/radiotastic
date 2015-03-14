@@ -21,23 +21,37 @@ import javax.inject.Inject;
 public class ImmediateSyncCaseImpl implements ImmediateSyncCase {
 
     private final GetAccountCase getAccountUseCase;
+    private final SyncHelper syncHelper;
     private final Context context;
 
     @Inject
-    public ImmediateSyncCaseImpl(Context context, GetAccountCase getAccountUseCase) {
+    public ImmediateSyncCaseImpl(Context context, SyncHelper syncHelper, GetAccountCase getAccountUseCase) {
         this.context = context;
+        this.syncHelper = syncHelper;
         this.getAccountUseCase = getAccountUseCase;
     }
 
     @Override
-    public void start(Bundle args) {
-        if (args == null) {
-            args = new Bundle();
+    public void startCachedSync(Bundle args) {
+        Bundle extras = combineArgs(args, syncHelper.prepareCachedExtras());
+        requestSync(extras);
+    }
+
+    @Override
+    public void startRemoteSync(Bundle args) {
+        Bundle extras = combineArgs(args, syncHelper.prepareRemoteExtras());
+        requestSync(extras);
+    }
+
+    private Bundle combineArgs(Bundle args, Bundle preparedArgs) {
+        if (args != null) {
+            preparedArgs.putAll(args);
         }
-        args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        return preparedArgs;
+    }
+
+    private void requestSync(Bundle args) {
         ContentResolver.requestSync(getAccountUseCase.get(),
                 context.getString(R.string.content_authority), args);
     }
-
 }

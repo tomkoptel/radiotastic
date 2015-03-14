@@ -8,12 +8,15 @@
 
 package com.udacity.study.jam.radiotastic.api;
 
+import android.support.annotation.Nullable;
+
 import com.udacity.study.jam.radiotastic.CategoryItem;
 import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.Collection;
 
 public interface RadioApi {
+    @Nullable
     Collection<CategoryItem> listPrimaryCategories();
     Collection<StationItem> listStations(String categoryId);
 }

@@ -33,6 +33,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.RetrofitError;
 import timber.log.Timber;
 
 public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
@@ -54,19 +55,28 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
 
     @Override
     public void execute(Bundle args) {
-        Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
-        ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(CategoryColumns.CONTENT_URI, CategoryColumns.ALL_COLUMNS, null, null, null);
         try {
-            contentResolver.applyBatch(
-                    context.getString(R.string.content_authority),
-                    prepareBatch(cursor, categories)
-            );
-        } catch (RemoteException e) {
-            Timber.e(e, "RemoteException while sync of categories");
-        } catch (OperationApplicationException e) {
-            Timber.e(e, "OperationApplicationException while sync of categories");
-            throw new IllegalStateException(e);
+            Collection<CategoryItem> categories = radioApi.listPrimaryCategories();
+            // FileRadioApi implementation returns null due to IOException
+            if (categories == null) {
+                syncResult.stats.numIoExceptions++;
+            } else {
+                ContentResolver contentResolver = context.getContentResolver();
+                Cursor cursor = contentResolver.query(CategoryColumns.CONTENT_URI, CategoryColumns.ALL_COLUMNS, null, null, null);
+                try {
+                    contentResolver.applyBatch(
+                            context.getString(R.string.content_authority),
+                            prepareBatch(cursor, categories)
+                    );
+                } catch (RemoteException e) {
+                    Timber.e(e, "RemoteException while sync of categories");
+                } catch (OperationApplicationException e) {
+                    Timber.e(e, "OperationApplicationException while sync of categories");
+                    throw new IllegalStateException(e);
+                }
+            }
+        } catch (RetrofitError error) {
+            syncResult.stats.numIoExceptions++;
         }
     }
 

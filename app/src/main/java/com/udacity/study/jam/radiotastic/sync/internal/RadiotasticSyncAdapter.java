@@ -26,7 +26,7 @@ public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        SyncComponent syncComponent = SyncComponent.Initializer.init(getContext(), syncResult);
+        SyncComponent syncComponent = SyncComponent.Initializer.init(getContext(), extras, syncResult);
         if (extras.containsKey(SyncStationsCaseImpl.CATEGORY_ID_ARG)) {
             syncComponent.stationsSync().execute(extras);
         } else {

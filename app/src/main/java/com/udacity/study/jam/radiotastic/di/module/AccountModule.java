@@ -18,6 +18,7 @@ import com.udacity.study.jam.radiotastic.sync.GetAccountCaseImpl;
 import com.udacity.study.jam.radiotastic.sync.ImmediateSyncCaseImpl;
 import com.udacity.study.jam.radiotastic.sync.ObserveSyncStateCaseImpl;
 import com.udacity.study.jam.radiotastic.sync.SyncAccountCaseImpl;
+import com.udacity.study.jam.radiotastic.sync.SyncHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,8 +38,8 @@ final public class AccountModule {
 
     @Provides
     ImmediateSyncCase provideImmediateSyncUseCase(
-            Context context, GetAccountCase getAccountUseCase) {
-        return new ImmediateSyncCaseImpl(context, getAccountUseCase);
+            Context context, SyncHelper syncHelper, GetAccountCase getAccountUseCase) {
+        return new ImmediateSyncCaseImpl(context, syncHelper, getAccountUseCase);
     }
 
     @Provides

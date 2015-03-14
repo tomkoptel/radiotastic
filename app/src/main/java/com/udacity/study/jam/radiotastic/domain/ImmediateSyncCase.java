@@ -11,5 +11,6 @@ package com.udacity.study.jam.radiotastic.domain;
 import android.os.Bundle;
 
 public interface ImmediateSyncCase {
-    void start(Bundle args);
+    void startCachedSync(Bundle args);
+    void startRemoteSync(Bundle args);
 }

@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.RetrofitError;
 import timber.log.Timber;
 
 public class SyncStationsCaseImpl implements SyncStationsCase {
@@ -72,21 +73,25 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
     @Override
     public void execute(Bundle args) {
         String categoryId = args.getString(CATEGORY_ID_ARG);
-        Collection<StationItem> stations = radioApi.listStations(categoryId);
-        ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(CONTENT_URI,
-                ALL_COLUMNS, SELECT_BY_CATEGORY_ID,
-                new String[]{categoryId}, null);
         try {
-            contentResolver.applyBatch(
-                    context.getString(R.string.content_authority),
-                    prepareBatch(cursor, categoryId, stations)
-            );
-        } catch (RemoteException e) {
-            Timber.e(e, "RemoteException while sync of categories");
-        } catch (OperationApplicationException e) {
-            Timber.e(e, "OperationApplicationException while sync of categories");
-            throw new IllegalStateException(e);
+            Collection<StationItem> stations = radioApi.listStations(categoryId);
+            ContentResolver contentResolver = context.getContentResolver();
+            Cursor cursor = contentResolver.query(CONTENT_URI,
+                    ALL_COLUMNS, SELECT_BY_CATEGORY_ID,
+                    new String[]{categoryId}, null);
+            try {
+                contentResolver.applyBatch(
+                        context.getString(R.string.content_authority),
+                        prepareBatch(cursor, categoryId, stations)
+                );
+            } catch (RemoteException e) {
+                Timber.e(e, "RemoteException while sync of categories");
+            } catch (OperationApplicationException e) {
+                Timber.e(e, "OperationApplicationException while sync of categories");
+                throw new IllegalStateException(e);
+            }
+        } catch (RetrofitError error) {
+            syncResult.stats.numIoExceptions++;
         }
     }
 

@@ -37,6 +37,7 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
     private boolean mSyncIsActive;
     private View mView;
     private Bus bus;
+    private SyncType syncType;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -91,7 +92,8 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         if (data.getCount() > 0) {
             showCategories(data);
         } else {
-            startSyncIfPossible();
+            showEmptyView();
+            startCachedSyncIfPossible();
         }
     }
 
@@ -101,7 +103,7 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
 
     @Override
     public void onRefresh() {
-        startSyncIfPossible();
+        startRemoteSyncIfPossible();
     }
 
     private void initSyncListener() {
@@ -109,22 +111,22 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
             @Override
             public void onStatusChanged(final boolean syncIsActive) {
                 mSyncIsActive = syncIsActive;
-                mFragment.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (syncIsActive) {
-                            if (!mView.isAlreadyLoaded()) {
-                                mView.showLoading();
-                            }
-                        } else {
-                            if (mView.isAlreadyLoaded()) {
-                                mView.hideLoading();
+                if (syncType == SyncType.FROM_CLOUD) {
+                    mFragment.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (syncIsActive) {
+                                if (!mView.isAlreadyLoaded()) {
+                                    mView.showLoading();
+                                }
                             } else {
-                                mView.showEmptyCase();
+                                if (mView.isAlreadyLoaded()) {
+                                    mView.hideLoading();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -138,12 +140,18 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         mFragment.getLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
     }
 
-    private void startSyncIfPossible() {
+    private void startRemoteSyncIfPossible() {
         if (!mSyncIsActive) {
-            immediateSync.start(null);
+            immediateSync.startRemoteSync(null);
         }
         if (!networkStateManager.isConnectedOrConnecting()) {
             notifyConnectionError();
+        }
+    }
+
+    private void startCachedSyncIfPossible() {
+        if (!mSyncIsActive) {
+            immediateSync.startCachedSync(null);
         }
     }
 
@@ -162,6 +170,15 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         }
     }
 
+    private void showEmptyView() {
+        mFragment.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showEmptyCase();
+            }
+        });
+    }
+
     public interface View {
         void hideLoading();
 
@@ -176,5 +193,9 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         boolean isReady();
 
         boolean isAlreadyLoaded();
+    }
+
+    private static enum SyncType {
+        FROM_FILE_SYSTEM, FROM_CLOUD;
     }
 }
