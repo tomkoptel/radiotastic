@@ -16,44 +16,71 @@ import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.SongItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SongsAdapter extends
-        RecyclerView.Adapter<SongsAdapter.ItemViewHolder> {
+        RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<SongItem> mData;
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
 
-    public SongsAdapter() {
+    private View mHeaderView;
+    private List<SongItem> mItems = new ArrayList<SongItem>();
+
+    public SongsAdapter(View headerView) {
+        mHeaderView = headerView;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (position == 0) ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        if (viewType == VIEW_TYPE_HEADER) {
+            return new HeaderViewHolder(mHeaderView);
+        } else {
+            View itemView = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(android.R.layout.simple_list_item_2, viewGroup, false);
+
+            return new ItemViewHolder(itemView);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof ItemViewHolder) {
+            ItemViewHolder holder = (ItemViewHolder) viewHolder;
+            SongItem item = getItem(position - 1);
+            holder.labelTextView.setText(item.getName());
+            holder.descTextView.setText(item.getTitle());
+        }
     }
 
     public void setDataset(List<SongItem> data) {
-        mData = data;
+        mItems = data;
         notifyDataSetChanged();
-        // This isn't working
-//        notifyItemRangeInserted(0, data.size());
     }
 
-    @Override
-    public ItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(android.R.layout.simple_list_item_2, viewGroup, false);
-        return new ItemViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(ItemViewHolder viewHolder, int position) {
-        SongItem item = mData.get(position);
-        viewHolder.labelTextView.setText(item.getName());
-        viewHolder.descTextView.setText(item.getTitle());
+    public SongItem getItem(int position) {
+        return mItems.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        if (mHeaderView == null) {
+            return mItems.size();
+        } else {
+            return mItems.size() + 1;
+        }
     }
 
-    public SongItem getItem(int position) {
-        return mData.get(position);
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(View view) {
+            super(view);
+        }
     }
 
     public final static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -66,4 +93,5 @@ public class SongsAdapter extends
             descTextView = (TextView) itemView.findViewById(android.R.id.text2);
         }
     }
+
 }

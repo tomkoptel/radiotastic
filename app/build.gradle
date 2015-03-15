@@ -55,6 +55,8 @@ dependencies {
     compile 'com.jakewharton.timber:timber:2.5.1'
 
     // UI support libraries
+    // Simplifies scroll interaction with scrollable views
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     // Custom implementation of floating action button
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     // Supporting animator on 10 API
