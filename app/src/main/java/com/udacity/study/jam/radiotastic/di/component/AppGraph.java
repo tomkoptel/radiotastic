@@ -10,12 +10,12 @@ package com.udacity.study.jam.radiotastic.di.component;
 
 import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService;
 import com.udacity.study.jam.radiotastic.ui.activity.MainActivity;
-import com.udacity.study.jam.radiotastic.ui.presenter.CategoryPresenter;
-import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
+import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
+import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 
 public interface AppGraph {
     void inject(MainActivity activity);
-    void inject(CategoryPresenter presenter);
-    void inject(StationPresenter presenter);
+    void inject(CategoriesPresenter presenter);
+    void inject(StationsPresenter presenter);
     void inject(StationSyncService stationSyncService);
 }

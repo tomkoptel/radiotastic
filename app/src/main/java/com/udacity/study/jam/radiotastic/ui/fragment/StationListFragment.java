@@ -28,11 +28,11 @@ import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.station.StationCursor;
 import com.udacity.study.jam.radiotastic.ui.adapter.StationAdapter;
-import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
+import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
-public class StationListFragment extends Fragment implements StationPresenter.View {
+public class StationListFragment extends Fragment implements StationsPresenter.View {
     private static final String CATEGORY_ID_ARG = "categoryID";
 
     private RecyclerView recyclerView;
@@ -42,7 +42,7 @@ public class StationListFragment extends Fragment implements StationPresenter.Vi
     private GestureDetectorCompat gestureDetectorCompat;
     private StationAdapter mAdapter;
 
-    private StationPresenter stationPresenter;
+    private StationsPresenter stationsPresenter;
     private String mCategoryId;
 
     public static StationListFragment init(String categoryID) {
@@ -76,9 +76,9 @@ public class StationListFragment extends Fragment implements StationPresenter.Vi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        stationPresenter = new StationPresenter(this, this);
-        stationPresenter.setCategoryId(mCategoryId);
-        stationPresenter.initialize();
+        stationsPresenter = new StationsPresenter(this, this);
+        stationsPresenter.setCategoryId(mCategoryId);
+        stationsPresenter.initialize();
 
         initRecyclerView();
         initSwipeRefresh();
@@ -87,13 +87,13 @@ public class StationListFragment extends Fragment implements StationPresenter.Vi
     @Override
     public void onResume() {
         super.onResume();
-        stationPresenter.resume();
+        stationsPresenter.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stationPresenter.pause();
+        stationsPresenter.pause();
     }
 
     @Override
@@ -184,7 +184,7 @@ public class StationListFragment extends Fragment implements StationPresenter.Vi
                 R.color.holo_purple_dark,
                 R.color.holo_red_dark
         );
-        swipeRefreshLayout.setOnRefreshListener(stationPresenter);
+        swipeRefreshLayout.setOnRefreshListener(stationsPresenter);
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {

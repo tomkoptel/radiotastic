@@ -16,28 +16,39 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.github.pwittchen.networkevents.library.ConnectivityStatus;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
-import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationColumns;
+import com.udacity.study.jam.radiotastic.db.station.StationSelection;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
+import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
 import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 
 import javax.inject.Inject;
 
-public class CategoryPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
+public class StationsPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final int LOAD_CATEGORIES = 100;
+    private static final int LOAD_STATIONS = 200;
+    private static final String[] ALL_COLUMNS = {
+            StationColumns._ID,
+            StationColumns.CATEGORY_ID,
+            StationColumns.STATION_ID,
+            StationColumns.NAME,
+            StationColumns.WEBSITE,
+            StationColumns.STREAMURL,
+            StationColumns.COUNTRY,
+            StationColumns.BITRATE,
+            StationColumns.STATUS,
+    };
+
     private final Fragment mFragment;
+    private String categoryId;
     private NetworkEvents networkEvents;
     private boolean mSyncIsActive;
     private View mView;
     private Bus bus;
-    private SyncType syncType;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -46,25 +57,23 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
     @Inject
     NetworkStateManager networkStateManager;
 
-    public CategoryPresenter(Fragment fragment, View view) {
+    public StationsPresenter(Fragment fragment, View view) {
         mFragment = fragment;
         mView = view;
     }
 
-    @Override
-    public void initialize() {
-        ApplicationComponent.Initializer
-                .init(mFragment.getActivity()).inject(this);
-        loadCategories();
-        initNetworkListeners();
-        initSyncListener();
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    @Subscribe
-    public void onConnectivityChanged(ConnectivityChanged event) {
-        if (event.getConnectivityStatus() == ConnectivityStatus.OFFLINE) {
-            notifyConnectionError();
-        }
+    @Override
+    public void initialize() {
+        ensureCategoryIdPresents();
+        ApplicationComponent.Initializer
+                .init(mFragment.getActivity()).inject(this);
+        loadStations();
+        initNetworkListeners();
+        initSyncListener();
     }
 
     @Override
@@ -83,17 +92,23 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mFragment.getActivity(), CategoryColumns.CONTENT_URI,
-                CategoryColumns.ALL_COLUMNS, null, null, CategoryColumns.NAME + " ASC");
+        StationSelection selection = new StationSelection();
+        selection.categoryId(Long.valueOf(categoryId));
+        return new CursorLoader(mFragment.getActivity(),
+                StationColumns.CONTENT_URI,
+                ALL_COLUMNS,
+                selection.sel(),
+                new String[]{categoryId},
+                StationColumns.NAME + " ASC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() > 0) {
-            showCategories(data);
+            showStations(data);
         } else {
             showEmptyView();
-            startCachedSyncIfPossible();
+            startSyncIfPossible();
         }
     }
 
@@ -103,7 +118,11 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
 
     @Override
     public void onRefresh() {
-        startRemoteSyncIfPossible();
+        startSyncIfPossible();
+    }
+
+    private void loadStations() {
+        mFragment.getLoaderManager().initLoader(LOAD_STATIONS, null, this);
     }
 
     private void initSyncListener() {
@@ -111,22 +130,20 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
             @Override
             public void onStatusChanged(final boolean syncIsActive) {
                 mSyncIsActive = syncIsActive;
-                if (syncType == SyncType.FROM_CLOUD) {
-                    mFragment.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (syncIsActive) {
-                                if (!mView.isAlreadyLoaded()) {
-                                    mView.showLoading();
-                                }
-                            } else {
-                                if (mView.isAlreadyLoaded()) {
-                                    mView.hideLoading();
-                                }
+                mFragment.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (syncIsActive) {
+                            if (!mView.isAlreadyLoaded()) {
+                                mView.showLoading();
+                            }
+                        } else {
+                            if (mView.isAlreadyLoaded()) {
+                                mView.hideLoading();
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     }
@@ -136,22 +153,15 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         networkEvents = new NetworkEvents(mFragment.getActivity(), bus);
     }
 
-    private void loadCategories() {
-        mFragment.getLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
-    }
-
-    private void startRemoteSyncIfPossible() {
+    private void startSyncIfPossible() {
         if (!mSyncIsActive) {
-            immediateSync.startRemoteSync(null);
+            Bundle args = new Bundle();
+            args.putString(SyncStationsCaseImpl.CATEGORY_ID_ARG, categoryId);
+            immediateSync.startRemoteSync(args);
         }
+
         if (!networkStateManager.isConnectedOrConnecting()) {
             notifyConnectionError();
-        }
-    }
-
-    private void startCachedSyncIfPossible() {
-        if (!mSyncIsActive) {
-            immediateSync.startCachedSync(null);
         }
     }
 
@@ -163,10 +173,16 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         }
     }
 
-    private void showCategories(Cursor cursor) {
+    private void showStations(Cursor cursor) {
         if (mView.isReady()) {
-            mView.renderCategories(cursor);
+            mView.renderStations(cursor);
             mView.hideLoading();
+        }
+    }
+
+    private void ensureCategoryIdPresents() {
+        if (categoryId == null) {
+            throw new IllegalStateException("Remember setup category id");
         }
     }
 
@@ -184,7 +200,7 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
 
         void showLoading();
 
-        void renderCategories(Cursor cursor);
+        void renderStations(Cursor cursor);
 
         void showConnectionErrorMessage();
 
@@ -193,9 +209,5 @@ public class CategoryPresenter extends Presenter implements LoaderManager.Loader
         boolean isReady();
 
         boolean isAlreadyLoaded();
-    }
-
-    private static enum SyncType {
-        FROM_FILE_SYSTEM, FROM_CLOUD;
     }
 }

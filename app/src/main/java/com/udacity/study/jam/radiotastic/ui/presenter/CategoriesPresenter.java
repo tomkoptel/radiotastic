@@ -16,39 +16,28 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.github.pwittchen.networkevents.library.ConnectivityStatus;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
+import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.udacity.study.jam.radiotastic.ApplicationComponent;
-import com.udacity.study.jam.radiotastic.db.station.StationColumns;
-import com.udacity.study.jam.radiotastic.db.station.StationSelection;
+import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
-import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
 import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 
 import javax.inject.Inject;
 
-public class StationPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
+public class CategoriesPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final int LOAD_STATIONS = 200;
-    private static final String[] ALL_COLUMNS = {
-            StationColumns._ID,
-            StationColumns.CATEGORY_ID,
-            StationColumns.STATION_ID,
-            StationColumns.NAME,
-            StationColumns.WEBSITE,
-            StationColumns.STREAMURL,
-            StationColumns.COUNTRY,
-            StationColumns.BITRATE,
-            StationColumns.STATUS,
-    };
-
+    private static final int LOAD_CATEGORIES = 100;
     private final Fragment mFragment;
-    private String categoryId;
     private NetworkEvents networkEvents;
     private boolean mSyncIsActive;
     private View mView;
     private Bus bus;
+    private SyncType syncType;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -57,23 +46,25 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
     @Inject
     NetworkStateManager networkStateManager;
 
-    public StationPresenter(Fragment fragment, View view) {
+    public CategoriesPresenter(Fragment fragment, View view) {
         mFragment = fragment;
         mView = view;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
     @Override
     public void initialize() {
-        ensureCategoryIdPresents();
         ApplicationComponent.Initializer
                 .init(mFragment.getActivity()).inject(this);
-        loadStations();
+        loadCategories();
         initNetworkListeners();
         initSyncListener();
+    }
+
+    @Subscribe
+    public void onConnectivityChanged(ConnectivityChanged event) {
+        if (event.getConnectivityStatus() == ConnectivityStatus.OFFLINE) {
+            notifyConnectionError();
+        }
     }
 
     @Override
@@ -92,23 +83,17 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        StationSelection selection = new StationSelection();
-        selection.categoryId(Long.valueOf(categoryId));
-        return new CursorLoader(mFragment.getActivity(),
-                StationColumns.CONTENT_URI,
-                ALL_COLUMNS,
-                selection.sel(),
-                new String[]{categoryId},
-                StationColumns.NAME + " ASC");
+        return new CursorLoader(mFragment.getActivity(), CategoryColumns.CONTENT_URI,
+                CategoryColumns.ALL_COLUMNS, null, null, CategoryColumns.NAME + " ASC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() > 0) {
-            showStations(data);
+            showCategories(data);
         } else {
             showEmptyView();
-            startSyncIfPossible();
+            startCachedSyncIfPossible();
         }
     }
 
@@ -118,11 +103,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
     @Override
     public void onRefresh() {
-        startSyncIfPossible();
-    }
-
-    private void loadStations() {
-        mFragment.getLoaderManager().initLoader(LOAD_STATIONS, null, this);
+        startRemoteSyncIfPossible();
     }
 
     private void initSyncListener() {
@@ -130,20 +111,22 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
             @Override
             public void onStatusChanged(final boolean syncIsActive) {
                 mSyncIsActive = syncIsActive;
-                mFragment.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (syncIsActive) {
-                            if (!mView.isAlreadyLoaded()) {
-                                mView.showLoading();
-                            }
-                        } else {
-                            if (mView.isAlreadyLoaded()) {
-                                mView.hideLoading();
+                if (syncType == SyncType.FROM_CLOUD) {
+                    mFragment.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (syncIsActive) {
+                                if (!mView.isAlreadyLoaded()) {
+                                    mView.showLoading();
+                                }
+                            } else {
+                                if (mView.isAlreadyLoaded()) {
+                                    mView.hideLoading();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -153,15 +136,22 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         networkEvents = new NetworkEvents(mFragment.getActivity(), bus);
     }
 
-    private void startSyncIfPossible() {
-        if (!mSyncIsActive) {
-            Bundle args = new Bundle();
-            args.putString(SyncStationsCaseImpl.CATEGORY_ID_ARG, categoryId);
-            immediateSync.startRemoteSync(args);
-        }
+    private void loadCategories() {
+        mFragment.getLoaderManager().initLoader(LOAD_CATEGORIES, null, this);
+    }
 
+    private void startRemoteSyncIfPossible() {
+        if (!mSyncIsActive) {
+            immediateSync.startRemoteSync(null);
+        }
         if (!networkStateManager.isConnectedOrConnecting()) {
             notifyConnectionError();
+        }
+    }
+
+    private void startCachedSyncIfPossible() {
+        if (!mSyncIsActive) {
+            immediateSync.startCachedSync(null);
         }
     }
 
@@ -173,16 +163,10 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         }
     }
 
-    private void showStations(Cursor cursor) {
+    private void showCategories(Cursor cursor) {
         if (mView.isReady()) {
-            mView.renderStations(cursor);
+            mView.renderCategories(cursor);
             mView.hideLoading();
-        }
-    }
-
-    private void ensureCategoryIdPresents() {
-        if (categoryId == null) {
-            throw new IllegalStateException("Remember setup category id");
         }
     }
 
@@ -200,7 +184,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
         void showLoading();
 
-        void renderStations(Cursor cursor);
+        void renderCategories(Cursor cursor);
 
         void showConnectionErrorMessage();
 
@@ -209,5 +193,9 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         boolean isReady();
 
         boolean isAlreadyLoaded();
+    }
+
+    private static enum SyncType {
+        FROM_FILE_SYSTEM, FROM_CLOUD;
     }
 }

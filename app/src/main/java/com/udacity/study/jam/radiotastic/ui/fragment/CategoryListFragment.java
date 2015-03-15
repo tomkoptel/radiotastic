@@ -28,11 +28,11 @@ import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 import com.udacity.study.jam.radiotastic.ui.adapter.CategoryAdapter;
-import com.udacity.study.jam.radiotastic.ui.presenter.CategoryPresenter;
+import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
-public class CategoryListFragment extends Fragment implements CategoryPresenter.View {
+public class CategoryListFragment extends Fragment implements CategoriesPresenter.View {
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
@@ -40,7 +40,7 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     private DataImageView emptyImageView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private CategoryPresenter categoryPresenter;
+    private CategoriesPresenter categoriesPresenter;
 
     @Nullable
     @Override
@@ -56,8 +56,8 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        categoryPresenter = new CategoryPresenter(this, this);
-        categoryPresenter.initialize();
+        categoriesPresenter = new CategoriesPresenter(this, this);
+        categoriesPresenter.initialize();
 
         initRecyclerView();
         initSwipeRefresh();
@@ -66,13 +66,13 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
     @Override
     public void onResume() {
         super.onResume();
-        categoryPresenter.resume();
+        categoriesPresenter.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        categoryPresenter.pause();
+        categoriesPresenter.pause();
     }
 
     @Override
@@ -163,7 +163,7 @@ public class CategoryListFragment extends Fragment implements CategoryPresenter.
                 R.color.holo_purple_dark,
                 R.color.holo_red_dark
         );
-        swipeRefreshLayout.setOnRefreshListener(categoryPresenter);
+        swipeRefreshLayout.setOnRefreshListener(categoriesPresenter);
     }
 
     private class ItemTouchListener extends SimpleOnItemTouchListener {
