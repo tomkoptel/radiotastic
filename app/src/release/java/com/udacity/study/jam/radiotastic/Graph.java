@@ -10,9 +10,8 @@ package com.udacity.study.jam.radiotastic;
 
 import android.content.Context;
 
-import com.udacity.study.jam.radiotastic.di.component.AppGraph;
 import com.udacity.study.jam.radiotastic.di.module.AccountModule;
-import com.udacity.study.jam.radiotastic.di.module.RadioApiModule;
+import com.udacity.study.jam.radiotastic.di.module.DataModule;
 import com.udacity.study.jam.radiotastic.di.module.SystemServicesModule;
 
 import javax.inject.Singleton;
@@ -21,14 +20,19 @@ import dagger.Component;
 
 @Singleton
 @Component(
-        modules = {SystemServicesModule.class, RadioApiModule.class, AccountModule.class}
+        modules = {SystemServicesModule.class, DataModule.class, AccountModule.class}
 )
-public interface ApplicationComponent extends AppGraph {
+public interface Graph {
+    void inject(MainActivity activity);
+    void inject(CategoriesPresenter presenter);
+    void inject(StationsPresenter presenter);
+    void inject(StationSyncService stationSyncService);
+
     /**
      * An initializer that creates the graph from an application.
      */
     final static class Initializer {
-        public static AppGraph init(Context context) {
+        public static Graph init(Context context, boolean mockMode) {
             return Dagger_ApplicationComponent.builder()
                     .systemServicesModule(new SystemServicesModule(
                             MainApplication.get(context)))

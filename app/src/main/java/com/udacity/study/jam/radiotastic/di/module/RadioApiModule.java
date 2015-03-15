@@ -11,7 +11,6 @@ package com.udacity.study.jam.radiotastic.di.module;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 import com.udacity.study.jam.radiotastic.api.DirbleApiKey;
 import com.udacity.study.jam.radiotastic.api.DirbleClient;
 import com.udacity.study.jam.radiotastic.api.DirbleRadioApi;
@@ -31,19 +30,9 @@ import retrofit.client.UrlConnectionClient;
 @Module
 public class RadioApiModule {
 
-    private final Bundle extras;
-
-    public RadioApiModule() {
-        this.extras = new Bundle();
-    }
-
-    public RadioApiModule(Bundle extras) {
-        this.extras = extras;
-    }
-
-    @Singleton
     @Provides
-    public RadioApi provideRadioApi(Context context, DirbleApiKey apiKey, DirbleClient dirbleClient) {
+    public RadioApi provideRadioApi(Context context, Bundle extras,
+                                    DirbleApiKey apiKey, DirbleClient dirbleClient) {
         RadioApi remoteClient = new DirbleRadioApi(apiKey, dirbleClient);
         if (!extras.containsKey(SyncHelper.SYNC_EXTRAS_FLAG)) {
             return remoteClient;
@@ -70,11 +59,6 @@ public class RadioApiModule {
     @Singleton
     UrlConnectionClient provideUrlConnectionClient() {
         return new AppUrlConnectionClient();
-    }
-
-    @Provides
-    Endpoint provideApiEndpoint(Context context) {
-        return new ApiEndpoint(context);
     }
 
     @Provides

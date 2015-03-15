@@ -18,7 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.squareup.otto.Bus;
-import com.udacity.study.jam.radiotastic.ApplicationComponent;
+import com.udacity.study.jam.radiotastic.App;
 import com.udacity.study.jam.radiotastic.db.station.StationColumns;
 import com.udacity.study.jam.radiotastic.db.station.StationSelection;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
@@ -69,8 +69,7 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
     @Override
     public void initialize() {
         ensureCategoryIdPresents();
-        ApplicationComponent.Initializer
-                .init(mFragment.getActivity()).inject(this);
+        App.get(mFragment.getActivity()).graph().inject(this);
         loadStations();
         initNetworkListeners();
         initSyncListener();

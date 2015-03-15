@@ -10,15 +10,19 @@ package com.udacity.study.jam.radiotastic;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SyncResult;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
 
-import com.udacity.study.jam.radiotastic.di.component.AppGraph;
+import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
 
 import timber.log.Timber;
 
-public class MainApplication extends Application {
-    private AppGraph mComponent;
+public class App extends Application {
+    private Graph graphComponent;
+    private SyncComponent syncComponent;
+    private boolean useMock;
 
     @Override
     public void onCreate() {
@@ -28,7 +32,7 @@ public class MainApplication extends Application {
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
         }
 
-        buildComponentAndInject();
+        graphComponent = Graph.Initializer.init(this, false);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -37,16 +41,28 @@ public class MainApplication extends Application {
         }
     }
 
-    public void buildComponentAndInject() {
-        mComponent = ApplicationComponent.Initializer.init(this);
+    public void setMockMode(boolean useMock) {
+        this.useMock = useMock;
+        this.graphComponent = null;
+        this.syncComponent = null;
     }
 
-    public static MainApplication get(Context context) {
-        return (MainApplication) context.getApplicationContext();
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
     }
 
-    public AppGraph component() {
-        return mComponent;
+    public SyncComponent syncGraph(SyncResult syncResult, Bundle extras) {
+        if (syncComponent == null) {
+            syncComponent = SyncComponent.Initializer.init(this, syncResult, extras, useMock);
+        }
+        return syncComponent;
+    }
+
+    public Graph graph() {
+        if (graphComponent == null) {
+            graphComponent = Graph.Initializer.init(this, useMock);
+        }
+        return graphComponent;
     }
 
     /**

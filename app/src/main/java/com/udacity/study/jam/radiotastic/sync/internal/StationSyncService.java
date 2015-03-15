@@ -12,7 +12,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.udacity.study.jam.radiotastic.MainApplication;
+import com.udacity.study.jam.radiotastic.App;
 import com.udacity.study.jam.radiotastic.api.RadioApi;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataContentValues;
@@ -45,7 +45,7 @@ public class StationSyncService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        MainApplication.get(this).component().inject(this);
+        App.get(this).graph().inject(this);
     }
 
     @Override

@@ -21,7 +21,8 @@ import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import com.udacity.study.jam.radiotastic.ApplicationComponent;
+import com.udacity.study.jam.radiotastic.App;
+import com.udacity.study.jam.radiotastic.Graph;
 import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
@@ -53,8 +54,7 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
 
     @Override
     public void initialize() {
-        ApplicationComponent.Initializer
-                .init(mFragment.getActivity()).inject(this);
+        App.get(mFragment.getActivity()).graph().inject(this);
         loadCategories();
         initNetworkListeners();
         initSyncListener();
