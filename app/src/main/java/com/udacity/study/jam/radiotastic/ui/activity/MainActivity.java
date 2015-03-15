@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment;
-import com.udacity.study.jam.radiotastic.ui.fragment.DetailFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationFragment;
 import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment;
 
 
@@ -36,10 +36,10 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onStationSelected(String stationID) {
+    public void onStationSelected(String stationID, String streamUrl) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_content, DetailFragment.init(stationID))
+                    .replace(R.id.detail_content, StationFragment.init(stationID, streamUrl))
                     .commit();
         }
     }

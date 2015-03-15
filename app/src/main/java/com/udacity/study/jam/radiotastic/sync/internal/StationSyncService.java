@@ -16,11 +16,19 @@ import com.udacity.study.jam.radiotastic.MainApplication;
 import com.udacity.study.jam.radiotastic.api.RadioApi;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataContentValues;
+import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataSelection;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Date;
 
 import javax.inject.Inject;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedInput;
 import timber.log.Timber;
 
 public class StationSyncService extends IntentService {
@@ -47,14 +55,55 @@ public class StationSyncService extends IntentService {
             String stationId = extras.getString(STATION_ID_ARG);
             try {
                 Response response = radioApi.getStation(stationId);
+                if (response.getStatus() == 200) {
 
-                StationMetaDataContentValues metaDataContentValues = new StationMetaDataContentValues();
-                metaDataContentValues.putStationId(Long.valueOf(stationId));
-                metaDataContentValues.putMeta(response.getBody().toString());
-                getContentResolver().insert(StationMetaDataColumns.CONTENT_URI, metaDataContentValues.values());
+                    TypedInput input = response.getBody();
+                    try {
+                        InputStream inputStream = input.in();
+                        String json = convertToString(inputStream);
+                        closeQuietly(inputStream);
+                        saveInDb(stationId, json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (RetrofitError error) {
                 Timber.e(error, "Failed to fetch station meta data");
             }
+        }
+    }
+
+    private void saveInDb(String stationId, String response) {
+        StationMetaDataSelection selection = new StationMetaDataSelection();
+        selection.stationId(Long.valueOf(stationId));
+        getContentResolver().delete(StationMetaDataColumns.CONTENT_URI, selection.sel(), selection.args());
+
+        StationMetaDataContentValues metaDataContentValues =
+                new StationMetaDataContentValues()
+                        .putStationId(Long.valueOf(stationId))
+                        .putMeta(response)
+                        .putCreatedAt(new Date());
+        getContentResolver().insert(StationMetaDataColumns.CONTENT_URI, metaDataContentValues.values());
+    }
+
+    private String convertToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        closeQuietly(inputStream);
+        return stringBuilder.toString();
+    }
+
+    private void closeQuietly(InputStream input) {
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException ioe) {
+            // Ignore exception due to quite close
         }
     }
 }

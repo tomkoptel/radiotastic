@@ -206,7 +206,7 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
                 cursor.moveToPosition(position);
                 StationCursor stationCursor = new StationCursor(cursor);
                 if (getActivity() instanceof Callback) {
-                    ((Callback) getActivity()).onStationSelected(String.valueOf(stationCursor.getStationId()));
+                    ((Callback) getActivity()).onStationSelected(String.valueOf(stationCursor.getStationId()), stationCursor.getStreamurl());
                 }
             }
             return super.onSingleTapConfirmed(event);
@@ -214,7 +214,7 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
     }
 
     public static interface Callback {
-        void onStationSelected(String stationID);
+        void onStationSelected(String stationID, String streamUrl);
     }
 
 }

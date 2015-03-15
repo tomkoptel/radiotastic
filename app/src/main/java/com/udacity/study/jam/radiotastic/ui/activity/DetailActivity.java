@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.ui.fragment.DetailFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationFragment;
 
 public class DetailActivity extends ActionBarActivity {
 
-    public static final String STATION_ID_EXTRA = "stationID";
+    public static final String STATION_ID_EXTRA = "station_id";
+    public static final String STATION_STREAM_URL_EXTRA = "station_stream_url";
     private String mStationID;
+    private String mStationStreamUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +28,12 @@ public class DetailActivity extends ActionBarActivity {
 
         if (getIntent() != null && getIntent().hasExtra(STATION_ID_EXTRA)) {
             mStationID = getIntent().getStringExtra(STATION_ID_EXTRA);
+            mStationStreamUrl = getIntent().getStringExtra(STATION_STREAM_URL_EXTRA);
         }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, DetailFragment.init(mStationID))
+                    .replace(R.id.content, StationFragment.init(mStationID, mStationStreamUrl))
                     .commit();
         }
     }
