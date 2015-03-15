@@ -178,11 +178,10 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
 
     private void initSwipeRefresh() {
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.holo_blue_dark,
-                R.color.holo_yellow_dark,
-                R.color.holo_green_dark,
-                R.color.holo_purple_dark,
-                R.color.holo_red_dark
+                R.color.gplus_color_1,
+                R.color.gplus_color_2,
+                R.color.gplus_color_3,
+                R.color.gplus_color_4
         );
         swipeRefreshLayout.setOnRefreshListener(stationsPresenter);
     }

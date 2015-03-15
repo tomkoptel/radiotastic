@@ -12,19 +12,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.StationDetails;
-import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
@@ -35,14 +36,15 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     private static final String STATION_ID_ARG = "station_id";
     private static final String STATION_STREAM_URL_ARG = "station_stream_url";
 
-    private TextView mName;
-    private TextView mDescription;
     private String mStationId;
     private String mStreamUrl;
     private StationPresenter stationPresenter;
-    private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
     private SongsAdapter mAdapter;
+
+    private RecyclerView recyclerView;
+    private FloatingActionButton floatingActionButton;
+    private Toolbar toolbar;
 
     public static StationFragment init(String stationId, String streamUrl) {
         Bundle args = new Bundle();
@@ -68,20 +70,18 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-        mDescription = (TextView) root.findViewById(R.id.description);
-        mDescription = (TextView) root.findViewById(R.id.description);
-        root.findViewById(R.id.playAction)
+        floatingActionButton = (FloatingActionButton) root.findViewById(R.id.action);
+        toolbar = (Toolbar) root.findViewById(R.id.toolbar);
+
+        floatingActionButton
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PlayerIntentService.startActionPlay(getActivity(), mStreamUrl);
-                    }
-                });
-        root.findViewById(R.id.stopAction)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PlayerIntentService.startActionStop(getActivity());
+//                        if (mIsPlaying) {
+//                            PlayerIntentService.startActionPlay(getActivity(), mStreamUrl);
+//                        } else {
+//                            PlayerIntentService.startActionStop(getActivity());
+//                        }
                     }
                 });
 
@@ -101,6 +101,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
 
         mAdapter = new SongsAdapter();
         recyclerView.setAdapter(mAdapter);

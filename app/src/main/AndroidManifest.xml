@@ -39,6 +39,7 @@
 
         <activity
             android:name=".ui.activity.DetailActivity"
+            android:theme="@style/AppTheme.Toolbar"
             android:label="@string/station_activity_title" />
 
         <service

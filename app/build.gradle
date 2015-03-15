@@ -48,16 +48,19 @@ dependencies {
     compile("com.squareup.okhttp:okhttp-urlconnection:2.1.0")  {
         exclude group: 'com.squareup.okio', module: 'okio'
     }
+    // Track network events change
+    compile 'com.github.pwittchen:networkevents:1.0.3'
 
     // Logging
     compile 'com.jakewharton.timber:timber:2.5.1'
 
+    // UI support libraries
+    // Custom implementation of floating action button
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
+    // Supporting animator on 10 API
+    compile 'com.nineoldandroids:library:2.4.0'
     // Custom toasts
     compile 'com.github.kennyc1012:snackbar:1.1-SNAPSHOT:api8Release@aar'
-    compile 'com.nineoldandroids:library:2.4.0'
-
-    // Network events
-    compile 'com.github.pwittchen:networkevents:1.0.3'
 
     debugCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     debugCompile 'com.google.dexmaker:dexmaker:1.0'
