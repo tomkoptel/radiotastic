@@ -13,6 +13,8 @@ import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.Collection;
 
+import retrofit.client.Response;
+
 public class DirbleRadioApi implements RadioApi {
     private final DirbleApiKey apiKey;
     private final DirbleClient dirbleClient;
@@ -30,5 +32,10 @@ public class DirbleRadioApi implements RadioApi {
     @Override
     public Collection<StationItem> listStations(String categoryId) {
         return dirbleClient.listStations(apiKey.get(), categoryId);
+    }
+
+    @Override
+    public Response getStation(String stationId) {
+        return dirbleClient.getStation(apiKey.get(), stationId);
     }
 }

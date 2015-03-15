@@ -1,0 +1,9 @@
+{
+    "description": "Encapsulates song images info.",
+    "type": "object",
+    "properties": {
+        "url": { "type": "string" },
+        "thumb": { "$ref": "songImage.json"},
+        "preview": { "$ref": "songImage.json"}
+    }
+}

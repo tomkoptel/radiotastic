@@ -59,6 +59,9 @@ dependencies {
     // Network events
     compile 'com.github.pwittchen:networkevents:1.0.3'
 
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
+    androidTestCompile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
+
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support'
     }

@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
+import retrofit.client.Response;
 import timber.log.Timber;
 
 public class FileRadioApi implements RadioApi {
@@ -50,6 +51,11 @@ public class FileRadioApi implements RadioApi {
     @Override
     public Collection<StationItem> listStations(String categoryId) {
         throw new UnsupportedOperationException("Stations are not cached as file");
+    }
+
+    @Override
+    public Response getStation(String stationId) {
+        throw new UnsupportedOperationException("Station are not cached as file");
     }
 
     private String toString(InputStream inputStream) throws IOException {

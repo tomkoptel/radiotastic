@@ -3,11 +3,21 @@
     "type": "object",
     "properties": {
         "id": { "type": "number" },
-        "status": { "type": "integer" },
-        "urlid": { "type": "string" },
         "name": { "type": "string" },
+        "description": { "type": "string" },
         "website": { "type": "string" },
+        "country": { "type": "string" },
+        "bitrate": { "type": "string" },
+        "added": { "type": "string" },
         "streamurl": { "type": "string" },
-        "description": { "type": "string" }
+        "urlid": { "type": "string" },
+        "status": { "type": "integer" },
+        "image": { "type": "string" },
+        "songhistory": {
+            "type": "array",
+            "items": {
+                "$ref": "songItem.json"
+            }
+        }
     }
 }

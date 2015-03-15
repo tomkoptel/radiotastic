@@ -24,13 +24,18 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.Endpoint;
 import retrofit.RestAdapter;
 import retrofit.client.UrlConnectionClient;
 
 @Module
-final public class RadioApiModule {
+public class RadioApiModule {
 
     private final Bundle extras;
+
+    public RadioApiModule() {
+        this.extras = new Bundle();
+    }
 
     public RadioApiModule(Bundle extras) {
         this.extras = extras;
@@ -68,14 +73,14 @@ final public class RadioApiModule {
     }
 
     @Provides
-    ApiEndpoint provideApiEndpoint(Context context) {
+    Endpoint provideApiEndpoint(Context context) {
         return new ApiEndpoint(context);
     }
 
     @Provides
     @Singleton
     RestAdapter provideRestAdapter(UrlConnectionClient connectionClient,
-                                   ApiEndpoint endpoint) {
+                                   Endpoint endpoint) {
         return new RestAdapter.Builder()
                 .setEndpoint(endpoint)
                 .setClient(connectionClient)

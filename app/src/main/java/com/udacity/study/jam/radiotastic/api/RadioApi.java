@@ -15,8 +15,11 @@ import com.udacity.study.jam.radiotastic.StationItem;
 
 import java.util.Collection;
 
+import retrofit.client.Response;
+
 public interface RadioApi {
     @Nullable
     Collection<CategoryItem> listPrimaryCategories();
     Collection<StationItem> listStations(String categoryId);
+    Response getStation(String stationId);
 }

@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 import com.udacity.study.jam.radiotastic.db.AppProvider;
 import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.db.station.StationColumns;
+import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 
 /**
  * General station info. This is basic set of data enough for client to playback.

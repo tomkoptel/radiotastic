@@ -12,6 +12,7 @@ import android.util.Log;
 import com.udacity.study.jam.radiotastic.BuildConfig;
 import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.db.station.StationColumns;
+import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 
 public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TAG = AppSQLiteOpenHelper.class.getSimpleName();
@@ -57,6 +58,18 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_INDEX_STATION_CATEGORY_ID = "CREATE INDEX IDX_STATION_CATEGORY_ID "
             + " ON " + StationColumns.TABLE_NAME + " ( " + StationColumns.CATEGORY_ID + " );";
+
+    public static final String SQL_CREATE_TABLE_STATION_META_DATA = "CREATE TABLE IF NOT EXISTS "
+            + StationMetaDataColumns.TABLE_NAME + " ( "
+            + StationMetaDataColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + StationMetaDataColumns.STATION_ID + " INTEGER NOT NULL, "
+            + StationMetaDataColumns.META + " TEXT NOT NULL, "
+            + StationMetaDataColumns.CREATED_AT + " INTEGER NOT NULL "
+            + ", CONSTRAINT unique_station_category_id_combination UNIQUE (station_id) ON CONFLICT IGNORE"
+            + " );";
+
+    public static final String SQL_CREATE_INDEX_STATION_META_DATA_STATION_ID = "CREATE INDEX IDX_STATION_META_DATA_STATION_ID "
+            + " ON " + StationMetaDataColumns.TABLE_NAME + " ( " + StationMetaDataColumns.STATION_ID + " );";
 
     // @formatter:on
 
@@ -117,6 +130,8 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TABLE_STATION);
         db.execSQL(SQL_CREATE_INDEX_STATION_STATION_ID);
         db.execSQL(SQL_CREATE_INDEX_STATION_CATEGORY_ID);
+        db.execSQL(SQL_CREATE_TABLE_STATION_META_DATA);
+        db.execSQL(SQL_CREATE_INDEX_STATION_META_DATA_STATION_ID);
         mOpenHelperCallbacks.onPostCreate(mContext, db);
     }
 
