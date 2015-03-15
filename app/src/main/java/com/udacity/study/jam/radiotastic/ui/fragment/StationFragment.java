@@ -11,15 +11,23 @@ package com.udacity.study.jam.radiotastic.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
+import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.StationDetails;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
+import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
+import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import timber.log.Timber;
 
@@ -32,6 +40,9 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     private String mStationId;
     private String mStreamUrl;
     private StationPresenter stationPresenter;
+    private RecyclerView recyclerView;
+    private GestureDetectorCompat gestureDetectorCompat;
+    private SongsAdapter mAdapter;
 
     public static StationFragment init(String stationId, String streamUrl) {
         Bundle args = new Bundle();
@@ -56,7 +67,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
-        mName = (TextView) root.findViewById(R.id.name);
+        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+        mDescription = (TextView) root.findViewById(R.id.description);
         mDescription = (TextView) root.findViewById(R.id.description);
         root.findViewById(R.id.playAction)
                 .setOnClickListener(new View.OnClickListener() {
@@ -73,12 +85,25 @@ public class StationFragment extends Fragment implements StationPresenter.View {
                     }
                 });
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.scrollToPosition(0);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addOnItemTouchListener(new ItemTouchListener());
+
+        gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
+                new RecyclerViewGestureListener());
+
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mAdapter = new SongsAdapter();
+        recyclerView.setAdapter(mAdapter);
 
         stationPresenter = new StationPresenter(this, this);
         stationPresenter.setStationId(mStationId);
@@ -109,7 +134,7 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
     @Override
     public void renderStation(StationDetails stationDetails) {
-        int a = 1;
+        mAdapter.setDataset(stationDetails.getSonghistory());
     }
 
     @Override
@@ -130,5 +155,27 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Override
     public boolean isAlreadyLoaded() {
         return false;
+    }
+
+    private class ItemTouchListener extends SimpleOnItemTouchListener {
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+            gestureDetectorCompat.onTouchEvent(motionEvent);
+            return false;
+        }
+    }
+
+    private class RecyclerViewGestureListener
+            extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent event) {
+            View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
+            int position = recyclerView.getChildPosition(view);
+            SongItem item = mAdapter.getItem(position);
+            if (item != null) {
+
+            }
+            return super.onSingleTapConfirmed(event);
+        }
     }
 }

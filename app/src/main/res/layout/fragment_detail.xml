@@ -39,4 +39,11 @@
         android:text="Stop"
         android:id="@+id/stopAction"
         android:layout_gravity="center_horizontal" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_station_list" />
 </LinearLayout>

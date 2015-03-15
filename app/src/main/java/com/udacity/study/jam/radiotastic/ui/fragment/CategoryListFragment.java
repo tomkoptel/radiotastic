@@ -27,7 +27,7 @@ import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
-import com.udacity.study.jam.radiotastic.ui.adapter.CategoryAdapter;
+import com.udacity.study.jam.radiotastic.ui.adapter.CategoriesAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
@@ -36,7 +36,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
 
     private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
-    private CategoryAdapter mAdapter;
+    private CategoriesAdapter mAdapter;
     private DataImageView emptyImageView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -125,18 +125,13 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
 
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        // actually VERTICAL is the default,
-        // just remember: LinearLayoutManager
-        // supports HORIZONTAL layout out of the box
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        // you can set the first visible item like this:
         linearLayoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        // you can set the first visible item like this:
         recyclerView.setHasFixedSize(true);
-
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
+        gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
+                new RecyclerViewGestureListener());
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -148,10 +143,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
             }
         });
 
-        gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
-                new RecyclerViewGestureListener());
-
-        mAdapter = new CategoryAdapter(getActivity(), null);
+        mAdapter = new CategoriesAdapter(getActivity(), null);
         recyclerView.setAdapter(mAdapter);
     }
 

@@ -19,10 +19,10 @@ import android.widget.TextView;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.station.StationCursor;
 
-public class StationAdapter extends
-        CursorRecyclerAdapter<StationAdapter.ListItemViewHolder> {
+public class StationsAdapter extends
+        CursorRecyclerAdapter<StationsAdapter.ListItemViewHolder> {
 
-    public StationAdapter(Context context, Cursor cursor) {
+    public StationsAdapter(Context context, Cursor cursor) {
         super(context, cursor);
     }
 

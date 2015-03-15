@@ -20,9 +20,9 @@ import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
 
 
-public class CategoryAdapter extends CursorRecyclerAdapter<CategoryAdapter.ItemViewHolder> {
+public class CategoriesAdapter extends CursorRecyclerAdapter<CategoriesAdapter.ItemViewHolder> {
 
-    public CategoryAdapter(Context context, Cursor cursor) {
+    public CategoriesAdapter(Context context, Cursor cursor) {
         super(context, cursor);
     }
 

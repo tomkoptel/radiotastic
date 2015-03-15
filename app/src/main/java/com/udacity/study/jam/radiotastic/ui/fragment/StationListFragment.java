@@ -27,7 +27,7 @@ import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.station.StationCursor;
-import com.udacity.study.jam.radiotastic.ui.adapter.StationAdapter;
+import com.udacity.study.jam.radiotastic.ui.adapter.StationsAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
@@ -40,7 +40,7 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private GestureDetectorCompat gestureDetectorCompat;
-    private StationAdapter mAdapter;
+    private StationsAdapter mAdapter;
 
     private StationsPresenter stationsPresenter;
     private String mCategoryId;
@@ -157,7 +157,7 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
         // you can set the first visible item like this:
         recyclerView.setHasFixedSize(true);
 
-        mAdapter = new StationAdapter(getActivity(), null);
+        mAdapter = new StationsAdapter(getActivity(), null);
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnItemTouchListener(new ItemTouchListener());
