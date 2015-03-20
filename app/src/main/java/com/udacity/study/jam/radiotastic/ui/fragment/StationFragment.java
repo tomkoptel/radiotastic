@@ -26,7 +26,6 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -44,68 +43,53 @@ import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
-import timber.log.Timber;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.DimensionPixelSizeRes;
 
+@EFragment(R.layout.fragment_detail)
 public class StationFragment extends Fragment implements StationPresenter.View, ObservableScrollViewCallbacks {
-    private static final String STATION_ID_ARG = "station_id";
-    private static final String STATION_STREAM_URL_ARG = "station_stream_url";
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
 
-    private String mStationId;
-    private String mStreamUrl;
     private StationPresenter stationPresenter;
     private GestureDetectorCompat gestureDetectorCompat;
     private SongsAdapter mAdapter;
 
-    private ObservableRecyclerView mRecyclerView;
-    private Toolbar mToolbar;
-    private TextView mTitleView;
-    private View mImageView;
-    private View mOverlayView;
-    private View mRecyclerViewBackground;
-    private View mFab;
+    @ViewById(R.id.recycler)
+    protected ObservableRecyclerView mRecyclerView;
+    @ViewById(R.id.toolbar)
+    protected Toolbar mToolbar;
+    @ViewById(R.id.title)
+    protected TextView mTitleView;
+    @ViewById(R.id.image)
+    protected View mImageView;
+    @ViewById(R.id.overlay)
+    protected View mOverlayView;
+    @ViewById(R.id.list_background)
+    protected View mRecyclerViewBackground;
+    @ViewById(R.id.fab)
+    protected View mFab;
 
-    private int mFlexibleSpaceImageHeight;
-    private int mFlexibleSpaceShowFabOffset;
+    @FragmentArg
+    protected String stationId;
+    @FragmentArg
+    protected String streamUrl;
+
+    @DimensionPixelSizeRes(R.dimen.flexible_space_image_height)
+    protected int mFlexibleSpaceImageHeight;
+    @DimensionPixelSizeRes(R.dimen.flexible_space_show_fab_offset)
+    protected int mFlexibleSpaceShowFabOffset;
+    @DimensionPixelSizeRes(R.dimen.margin_standard)
+    protected int mFabMargin;
+
     private int mActionBarSize;
-    private int mFabMargin;
     private boolean mFabIsShown;
 
-    public static StationFragment init(String stationId, String streamUrl) {
-        Bundle args = new Bundle();
-        args.putString(STATION_ID_ARG, stationId);
-        args.putString(STATION_STREAM_URL_ARG, streamUrl);
-        StationFragment stationFragment = new StationFragment();
-        stationFragment.setArguments(args);
-        return stationFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Timber.tag(StationFragment.class.getSimpleName());
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(STATION_ID_ARG)) {
-            mStationId = args.getString(STATION_ID_ARG);
-            mStreamUrl = args.getString(STATION_STREAM_URL_ARG);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_detail, container, false);
-        mImageView = root.findViewById(R.id.image);
-        mOverlayView = root.findViewById(R.id.overlay);
-        mRecyclerViewBackground = root.findViewById(R.id.list_background);
-        mRecyclerView = (ObservableRecyclerView) root.findViewById(R.id.recycler);
-        mToolbar = (Toolbar) root.findViewById(R.id.toolbar);
-        mTitleView = (TextView) root.findViewById(R.id.title);
-
+    @AfterViews
+    final void init() {
         ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
-
-        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
         mActionBarSize = getActionBarSize();
 
         mRecyclerView.setScrollViewCallbacks(this);
@@ -133,7 +117,6 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
         mTitleView.setText(getActivity().getTitle());
         getActivity().setTitle(null);
 
-        mFab = root.findViewById(R.id.fab);
         ViewHelper.setScaleX(mFab, 0);
         ViewHelper.setScaleY(mFab, 0);
 
@@ -185,10 +168,7 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
                 ViewHelper.setScaleY(mTitleView, scale);
             }
         });
-
-        return root;
     }
-
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
@@ -298,7 +278,7 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
         super.onActivityCreated(savedInstanceState);
 
         stationPresenter = new StationPresenter(this, this);
-        stationPresenter.setStationId(mStationId);
+        stationPresenter.setStationId(stationId);
         stationPresenter.initialize();
     }
 

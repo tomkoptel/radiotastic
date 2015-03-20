@@ -1,37 +1,60 @@
 package com.udacity.study.jam.radiotastic.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment;
-import com.udacity.study.jam.radiotastic.ui.fragment.StationFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment_;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationFragment_;
 import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment_;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 
-public class MainActivity extends ActionBarActivity
+@EActivity(R.layout.activity_main)
+public class MainActivity extends BaseActivity
         implements CategoryListFragment.Callback, StationListFragment.Callback {
 
+    @ViewById
+    protected Toolbar toolbar;
+
     private boolean mTwoPane;
+    private Bundle mSavedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mTwoPane = (findViewById(R.id.sub_content) != null);
+        mSavedInstanceState = savedInstanceState;
+    }
+
+    @AfterViews
+    final void init() {
+        setSupportActionBar(toolbar);
+        mTwoPane = (findViewById(R.id.detail_content) != null);
+
+        if (mSavedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.master_content, CategoryListFragment_.builder().build())
+                    .commit();
+        }
     }
 
     @Override
     public void onCategorySelected(String categoryID) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.sub_content, StationListFragment.init(categoryID))
+                    .replace(R.id.master_content,
+                            StationListFragment_.builder()
+                                    .categoryId(categoryID)
+                                    .build())
+                    .addToBackStack(null)
                     .commit();
         } else {
-            Intent newIntent = new Intent(this, StationsActivity.class);
-            newIntent.putExtra(StationsActivity.CATEGORY_ID_EXTRA, categoryID);
-            startActivity(newIntent);
+            StationsActivity_.intent(this).categoryId(categoryID).start();
         }
     }
 
@@ -39,7 +62,11 @@ public class MainActivity extends ActionBarActivity
     public void onStationSelected(String stationID, String streamUrl) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.detail_content, StationFragment.init(stationID, streamUrl))
+                    .replace(R.id.detail_content,
+                            StationFragment_.builder()
+                            .stationId(stationID)
+                            .streamUrl(streamUrl)
+                            .build())
                     .commit();
         }
     }

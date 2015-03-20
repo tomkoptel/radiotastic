@@ -27,6 +27,14 @@ android {
     }
 }
 
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName PACKAGE_NAME
+        logLevel "WARN"
+    }
+}
+
 dependencies {
     compile (project(':pojo')) {
         exclude group: 'com.google.code.gson'
@@ -63,6 +71,10 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     // Custom toasts
     compile 'com.github.kennyc1012:snackbar:1.1-SNAPSHOT:api8Release@aar'
+
+    // Annotation dependencies
+    compile "org.androidannotations:androidannotations-api:3.2"
+    apt "org.androidannotations:androidannotations:3.2"
 
     debugCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     debugCompile 'com.google.dexmaker:dexmaker:1.0'

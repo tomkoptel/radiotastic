@@ -18,10 +18,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
@@ -32,25 +30,22 @@ import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
+@EFragment(R.layout.fragment_entity_list)
 public class CategoryListFragment extends Fragment implements CategoriesPresenter.View {
 
-    private RecyclerView recyclerView;
     private GestureDetectorCompat gestureDetectorCompat;
-    private CategoriesAdapter mAdapter;
-    private DataImageView emptyImageView;
-
-    private SwipeRefreshLayout swipeRefreshLayout;
     private CategoriesPresenter categoriesPresenter;
+    private CategoriesAdapter mAdapter;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_entity_list, container, false);
-        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-        emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
-        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
-        return root;
-    }
+    @ViewById
+    protected RecyclerView recyclerView;
+    @ViewById(android.R.id.empty)
+    protected DataImageView emptyImageView;
+    @ViewById(R.id.refreshLayout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

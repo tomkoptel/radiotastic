@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
-  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
-  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
-  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
-  -->
 
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/category_list_fragment"
-    android:name="com.udacity.study.jam.radiotastic.ui.fragment.CategoryListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout="@android:layout/list_content"
-    tools:context=".MainActivity"/>
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:id="@+id/master_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity_"
+        tools:layout="@android:layout/list_content" />
+
+</LinearLayout>

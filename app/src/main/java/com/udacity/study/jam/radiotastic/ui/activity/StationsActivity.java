@@ -8,42 +8,40 @@
 
 package com.udacity.study.jam.radiotastic.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment;
+import com.udacity.study.jam.radiotastic.ui.fragment.StationListFragment_;
+
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 
 
-public class StationsActivity extends ActionBarActivity implements StationListFragment.Callback {
+@EActivity(R.layout.activity_stations)
+public class StationsActivity extends BaseActivity implements StationListFragment.Callback {
 
-    public static String CATEGORY_ID_EXTRA = "categoryID";
-
-    private String categoryId;
+    @Extra
+    protected String categoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stations);
-
-        if (getIntent() != null && getIntent().hasExtra(CATEGORY_ID_EXTRA)) {
-            categoryId = getIntent().getStringExtra(CATEGORY_ID_EXTRA);
-        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, StationListFragment.init(categoryId))
+                    .replace(R.id.content,
+                            StationListFragment_
+                                    .builder()
+                                    .categoryId(categoryId)
+                                    .build())
                     .commit();
         }
     }
 
     @Override
     public void onStationSelected(String stationID, String streamUrl) {
-        Intent newIntent = new Intent(this, DetailActivity.class);
-        newIntent.putExtra(DetailActivity.STATION_ID_EXTRA, stationID);
-        newIntent.putExtra(DetailActivity.STATION_STREAM_URL_EXTRA, streamUrl);
-        startActivity(newIntent);
+        DetailActivity_.intent(this).stationId(stationID).streamUrl(streamUrl).start();
     }
 
 }

@@ -17,6 +17,7 @@ import android.os.Bundle;
 
 import com.udacity.study.jam.radiotastic.App;
 import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
+import com.udacity.study.jam.radiotastic.sync.SyncHelper;
 import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
 
 public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -27,11 +28,13 @@ public class RadiotasticSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        SyncComponent syncComponent = App.get(getContext()).syncGraph(syncResult, extras);
-        if (extras.containsKey(SyncStationsCaseImpl.CATEGORY_ID_ARG)) {
-            syncComponent.stationsSync().execute(extras);
-        } else {
-            syncComponent.categoriesSync().execute(extras);
+        if (extras.containsKey(SyncHelper.SYNC_EXTRAS_FLAG)) {
+            SyncComponent syncComponent = App.get(getContext()).syncGraph(syncResult, extras);
+            if (extras.containsKey(SyncStationsCaseImpl.CATEGORY_ID_ARG)) {
+                syncComponent.stationsSync().execute(extras);
+            } else {
+                syncComponent.categoriesSync().execute(extras);
+            }
         }
     }
 }

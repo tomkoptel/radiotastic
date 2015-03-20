@@ -18,10 +18,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
@@ -32,52 +30,33 @@ import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
-public class StationListFragment extends Fragment implements StationsPresenter.View {
-    private static final String CATEGORY_ID_ARG = "categoryID";
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
 
-    private RecyclerView recyclerView;
-    private DataImageView emptyImageView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+@EFragment(R.layout.fragment_entity_list)
+public class StationListFragment extends Fragment implements StationsPresenter.View {
 
     private GestureDetectorCompat gestureDetectorCompat;
     private StationsAdapter mAdapter;
-
     private StationsPresenter stationsPresenter;
-    private String mCategoryId;
 
-    public static StationListFragment init(String categoryID) {
-        Bundle args = new Bundle();
-        args.putString(CATEGORY_ID_ARG, categoryID);
-        StationListFragment stationListFragment = new StationListFragment();
-        stationListFragment.setArguments(args);
-        return stationListFragment;
-    }
+    @ViewById
+    protected RecyclerView recyclerView;
+    @ViewById(android.R.id.empty)
+    protected DataImageView emptyImageView;
+    @ViewById(R.id.refreshLayout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(CATEGORY_ID_ARG)) {
-            mCategoryId = args.getString(CATEGORY_ID_ARG);
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_entity_list, container, false);
-        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
-        emptyImageView = (DataImageView) root.findViewById(android.R.id.empty);
-        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refreshLayout);
-        return root;
-    }
+    @FragmentArg
+    protected String categoryId;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         stationsPresenter = new StationsPresenter(this, this);
-        stationsPresenter.setCategoryId(mCategoryId);
+        stationsPresenter.setCategoryId(categoryId);
         stationsPresenter.initialize();
 
         initRecyclerView();
