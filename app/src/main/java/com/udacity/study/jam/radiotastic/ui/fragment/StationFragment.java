@@ -34,18 +34,22 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.StationDetails;
+import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
 import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.DimensionPixelSizeRes;
 
@@ -70,7 +74,7 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
     @ViewById(R.id.list_background)
     protected View mRecyclerViewBackground;
     @ViewById(R.id.fab)
-    protected View mFab;
+    protected FloatingActionButton mFab;
 
     @FragmentArg
     protected String stationId;
@@ -84,11 +88,16 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
     @DimensionPixelSizeRes(R.dimen.margin_standard)
     protected int mFabMargin;
 
+    @InstanceState
+    protected boolean mPlaying;
+
     private int mActionBarSize;
     private boolean mFabIsShown;
 
     @AfterViews
     final void init() {
+        mFab.setImageResource(mPlaying ? R.drawable.ic_av_stop : R.drawable.ic_av_play_arrow );
+
         ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
         mActionBarSize = getActionBarSize();
 
@@ -168,6 +177,19 @@ public class StationFragment extends Fragment implements StationPresenter.View, 
                 ViewHelper.setScaleY(mTitleView, scale);
             }
         });
+    }
+
+    @Click(R.id.fab)
+    final void togglePlayBack() {
+        if (mPlaying) {
+            mPlaying = false;
+            mFab.setImageResource(R.drawable.ic_av_play_arrow );
+            PlayerIntentService.startActionStop(getActivity());
+        } else {
+            mPlaying = true;
+            mFab.setImageResource(R.drawable.ic_av_stop );
+            PlayerIntentService.startActionPlay(getActivity(), streamUrl);
+        }
     }
 
     @Override

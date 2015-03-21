@@ -36,12 +36,22 @@
 
         <activity
             android:name=".ui.activity.StationsActivity_"
-            android:label="@string/stations_activity_title" />
+            android:label="@string/stations_activity_title"
+            android:parentActivityName=".ui.activity.MainActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.MainActivity_" />
+        </activity>
 
         <activity
             android:name=".ui.activity.DetailActivity_"
             android:theme="@style/AppTheme.Toolbar"
-            android:label="@string/station_activity_title" />
+            android:label="@string/station_activity_title"
+            android:parentActivityName=".ui.activity.StationsActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.StationsActivity_" />
+        </activity>
 
         <service
             android:name=".player.PlayerIntentService"
