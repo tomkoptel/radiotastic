@@ -13,21 +13,20 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.station.StationCursor;
-import com.udacity.study.jam.radiotastic.ui.adapter.StationsAdapter;
+import com.udacity.study.jam.radiotastic.ui.adapter.decoration.DividerItemDecoration;
+import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyCursorRecyclerAdapter;
+import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyViewHolder;
+import com.udacity.study.jam.radiotastic.ui.adapter.holder.StationViewHolder;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
-import com.udacity.study.jam.radiotastic.util.SimpleOnItemTouchListener;
 import com.udacity.study.jam.radiotastic.widget.DataImageView;
 
 import org.androidannotations.annotations.EFragment;
@@ -35,10 +34,9 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_entity_list)
-public class StationListFragment extends Fragment implements StationsPresenter.View {
+public class StationListFragment extends Fragment implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
 
-    private GestureDetectorCompat gestureDetectorCompat;
-    private StationsAdapter mAdapter;
+    private EasyCursorRecyclerAdapter mAdapter;
     private StationsPresenter stationsPresenter;
 
     @ViewById
@@ -60,6 +58,7 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
         stationsPresenter.initialize();
 
         initRecyclerView();
+        initAdapter();
         initSwipeRefresh();
     }
 
@@ -125,21 +124,11 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
 
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        // actually VERTICAL is the default,
-        // just remember: LinearLayoutManager
-        // supports HORIZONTAL layout out of the box
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        // you can set the first visible item like this:
         linearLayoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        // you can set the first visible item like this:
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
-
-        mAdapter = new StationsAdapter(getActivity(), null);
-        recyclerView.setAdapter(mAdapter);
-
-        recyclerView.addOnItemTouchListener(new ItemTouchListener());
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -150,9 +139,13 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
                 swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
         });
+    }
 
-        gestureDetectorCompat = new GestureDetectorCompat(getActivity(),
-                new RecyclerViewGestureListener());
+    private void initAdapter() {
+        mAdapter = new EasyCursorRecyclerAdapter(getActivity(), null);
+        mAdapter.bind(StationViewHolder.class);
+        mAdapter.setOnClickListener(this);
+        recyclerView.setAdapter(mAdapter);
     }
 
     private void initSwipeRefresh() {
@@ -165,29 +158,17 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
         swipeRefreshLayout.setOnRefreshListener(stationsPresenter);
     }
 
-    private class ItemTouchListener extends SimpleOnItemTouchListener {
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            gestureDetectorCompat.onTouchEvent(motionEvent);
-            return false;
-        }
-    }
-
-    private class RecyclerViewGestureListener
-            extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent event) {
-            View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
-            int position = recyclerView.getChildPosition(view);
-            Cursor cursor = mAdapter.getCursor();
-            if (cursor != null) {
-                cursor.moveToPosition(position);
-                StationCursor stationCursor = new StationCursor(cursor);
-                if (getActivity() instanceof Callback) {
-                    ((Callback) getActivity()).onStationSelected(String.valueOf(stationCursor.getStationId()), stationCursor.getStreamurl());
-                }
+    @Override
+    public void onItemClick(int position, View view) {
+        Cursor cursor = mAdapter.getCursor();
+        if (cursor != null) {
+            cursor.moveToPosition(position);
+            StationCursor stationCursor = new StationCursor(cursor);
+            if (getActivity() instanceof Callback) {
+                ((Callback) getActivity()).onStationSelected(
+                        String.valueOf(stationCursor.getStationId()),
+                        stationCursor.getStreamurl());
             }
-            return super.onSingleTapConfirmed(event);
         }
     }
 

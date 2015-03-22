@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId PACKAGE_NAME
         testApplicationId TEST_PACKAGE_NAME
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

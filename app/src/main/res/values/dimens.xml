@@ -9,4 +9,14 @@
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
 
+    <dimen name="list_item_top_padding">20dp</dimen>
+    <dimen name="list_item_left_padding">16dp</dimen>
+    <dimen name="list_item_right_padding">16dp</dimen>
+    <dimen name="list_item_bottom_padding">20dp</dimen>
+    <dimen name="list_item_two_line_height">72dp</dimen>
+    <dimen name="list_item_three_line_height">88dp</dimen>
+
+    <dimen name="list_text_primary">16sp</dimen>
+    <dimen name="list_text_secondary">14sp</dimen>
+
 </resources>

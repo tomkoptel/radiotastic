@@ -15,4 +15,5 @@
     <!--Activity titles-->
     <string name="stations_activity_title">Stations</string>
     <string name="station_activity_title">Station details</string>
+    <string name="not_available">NA</string>
 </resources>

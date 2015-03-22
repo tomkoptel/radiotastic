@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.udacity.study.jam.radiotastic.ui.adapter;
+package com.udacity.study.jam.radiotastic.ui.adapter.easy;
 
 /*
  * Copyright (C) 2014 skyfish.jy@gmail.com
@@ -45,10 +45,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 
-public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+import java.util.ArrayList;
+import java.util.List;
 
-    private Context mContext;
+public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHolder> {
 
     private Cursor mCursor;
 
@@ -57,9 +59,12 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
     private int mRowIdColumn;
 
     private DataSetObserver mDataSetObserver;
+    private BaseEasyViewHolderFactory viewHolderFactory;
+    private List<Class> valueClassTypes = new ArrayList<>();
+    private EasyViewHolder.OnItemClickListener itemClickListener;
+    private EasyViewHolder.OnItemLongClickListener longClickListener;
 
-    public CursorRecyclerAdapter(Context context, Cursor cursor) {
-        mContext = context;
+    public EasyCursorRecyclerAdapter(Context context, Cursor cursor) {
         mCursor = cursor;
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
@@ -67,6 +72,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
         if (mCursor != null) {
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
+        viewHolderFactory = new BaseEasyViewHolderFactory(context);
     }
 
     public Cursor getCursor() {
@@ -89,22 +95,39 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
         return 0;
     }
 
-    @Override
-    public void setHasStableIds(boolean hasStableIds) {
-        super.setHasStableIds(true);
+    public void bind(Class<? extends EasyViewHolder> viewHolder) {
+        valueClassTypes.add(Cursor.class);
+        viewHolderFactory.bind(Cursor.class, viewHolder);
     }
 
-    public abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
+    @Override
+    public EasyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        EasyViewHolder easyViewHolder = viewHolderFactory.create(valueClassTypes.get(viewType), parent);
+        bindListeners(easyViewHolder);
+        return easyViewHolder;
+    }
+
+    private void bindListeners(EasyViewHolder easyViewHolder) {
+        if (easyViewHolder != null) {
+            easyViewHolder.setItemClickListener(itemClickListener);
+            easyViewHolder.setLongClickListener(longClickListener);
+        }
+    }
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(EasyViewHolder holder, int position) {
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
         if (!mCursor.moveToPosition(position)) {
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-        onBindViewHolder(viewHolder, mCursor);
+        holder.bindTo(mCursor);
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
     }
 
     /**
@@ -146,6 +169,15 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
             //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
         }
         return oldCursor;
+    }
+
+
+    public void setOnClickListener(EasyViewHolder.OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    public void setOnLongClickListener(EasyViewHolder.OnItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     private class NotifyingDataSetObserver extends DataSetObserver {
