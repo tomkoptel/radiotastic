@@ -33,19 +33,14 @@ public class RadioApiModule {
     @Provides
     public RadioApi provideRadioApi(Context context, Bundle extras,
                                     DirbleApiKey apiKey, DirbleClient dirbleClient) {
-        RadioApi remoteClient = new DirbleRadioApi(apiKey, dirbleClient);
-        if (!extras.containsKey(SyncHelper.SYNC_EXTRAS_FLAG)) {
-            return remoteClient;
-        } else {
-            int syncFlag = extras.getInt(SyncHelper.SYNC_EXTRAS_FLAG);
-            switch (syncFlag) {
-                case SyncHelper.FLAG_SYNC_REMOTE:
-                    return remoteClient;
-                case SyncHelper.FLAG_SYNC_CACHED:
-                    return new FileRadioApi(context);
-                default:
-                    throw new UnsupportedOperationException("It looks like SYNC_EXTRAS_FLAG was misused");
-            }
+        int syncFlag = extras.getInt(SyncHelper.SYNC_EXTRAS_FLAG, SyncHelper.FLAG_SYNC_REMOTE);
+        switch (syncFlag) {
+            case SyncHelper.FLAG_SYNC_REMOTE:
+                return new DirbleRadioApi(apiKey, dirbleClient);
+            case SyncHelper.FLAG_SYNC_CACHED:
+                return new FileRadioApi(context);
+            default:
+                throw new UnsupportedOperationException("It looks like SYNC_EXTRAS_FLAG was misused");
         }
     }
 

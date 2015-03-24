@@ -16,12 +16,13 @@ import android.os.Bundle;
 import android.os.StrictMode;
 
 import com.udacity.study.jam.radiotastic.di.component.SyncComponent;
+import com.udacity.study.jam.radiotastic.util.CrashReportingTree;
+import com.udacity.study.jam.radiotastic.util.DebugTree;
 
 import timber.log.Timber;
 
 public class App extends Application {
     private Graph graphComponent;
-    private SyncComponent syncComponent;
     private boolean useMock;
 
     @Override
@@ -35,7 +36,7 @@ public class App extends Application {
         graphComponent = Graph.Initializer.init(this, false);
 
         if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(new DebugTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }
@@ -44,7 +45,6 @@ public class App extends Application {
     public void setMockMode(boolean useMock) {
         this.useMock = useMock;
         this.graphComponent = null;
-        this.syncComponent = null;
     }
 
     public static App get(Context context) {
@@ -52,10 +52,7 @@ public class App extends Application {
     }
 
     public SyncComponent syncGraph(SyncResult syncResult, Bundle extras) {
-        if (syncComponent == null) {
-            syncComponent = SyncComponent.Initializer.init(this, syncResult, extras, useMock);
-        }
-        return syncComponent;
+        return SyncComponent.Initializer.init(this, syncResult, extras, useMock);
     }
 
     public Graph graph() {
@@ -63,32 +60,5 @@ public class App extends Application {
             graphComponent = Graph.Initializer.init(this, useMock);
         }
         return graphComponent;
-    }
-
-    /**
-     * A tree which logs important information for crash reporting.
-     */
-    private static class CrashReportingTree extends Timber.HollowTree {
-        @Override
-        public void i(String message, Object... args) {
-            // TODO e.g., Crashlytics.log(String.format(message, args));
-        }
-
-        @Override
-        public void i(Throwable t, String message, Object... args) {
-            i(message, args); // Just add to the log.
-        }
-
-        @Override
-        public void e(String message, Object... args) {
-            i("ERROR: " + message, args); // Just add to the log.
-        }
-
-        @Override
-        public void e(Throwable t, String message, Object... args) {
-            e(message, args);
-
-            // TODO e.g., Crashlytics.logException(t);
-        }
     }
 }
