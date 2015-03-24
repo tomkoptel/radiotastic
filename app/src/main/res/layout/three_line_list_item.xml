@@ -10,27 +10,27 @@
     android:paddingRight="@dimen/list_item_right_padding"
     android:paddingStart="@dimen/list_item_left_padding">
 
-    <RelativeLayout
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@android:id/text1"
-            android:paddingTop="@dimen/list_item_top_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/textPrimary"
-            tools:text="Station Name" />
+            tools:text="Station Name"
+            />
 
         <TextView
             android:id="@android:id/text2"
             android:maxLines="2"
-            android:paddingBottom="@dimen/list_item_bottom_padding"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/textSecondary"
-            tools:text="Station Description" />
+            tools:text="Station DescriptionStation DescriptionStation DescriptionStation Description" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>
