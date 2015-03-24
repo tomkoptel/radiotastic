@@ -136,7 +136,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     }
 
     private void initAdapter() {
-        mAdapter = new EasyCursorRecyclerAdapter(getActivity(), null);
+        mAdapter = new EasyCursorRecyclerAdapter();
         mAdapter.bind(CategoryViewHolder.class);
         mAdapter.setOnClickListener(this);
         recyclerView.setAdapter(mAdapter);

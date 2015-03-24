@@ -8,11 +8,12 @@
 
 package com.udacity.study.jam.radiotastic.domain;
 
+import android.content.SyncStatusObserver;
+
 public interface ObserveSyncStateCase {
-    interface SyncStatusCallBack {
-        void onStatusChanged(boolean syncIsActive);
-    }
-    void create(SyncStatusCallBack statusCallBack);
+    void create(SyncStatusObserver observer);
     void resume();
     void pause();
+    void destroy();
+    boolean isSyncActive();
 }

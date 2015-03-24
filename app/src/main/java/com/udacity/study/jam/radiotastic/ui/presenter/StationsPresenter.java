@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.ui.presenter;
 
+import android.content.SyncStatusObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,8 +17,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.squareup.otto.Bus;
 import com.udacity.study.jam.radiotastic.App;
 import com.udacity.study.jam.radiotastic.db.station.StationColumns;
 import com.udacity.study.jam.radiotastic.db.station.StationSelection;
@@ -45,10 +44,8 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
 
     private final Fragment mFragment;
     private String categoryId;
-    private NetworkEvents networkEvents;
     private boolean mSyncIsActive;
     private View mView;
-    private Bus bus;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -71,22 +68,17 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
         ensureCategoryIdPresents();
         App.get(mFragment.getActivity()).graph().inject(this);
         loadStations();
-        initNetworkListeners();
         initSyncListener();
     }
 
     @Override
     public void resume() {
         observeSyncCase.resume();
-        bus.register(this);
-        networkEvents.register();
     }
 
     @Override
     public void pause() {
         observeSyncCase.pause();
-        bus.unregister(this);
-        networkEvents.unregister();
     }
 
     @Override
@@ -125,14 +117,14 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
     }
 
     private void initSyncListener() {
-        observeSyncCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
+        observeSyncCase.create(new SyncStatusObserver() {
             @Override
-            public void onStatusChanged(final boolean syncIsActive) {
-                mSyncIsActive = syncIsActive;
-                mFragment.getActivity().runOnUiThread(new Runnable() {
+            public void onStatusChanged(int which) {
+                mSyncIsActive = observeSyncCase.isSyncActive();
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (syncIsActive) {
+                        if (mSyncIsActive) {
                             if (!mView.isAlreadyLoaded()) {
                                 mView.showLoading();
                             }
@@ -145,11 +137,6 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
                 });
             }
         });
-    }
-
-    private void initNetworkListeners() {
-        bus = new Bus();
-        networkEvents = new NetworkEvents(mFragment.getActivity(), bus);
     }
 
     private void startSyncIfPossible() {
@@ -186,12 +173,16 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
     }
 
     private void showEmptyView() {
-        mFragment.getActivity().runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mView.showEmptyCase();
             }
         });
+    }
+
+    private void runOnUiThread(Runnable runnable) {
+        mFragment.getActivity().runOnUiThread(runnable);
     }
 
     public interface View {

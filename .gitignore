@@ -53,3 +53,4 @@ com_crashlytics_export_strings.xml
 db/gen
 # Mirror plugin
 app/mirror/
+captures/

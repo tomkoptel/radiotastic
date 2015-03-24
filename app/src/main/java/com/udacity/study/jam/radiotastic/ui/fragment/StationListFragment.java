@@ -34,7 +34,8 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_entity_list)
-public class StationListFragment extends Fragment implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
+public class StationListFragment extends Fragment
+        implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
 
     private EasyCursorRecyclerAdapter mAdapter;
     private StationsPresenter stationsPresenter;
@@ -129,20 +130,11 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
-
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                int topRowVerticalPosition =
-                        (recyclerView == null || recyclerView.getChildCount() == 0)
-                                ? 0 : recyclerView.getChildAt(0).getTop();
-                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-            }
-        });
+        recyclerView.setOnScrollListener(new ScrollListener());
     }
 
     private void initAdapter() {
-        mAdapter = new EasyCursorRecyclerAdapter(getActivity(), null);
+        mAdapter = new EasyCursorRecyclerAdapter();
         mAdapter.bind(StationViewHolder.class);
         mAdapter.setOnClickListener(this);
         recyclerView.setAdapter(mAdapter);
@@ -172,8 +164,26 @@ public class StationListFragment extends Fragment implements StationsPresenter.V
         }
     }
 
-    public static interface Callback {
+    @Override
+    public void onDestroyView() {
+        mAdapter.swapCursor(null);
+        mAdapter.setOnClickListener(null);
+        recyclerView.setOnScrollListener(null);
+        super.onDestroyView();
+    }
+
+    public interface Callback {
         void onStationSelected(String stationID, String streamUrl);
+    }
+
+    private class ScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+            int topRowVerticalPosition =
+                    (recyclerView == null || recyclerView.getChildCount() == 0)
+                            ? 0 : recyclerView.getChildAt(0).getTop();
+            swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+        }
     }
 
 }

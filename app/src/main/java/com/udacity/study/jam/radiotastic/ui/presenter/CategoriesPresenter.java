@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.ui.presenter;
 
+import android.content.SyncStatusObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,13 +17,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.github.pwittchen.networkevents.library.ConnectivityStatus;
-import com.github.pwittchen.networkevents.library.NetworkEvents;
-import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.udacity.study.jam.radiotastic.App;
-import com.udacity.study.jam.radiotastic.Graph;
 import com.udacity.study.jam.radiotastic.db.category.CategoryColumns;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
@@ -34,10 +29,8 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
 
     private static final int LOAD_CATEGORIES = 100;
     private final Fragment mFragment;
-    private NetworkEvents networkEvents;
     private boolean mSyncIsActive;
     private View mView;
-    private Bus bus;
     private SyncType syncType;
 
     @Inject
@@ -56,29 +49,17 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
     public void initialize() {
         App.get(mFragment.getActivity()).graph().inject(this);
         loadCategories();
-        initNetworkListeners();
         initSyncListener();
-    }
-
-    @Subscribe
-    public void onConnectivityChanged(ConnectivityChanged event) {
-        if (event.getConnectivityStatus() == ConnectivityStatus.OFFLINE) {
-            notifyConnectionError();
-        }
     }
 
     @Override
     public void resume() {
         observeSyncCase.resume();
-        bus.register(this);
-        networkEvents.register();
     }
 
     @Override
     public void pause() {
         observeSyncCase.pause();
-        bus.unregister(this);
-        networkEvents.unregister();
     }
 
     @Override
@@ -107,15 +88,15 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
     }
 
     private void initSyncListener() {
-        observeSyncCase.create(new ObserveSyncStateCase.SyncStatusCallBack() {
+        observeSyncCase.create(new SyncStatusObserver() {
             @Override
-            public void onStatusChanged(final boolean syncIsActive) {
-                mSyncIsActive = syncIsActive;
+            public void onStatusChanged(int which) {
+                mSyncIsActive = observeSyncCase.isSyncActive();
                 if (syncType == SyncType.FROM_CLOUD) {
-                    mFragment.getActivity().runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (syncIsActive) {
+                            if (mSyncIsActive) {
                                 if (!mView.isAlreadyLoaded()) {
                                     mView.showLoading();
                                 }
@@ -129,11 +110,6 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
                 }
             }
         });
-    }
-
-    private void initNetworkListeners() {
-        bus = new Bus();
-        networkEvents = new NetworkEvents(mFragment.getActivity(), bus);
     }
 
     private void loadCategories() {
@@ -179,6 +155,10 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
         });
     }
 
+    private void runOnUiThread(Runnable runnable) {
+        mFragment.getActivity().runOnUiThread(runnable);
+    }
+
     public interface View {
         void hideLoading();
 
@@ -195,7 +175,7 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
         boolean isAlreadyLoaded();
     }
 
-    private static enum SyncType {
+    private enum SyncType {
         FROM_FILE_SYSTEM, FROM_CLOUD;
     }
 }

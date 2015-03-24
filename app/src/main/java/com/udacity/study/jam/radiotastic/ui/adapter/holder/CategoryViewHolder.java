@@ -8,7 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.ui.adapter.holder;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.view.ViewGroup;
@@ -22,8 +21,8 @@ public class CategoryViewHolder extends EasyViewHolder<Cursor> {
     private final TextView labelTextView;
     private final TextView descTextView;
 
-    public CategoryViewHolder(Context context, ViewGroup parent) {
-        super(context, parent, R.layout.three_line_list_item);
+    public CategoryViewHolder(ViewGroup parent) {
+        super(parent, R.layout.three_line_list_item);
         labelTextView = (TextView) itemView.findViewById(android.R.id.text1);
         descTextView = (TextView) itemView.findViewById(android.R.id.text2);
     }

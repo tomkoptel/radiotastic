@@ -17,8 +17,11 @@ import android.widget.ImageView;
 
 import com.udacity.study.jam.radiotastic.R;
 
+import org.androidannotations.annotations.EView;
+
+@EView
 public class DataImageView extends ImageView {
-    public static enum Type {
+    public enum Type {
         SYNC, ERROR, EMPTY, NONE;
     }
 

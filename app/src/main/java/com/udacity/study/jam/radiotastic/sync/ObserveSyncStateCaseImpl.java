@@ -35,13 +35,8 @@ public class ObserveSyncStateCaseImpl implements ObserveSyncStateCase {
     }
 
     @Override
-    public void create(final SyncStatusCallBack statusCallBack) {
-        observer = new SyncStatusObserver() {
-            @Override
-            public void onStatusChanged(int which) {
-                statusCallBack.onStatusChanged(isSyncActive());
-            }
-        };
+    public void create(final SyncStatusObserver observer) {
+        this.observer = observer;
     }
 
     @Override
@@ -64,7 +59,13 @@ public class ObserveSyncStateCaseImpl implements ObserveSyncStateCase {
         }
     }
 
-    private boolean isSyncActive() {
+    @Override
+    public void destroy() {
+        observer = null;
+    }
+
+    @Override
+    public boolean isSyncActive() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return isSyncActiveHoneycomb();
         } else {

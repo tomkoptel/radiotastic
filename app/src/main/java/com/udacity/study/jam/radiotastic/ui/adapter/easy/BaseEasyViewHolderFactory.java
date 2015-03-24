@@ -8,7 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.ui.adapter.easy;
 
-import android.content.Context;
 import android.view.ViewGroup;
 
 import java.lang.reflect.Constructor;
@@ -17,22 +16,16 @@ import java.util.Map;
 
 public class BaseEasyViewHolderFactory {
 
-    protected Context context;
-
     private Map<Class, Class<? extends EasyViewHolder>> boundViewHolders = new HashMap<>();
-
-    public BaseEasyViewHolderFactory(Context context) {
-        this.context = context;
-    }
 
     public EasyViewHolder create(Class valueClass, ViewGroup parent) {
         try {
             Class<? extends EasyViewHolder> easyViewHolderClass = boundViewHolders.get(valueClass);
-            Constructor<? extends EasyViewHolder> constructor = easyViewHolderClass.getDeclaredConstructor(Context.class, ViewGroup.class);
-            return constructor.newInstance(context, parent);
+            Constructor<? extends EasyViewHolder> constructor =
+                    easyViewHolderClass.getDeclaredConstructor(ViewGroup.class);
+            return constructor.newInstance(parent);
         } catch (Throwable e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

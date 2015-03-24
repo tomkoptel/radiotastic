@@ -41,7 +41,6 @@ package com.udacity.study.jam.radiotastic.ui.adapter.easy;
  *
  */
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
@@ -58,13 +57,17 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
 
     private int mRowIdColumn;
 
+    private final BaseEasyViewHolderFactory viewHolderFactory = new BaseEasyViewHolderFactory();
+    private final List<Class> valueClassTypes = new ArrayList<>();
     private DataSetObserver mDataSetObserver;
-    private BaseEasyViewHolderFactory viewHolderFactory;
-    private List<Class> valueClassTypes = new ArrayList<>();
     private EasyViewHolder.OnItemClickListener itemClickListener;
     private EasyViewHolder.OnItemLongClickListener longClickListener;
 
-    public EasyCursorRecyclerAdapter(Context context, Cursor cursor) {
+    public EasyCursorRecyclerAdapter() {
+        this(null);
+    }
+
+    public EasyCursorRecyclerAdapter(Cursor cursor) {
         mCursor = cursor;
         mDataValid = cursor != null;
         mRowIdColumn = mDataValid ? mCursor.getColumnIndex("_id") : -1;
@@ -72,7 +75,6 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
         if (mCursor != null) {
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
-        viewHolderFactory = new BaseEasyViewHolderFactory(context);
     }
 
     public Cursor getCursor() {

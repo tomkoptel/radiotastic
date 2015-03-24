@@ -8,7 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.ui.adapter.holder;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,8 +20,8 @@ public class StationViewHolder extends EasyViewHolder<Cursor> {
     private final TextView labelTextView;
     private final TextView descTextView;
 
-    public StationViewHolder(Context context, ViewGroup parent) {
-        super(context, parent, R.layout.two_line_list_item);
+    public StationViewHolder(ViewGroup parent) {
+        super(parent, R.layout.two_line_list_item);
         labelTextView = (TextView) itemView.findViewById(android.R.id.text1);
         descTextView = (TextView) itemView.findViewById(android.R.id.text2);
     }
