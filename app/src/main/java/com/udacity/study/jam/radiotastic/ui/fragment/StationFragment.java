@@ -18,7 +18,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.udacity.study.jam.radiotastic.R;
-import com.udacity.study.jam.radiotastic.StationDetails;
+import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.helper.StationRecyclerHelper;
@@ -31,6 +31,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.List;
 
 @EFragment(R.layout.fragment_detail)
 public class StationFragment extends Fragment implements StationPresenter.View {
@@ -114,8 +116,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     }
 
     @Override
-    public void renderStation(StationDetails stationDetails) {
-        mAdapter.setDataset(stationDetails.getSonghistory());
+    public void renderSongHistory(List<SongItem> songHistory) {
+        mAdapter.setDataset(songHistory);
     }
 
     @Override

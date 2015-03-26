@@ -16,6 +16,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.google.gson.Gson;
+import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.StationDetails;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataCursor;
@@ -23,6 +24,7 @@ import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataSelec
 import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService_;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class StationPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOAD_STATION = 300;
@@ -99,8 +101,15 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
     private void showStation(Cursor cursor) {
         if (mView.isReady()) {
             if (cursor.moveToFirst()) {
-                mView.renderStation(transform(cursor));
+                StationDetails details = transform(cursor);
+                List<SongItem> songHistory = details.getSonghistory();
+
                 mView.hideLoading();
+                if (songHistory.isEmpty()) {
+                    mView.showEmptyCase();
+                } else {
+                    mView.renderSongHistory(songHistory);
+                }
             }
         }
     }
@@ -119,7 +128,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
         void showLoading();
 
-        void renderStation(StationDetails stationDetails);
+        void renderSongHistory(List<SongItem> songHistory);
 
         void showConnectionErrorMessage();
 
