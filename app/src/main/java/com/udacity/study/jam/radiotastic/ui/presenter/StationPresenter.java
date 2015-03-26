@@ -8,7 +8,6 @@
 
 package com.udacity.study.jam.radiotastic.ui.presenter;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +20,7 @@ import com.udacity.study.jam.radiotastic.StationDetails;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataCursor;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataSelection;
-import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService;
+import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService_;
 
 import java.util.Calendar;
 
@@ -56,12 +55,10 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     public void setStationId(String stationId) {
@@ -93,10 +90,9 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (data.getCount() > 0) {
             showStation(data);
         } else {
-            Intent startIntent = new Intent(StationSyncService.ACTION);
-            startIntent.setClass(mFragment.getActivity(), StationSyncService.class);
-            startIntent.putExtra(StationSyncService.STATION_ID_ARG, stationId);
-            mFragment.getActivity().startService(startIntent);
+            StationSyncService_.intent(mFragment.getActivity())
+                    .fetchStationMetaData(stationId)
+                    .start();
         }
     }
 

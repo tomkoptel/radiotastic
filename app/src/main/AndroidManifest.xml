@@ -93,12 +93,8 @@
         </service>
 
         <service
-            android:name=".sync.internal.StationSyncService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.udacity.study.jam.radiotastic.SyncStation" />
-            </intent-filter>
-        </service>
+            android:name=".sync.internal.StationSyncService_"
+            android:exported="false"/>
 
     </application>
 

@@ -9,15 +9,19 @@
 package com.udacity.study.jam.radiotastic.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.udacity.study.jam.radiotastic.SongDate;
 import com.udacity.study.jam.radiotastic.SongItem;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SongsAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -54,8 +58,17 @@ public class SongsAdapter extends
         if (viewHolder instanceof ItemViewHolder) {
             ItemViewHolder holder = (ItemViewHolder) viewHolder;
             SongItem item = getItem(position - 1);
+            SongDate date = item.getDate();
+            String title = item.getTitle();
+            if (date != null) {
+                Date utcTime = new Date((long) (date.getSec() * TimeUnit.SECONDS.toMillis(1)));
+                long now = System.currentTimeMillis();
+                CharSequence result = DateUtils.getRelativeTimeSpanString(utcTime.getTime(),
+                        now, DateUtils.SECOND_IN_MILLIS);
+                title = title + "\n" + result;
+            }
             holder.labelTextView.setText(item.getName());
-            holder.descTextView.setText(item.getTitle());
+            holder.descTextView.setText(title);
         }
     }
 
