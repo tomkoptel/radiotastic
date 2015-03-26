@@ -92,6 +92,7 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (data.getCount() > 0) {
             showStation(data);
         } else {
+            mView.showLoading();
             StationSyncService_.intent(mFragment.getActivity())
                     .fetchStationMetaData(stationId)
                     .start();
@@ -102,13 +103,17 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         if (mView.isReady()) {
             if (cursor.moveToFirst()) {
                 StationDetails details = transform(cursor);
-                List<SongItem> songHistory = details.getSonghistory();
-
-                mView.hideLoading();
-                if (songHistory.isEmpty()) {
-                    mView.showEmptyCase();
+                if (details == null) {
+                    mView.showConnectionErrorMessage();
                 } else {
-                    mView.renderSongHistory(songHistory);
+                    List<SongItem> songHistory = details.getSonghistory();
+
+                    mView.hideLoading();
+                    if (songHistory.isEmpty()) {
+                        mView.showEmptyCase();
+                    } else {
+                        mView.renderSongHistory(songHistory);
+                    }
                 }
             }
         }

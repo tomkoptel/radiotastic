@@ -131,6 +131,8 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
                         } else {
                             if (mView.isAlreadyLoaded()) {
                                 mView.hideLoading();
+                            } else {
+                                mView.showEmptyCase();
                             }
                         }
                     }

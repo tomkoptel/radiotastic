@@ -38,13 +38,11 @@ public class StationMetaDataCursor extends AbstractCursor implements StationMeta
 
     /**
      * Get the {@code meta} value.
-     * Cannot be {@code null}.
+     * Can be {@code null}.
      */
-    @NonNull
+    @Nullable
     public String getMeta() {
         String res = getStringOrNull(StationMetaDataColumns.META);
-        if (res == null)
-            throw new NullPointerException("The value of 'meta' in the database was null, which is not allowed according to the model definition");
         return res;
     }
 

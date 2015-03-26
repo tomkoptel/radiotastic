@@ -37,12 +37,15 @@ public class StationMetaDataContentValues extends AbstractContentValues {
     }
 
 
-    public StationMetaDataContentValues putMeta(@NonNull String value) {
-        if (value == null) throw new IllegalArgumentException("meta must not be null");
+    public StationMetaDataContentValues putMeta(@Nullable String value) {
         mContentValues.put(StationMetaDataColumns.META, value);
         return this;
     }
 
+    public StationMetaDataContentValues putMetaNull() {
+        mContentValues.putNull(StationMetaDataColumns.META);
+        return this;
+    }
 
     public StationMetaDataContentValues putCreatedAt(@NonNull Date value) {
         if (value == null) throw new IllegalArgumentException("createdAt must not be null");

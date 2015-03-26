@@ -14,32 +14,40 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.udacity.study.jam.radiotastic.R;
 
-import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.ViewById;
 
-@EView
-public class DataImageView extends ImageView {
+@EViewGroup(R.layout.state_layout)
+public class StateSyncLayout extends RelativeLayout {
+    @ViewById(android.R.id.icon)
+    protected ImageView stateImage;
+    @ViewById(android.R.id.text1)
+    protected TextView stateText;
+
     public enum Type {
         SYNC, ERROR, EMPTY, NONE;
     }
 
-    public DataImageView(Context context) {
+    public StateSyncLayout(Context context) {
         super(context);
     }
 
-    public DataImageView(Context context, AttributeSet attrs) {
+    public StateSyncLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public DataImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StateSyncLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DataImageView(Context context, AttributeSet attrs,
-                         int defStyleAttr, int defStyleRes) {
+    public StateSyncLayout(Context context, AttributeSet attrs,
+                           int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -47,13 +55,16 @@ public class DataImageView extends ImageView {
         setVisibility(View.VISIBLE);
         switch (type) {
             case SYNC:
-                setImageResource(R.drawable.ic_cloud_sync);
+                stateImage.setImageResource(R.drawable.ic_cloud_sync);
+                stateText.setText(R.string.loading);
                 break;
             case EMPTY:
-                setImageResource(R.drawable.ic_empty_data);
+                stateImage.setImageResource(R.drawable.ic_empty_data);
+                stateText.setText(R.string.no_data);
                 break;
             case ERROR:
-                setImageResource(R.drawable.ic_alert_error);
+                stateImage.setImageResource(R.drawable.ic_alert_error);
+                stateText.setText(R.string.error);
                 break;
             case NONE:
                 setVisibility(View.GONE);

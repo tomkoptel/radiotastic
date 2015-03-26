@@ -6,12 +6,12 @@
             "name": "station_id",
             "type": "Long",
             "nullable": false,
-            "index": true,
+            "index": true
         },
         {
             "name": "meta",
             "type": "String",
-            "nullable": false
+            "nullable": true
         },
         {
             "name": "created_at",

@@ -76,6 +76,7 @@ public class SyncCategoriesCaseImpl implements SyncCategoriesCase {
                 }
             }
         } catch (RetrofitError error) {
+            Timber.e(error, "Failed to sync categories");
             syncResult.stats.numIoExceptions++;
         }
     }

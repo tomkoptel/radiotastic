@@ -24,7 +24,7 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/item_station_list" />
 
-        <com.udacity.study.jam.radiotastic.widget.DataImageView_
+        <com.udacity.study.jam.radiotastic.widget.StateSyncLayout_
             android:id="@android:id/empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

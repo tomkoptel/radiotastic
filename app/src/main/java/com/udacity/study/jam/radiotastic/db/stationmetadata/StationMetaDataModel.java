@@ -19,9 +19,9 @@ public interface StationMetaDataModel extends BaseModel {
 
     /**
      * Get the {@code meta} value.
-     * Cannot be {@code null}.
+     * Can be {@code null}.
      */
-    @NonNull
+    @Nullable
     String getMeta();
 
     /**

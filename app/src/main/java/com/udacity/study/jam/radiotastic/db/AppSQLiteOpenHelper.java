@@ -63,7 +63,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
             + StationMetaDataColumns.TABLE_NAME + " ( "
             + StationMetaDataColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + StationMetaDataColumns.STATION_ID + " INTEGER NOT NULL, "
-            + StationMetaDataColumns.META + " TEXT NOT NULL, "
+            + StationMetaDataColumns.META + " TEXT, "
             + StationMetaDataColumns.CREATED_AT + " INTEGER NOT NULL "
             + ", CONSTRAINT unique_station_category_id_combination UNIQUE (station_id) ON CONFLICT IGNORE"
             + " );";

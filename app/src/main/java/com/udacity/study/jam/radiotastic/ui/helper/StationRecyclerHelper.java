@@ -51,6 +51,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
     private int mActionBarSize;
     private boolean mFabIsShown;
     private View headerView;
+    private View mStateView;
 
     public void init(View root) {
         inject(root);
@@ -69,6 +70,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
         mRecyclerViewBackground = hasViews.findViewById(R.id.list_background);
         mRecyclerView = ((ObservableRecyclerView) hasViews.findViewById(R.id.recycler));
         mFab = ((FloatingActionButton) hasViews.findViewById(R.id.fab));
+        mStateView = hasViews.findViewById(android.R.id.empty);
     }
 
     private void configure() {
@@ -106,6 +108,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
                 float fabTranslationY = translateFab(0);
                 // Show/hide FAB
                 toggleFab(fabTranslationY);
+                ViewHelper.setTranslationY(mStateView, mFlexibleSpaceImageHeight + mFabMargin);
             }
         });
 

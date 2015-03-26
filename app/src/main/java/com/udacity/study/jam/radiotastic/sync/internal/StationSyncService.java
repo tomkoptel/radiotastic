@@ -59,12 +59,14 @@ public class StationSyncService extends IntentService {
                     InputStream inputStream = input.in();
                     String json = convertToString(inputStream);
                     closeQuietly(inputStream);
-                    saveInDb(stationId, json);
+                    persistResponse(stationId, json);
                 } catch (IOException e) {
+                    saveResponse(stationId, null);
                     Timber.e(e, "Failed to close input stream");
                 }
             }
         } catch (RetrofitError error) {
+            saveResponse(stationId, null);
             Timber.e(error, "Failed to fetch station meta data");
         }
     }
@@ -73,11 +75,15 @@ public class StationSyncService extends IntentService {
     protected void onHandleIntent(Intent intent) {
     }
 
-    private void saveInDb(String stationId, String response) {
+    private void persistResponse(String stationId, String response) {
         StationMetaDataSelection selection = new StationMetaDataSelection();
         selection.stationId(Long.valueOf(stationId));
         getContentResolver().delete(StationMetaDataColumns.CONTENT_URI, selection.sel(), selection.args());
 
+        saveResponse(stationId, response);
+    }
+
+    private void saveResponse(String stationId, String response) {
         StationMetaDataContentValues metaDataContentValues =
                 new StationMetaDataContentValues()
                         .putStationId(Long.valueOf(stationId))

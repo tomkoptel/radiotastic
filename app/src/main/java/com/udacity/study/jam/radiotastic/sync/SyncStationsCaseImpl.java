@@ -91,6 +91,7 @@ public class SyncStationsCaseImpl implements SyncStationsCase {
                 throw new IllegalStateException(e);
             }
         } catch (RetrofitError error) {
+            Timber.e(error, "Failed to sync stations");
             syncResult.stats.numIoExceptions++;
         }
     }

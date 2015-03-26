@@ -27,7 +27,7 @@ import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyCursorRecyclerAdapt
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyViewHolder;
 import com.udacity.study.jam.radiotastic.ui.adapter.holder.CategoryViewHolder;
 import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
-import com.udacity.study.jam.radiotastic.widget.DataImageView;
+import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -41,7 +41,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     @ViewById
     protected RecyclerView recyclerView;
     @ViewById(android.R.id.empty)
-    protected DataImageView emptyImageView;
+    protected StateSyncLayout emptyImageView;
     @ViewById(R.id.refreshLayout)
     protected SwipeRefreshLayout swipeRefreshLayout;
 
@@ -72,13 +72,13 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     @Override
     public void hideLoading() {
         swipeRefreshLayout.setRefreshing(false);
-        emptyImageView.setImageType(DataImageView.Type.NONE);
+        emptyImageView.setImageType(StateSyncLayout.Type.NONE);
     }
 
     @Override
     public void showLoading() {
         swipeRefreshLayout.setRefreshing(true);
-        emptyImageView.setImageType(DataImageView.Type.SYNC);
+        emptyImageView.setImageType(StateSyncLayout.Type.SYNC);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     @Override
     public void showEmptyCase() {
         swipeRefreshLayout.setRefreshing(false);
-        emptyImageView.setImageType(DataImageView.Type.EMPTY);
+        emptyImageView.setImageType(StateSyncLayout.Type.EMPTY);
     }
 
     @Override

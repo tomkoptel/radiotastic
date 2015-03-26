@@ -23,6 +23,7 @@ import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.helper.StationRecyclerHelper;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
+import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -45,6 +46,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     protected Toolbar mToolbar;
     @ViewById(R.id.fab)
     protected FloatingActionButton mFab;
+    @ViewById(android.R.id.empty)
+    protected StateSyncLayout emptyImageView;
 
     @FragmentArg
     protected String stationId;
@@ -107,12 +110,12 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
     @Override
     public void hideLoading() {
-
+        emptyImageView.setImageType(StateSyncLayout.Type.NONE);
     }
 
     @Override
     public void showLoading() {
-
+        emptyImageView.setImageType(StateSyncLayout.Type.SYNC);
     }
 
     @Override
@@ -122,12 +125,12 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
     @Override
     public void showConnectionErrorMessage() {
-
+        emptyImageView.setImageType(StateSyncLayout.Type.ERROR);
     }
 
     @Override
     public void showEmptyCase() {
-
+        emptyImageView.setImageType(StateSyncLayout.Type.EMPTY);
     }
 
     @Override
