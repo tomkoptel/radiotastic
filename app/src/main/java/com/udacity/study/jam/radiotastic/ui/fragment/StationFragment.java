@@ -85,7 +85,9 @@ public class StationFragment extends Fragment implements StationPresenter.View {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(false);
 
-        mAdapter = new SongsAdapter(recyclerHelper.getHeaderView());
+        boolean twoPane = (getActivity().findViewById(R.id.detail_content) != null);
+
+        mAdapter = new SongsAdapter(recyclerHelper.getHeaderView(), twoPane);
         mRecyclerView.setAdapter(mAdapter);
     }
 
