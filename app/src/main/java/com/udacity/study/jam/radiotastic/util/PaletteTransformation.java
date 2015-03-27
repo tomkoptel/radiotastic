@@ -1,39 +1,31 @@
 package com.udacity.study.jam.radiotastic.util;
 
 import android.graphics.Bitmap;
-import android.support.v4.util.Pools;
 import android.support.v7.graphics.Palette;
 
 import com.squareup.picasso.Transformation;
 
-public class PaletteTransformation implements Transformation {
-    private static final Pools.Pool<PaletteTransformation> POOL = new Pools.SynchronizedPool<>(5);
+import java.util.Map;
+import java.util.WeakHashMap;
 
-    public static PaletteTransformation getInstance() {
-        PaletteTransformation instance = POOL.acquire();
-        return instance != null ? instance : new PaletteTransformation();
+public class PaletteTransformation implements Transformation {
+    private static final PaletteTransformation INSTANCE = new PaletteTransformation();
+    private static final Map<Bitmap, Palette> CACHE = new WeakHashMap<>();
+
+    public static PaletteTransformation instance() {
+        return INSTANCE;
     }
 
-    private Palette palette;
+    public static Palette getPalette(Bitmap bitmap) {
+        return CACHE.get(bitmap);
+    }
 
     private PaletteTransformation() {}
 
-    public Palette extractPaletteAndRelease() {
-        Palette palette = this.palette;
-        if (palette == null) {
-            throw new IllegalStateException("Transformation was not run.");
-        }
-        this.palette = null;
-        POOL.release(this);
-        return palette;
-    }
-
     @Override
     public Bitmap transform(Bitmap source) {
-        if (palette != null) {
-            throw new IllegalStateException("Instances may only be used once.");
-        }
-        palette = Palette.generate(source);
+        Palette palette = Palette.generate(source);
+        CACHE.put(source, palette);
         return source;
     }
 

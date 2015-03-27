@@ -8,6 +8,8 @@
 
 package com.udacity.study.jam.radiotastic.ui.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -132,16 +134,17 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
     @Override
     public void renderStationImage(String imageUri) {
-        final PaletteTransformation paletteTransformation = PaletteTransformation.getInstance();
         Picasso.with(getActivity())
                 .load(imageUri)
-                .fit().centerInside()
-                .transform(paletteTransformation)
+                .transform(PaletteTransformation.instance())
+                .placeholder(R.drawable.placeholder)
                 .into(stationImageView, new Callback.EmptyCallback() {
                     @Override
                     public void onSuccess() {
-                        Palette palette = paletteTransformation.extractPaletteAndRelease();
+                        Bitmap bitmap = ((BitmapDrawable) stationImageView.getDrawable()).getBitmap();
+                        Palette palette = PaletteTransformation.getPalette(bitmap);
                         int mutedLight = palette.getLightMutedColor(0x000000);
+                        stationImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         stationImageView.setBackgroundColor(mutedLight);
                     }
                 });
