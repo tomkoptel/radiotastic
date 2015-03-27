@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.udacity.study.jam.radiotastic.SongItem;
@@ -114,6 +115,10 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
                     } else {
                         mView.renderSongHistory(songHistory);
                     }
+
+                    if (!TextUtils.isEmpty(details.getImage())) {
+                        mView.renderStationImage(details.getImage());
+                    }
                 }
             }
         }
@@ -134,6 +139,8 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
         void showLoading();
 
         void renderSongHistory(List<SongItem> songHistory);
+
+        void renderStationImage(String imageUri);
 
         void showConnectionErrorMessage();
 

@@ -12,17 +12,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.helper.StationRecyclerHelper;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
+import com.udacity.study.jam.radiotastic.util.PaletteTransformation;
 import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
 
 import org.androidannotations.annotations.AfterViews;
@@ -48,6 +53,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     protected FloatingActionButton mFab;
     @ViewById(android.R.id.empty)
     protected StateSyncLayout emptyImageView;
+    @ViewById(R.id.image)
+    protected ImageView stationImageView;
 
     @FragmentArg
     protected String stationId;
@@ -121,6 +128,23 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Override
     public void renderSongHistory(List<SongItem> songHistory) {
         mAdapter.setDataset(songHistory);
+    }
+
+    @Override
+    public void renderStationImage(String imageUri) {
+        final PaletteTransformation paletteTransformation = PaletteTransformation.getInstance();
+        Picasso.with(getActivity())
+                .load(imageUri)
+                .fit().centerInside()
+                .transform(paletteTransformation)
+                .into(stationImageView, new Callback.EmptyCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Palette palette = paletteTransformation.extractPaletteAndRelease();
+                        int mutedLight = palette.getLightMutedColor(0x000000);
+                        stationImageView.setBackgroundColor(mutedLight);
+                    }
+                });
     }
 
     @Override
