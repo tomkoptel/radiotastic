@@ -25,13 +25,14 @@ import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 
 import javax.inject.Inject;
 
-public class CategoriesPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
+public class CategoriesPresenter extends Presenter
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final int LOAD_CATEGORIES = 100;
     private final Fragment mFragment;
     private boolean mSyncIsActive;
     private View mView;
-    private SyncType syncType;
 
     @Inject
     ImmediateSyncCase immediateSync;
@@ -92,22 +93,20 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
             @Override
             public void onStatusChanged(int which) {
                 mSyncIsActive = observeSyncCase.isSyncActive();
-                if (syncType == SyncType.FROM_CLOUD) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mSyncIsActive) {
-                                if (!mView.isAlreadyLoaded()) {
-                                    mView.showLoading();
-                                }
-                            } else {
-                                if (mView.isAlreadyLoaded()) {
-                                    mView.hideLoading();
-                                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSyncIsActive) {
+                            if (!mView.isAlreadyLoaded()) {
+                                mView.showLoading();
+                            }
+                        } else {
+                            if (mView.isAlreadyLoaded()) {
+                                mView.hideLoading();
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     }
@@ -173,9 +172,5 @@ public class CategoriesPresenter extends Presenter implements LoaderManager.Load
         boolean isReady();
 
         boolean isAlreadyLoaded();
-    }
-
-    private enum SyncType {
-        FROM_FILE_SYSTEM, FROM_CLOUD;
     }
 }
