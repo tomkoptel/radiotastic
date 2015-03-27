@@ -7,9 +7,12 @@
     <color name="gplus_color_3">#427fed</color>
     <color name="gplus_color_4">#b23424</color>
 
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#727272</color>
+    <color name="divider">#B6B6B6</color>
     <color name="primary">#9C27B0</color>
     <color name="primaryDark">#7B1FA2</color>
-    <color name="accent">#D500F9</color>
+    <color name="accent">#E040FB</color>
     <color name="accentLight">#EA80FC</color>
     <color name="transparentAccent">#55D500F9</color>
 

@@ -19,20 +19,20 @@ import static android.view.View.OnLongClickListener;
 public abstract class EasyViewHolder<V> extends RecyclerView.ViewHolder implements OnLongClickListener,
         OnClickListener {
 
-    private static final OnItemClickListener NULL_CLICK_LISTENER = new OnItemClickListener() {
+    public static final OnItemClickListener NULL_CLICK_LISTENER = new OnItemClickListener() {
         @Override
         public void onItemClick(int position, View view) {
         }
     };
-    private static final OnItemLongClickListener NULL_LONG_CLICK_LISTENER = new OnItemLongClickListener() {
+    public static final OnItemLongClickListener NULL_LONG_CLICK_LISTENER = new OnItemLongClickListener() {
         @Override
         public boolean onLongItemClicked(int position, View view) {
             return false;
         }
     };
 
-    private OnItemClickListener itemClickListener = NULL_CLICK_LISTENER;
-    private OnItemLongClickListener longClickListener = NULL_LONG_CLICK_LISTENER;
+    private OnItemClickListener itemClickListener;
+    private OnItemLongClickListener longClickListener;
 
     public EasyViewHolder(ViewGroup parent, int layoutId) {
         super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));

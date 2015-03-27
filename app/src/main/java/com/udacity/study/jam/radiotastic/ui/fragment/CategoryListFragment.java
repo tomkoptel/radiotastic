@@ -22,12 +22,12 @@ import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.category.CategoryCursor;
-import com.udacity.study.jam.radiotastic.ui.adapter.decoration.DividerItemDecoration;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyCursorRecyclerAdapter;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyViewHolder;
 import com.udacity.study.jam.radiotastic.ui.adapter.holder.CategoryViewHolder;
 import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
 import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -123,7 +123,12 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
         linearLayoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getActivity())
+                        .color(getResources().getColor(R.color.divider))
+                        .margin(getResources().getDimensionPixelSize(R.dimen.list_item_left_padding),
+                                getResources().getDimensionPixelSize(R.dimen.list_item_right_padding))
+                        .build());
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy){
@@ -165,7 +170,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
         }
     }
 
-    public static interface Callback {
+    public interface Callback {
         void onCategorySelected(String categoryID);
     }
 }

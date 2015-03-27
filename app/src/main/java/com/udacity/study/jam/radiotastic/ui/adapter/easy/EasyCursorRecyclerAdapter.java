@@ -60,8 +60,8 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
     private final BaseEasyViewHolderFactory viewHolderFactory = new BaseEasyViewHolderFactory();
     private final List<Class> valueClassTypes = new ArrayList<>();
     private DataSetObserver mDataSetObserver;
-    private EasyViewHolder.OnItemClickListener itemClickListener;
-    private EasyViewHolder.OnItemLongClickListener longClickListener;
+    private EasyViewHolder.OnItemClickListener itemClickListener = EasyViewHolder.NULL_CLICK_LISTENER;
+    private EasyViewHolder.OnItemLongClickListener longClickListener = EasyViewHolder.NULL_LONG_CLICK_LISTENER;
 
     public EasyCursorRecyclerAdapter() {
         this(null);

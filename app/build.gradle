@@ -71,6 +71,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     // Custom toasts
     compile 'com.github.kennyc1012:snackbar:1.1-SNAPSHOT:api8Release@aar'
+    // Android library providing simple way to control divider items of RecyclerView
+    compile 'com.yqritc:recyclerview-flexibledivider:1.1.0'
 
     // Annotation dependencies
     compile "org.androidannotations:androidannotations-api:3.2"
