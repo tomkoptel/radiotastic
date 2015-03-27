@@ -61,6 +61,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     protected ImageView stationImageView;
 
     @FragmentArg
+    protected String stationName;
+    @FragmentArg
     protected String stationId;
     @FragmentArg
     protected String streamUrl;
@@ -77,7 +79,11 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @AfterViews
     final void init() {
         ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
-        recyclerHelper.init(getView());
+        recyclerHelper
+                .setup()
+                .rootView(getView())
+                .title(stationName)
+                .init();
 
         mPlaying = playerPref.stationId().getOr("").equals(stationId);
         mFab.setImageResource(mPlaying ? R.drawable.ic_av_stop : R.drawable.ic_av_play_arrow);

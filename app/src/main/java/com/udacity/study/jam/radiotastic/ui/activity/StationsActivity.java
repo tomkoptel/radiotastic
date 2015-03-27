@@ -40,8 +40,12 @@ public class StationsActivity extends BaseActivity implements StationListFragmen
     }
 
     @Override
-    public void onStationSelected(String stationID, String streamUrl) {
-        DetailActivity_.intent(this).stationId(stationID).streamUrl(streamUrl).start();
+    public void onStationSelected(String stationID, String stationName, String streamUrl) {
+        DetailActivity_.intent(this)
+                .stationId(stationID)
+                .stationName(stationName)
+                .streamUrl(streamUrl)
+                .start();
     }
 
 }

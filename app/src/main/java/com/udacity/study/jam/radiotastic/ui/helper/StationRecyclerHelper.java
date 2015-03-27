@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,24 +54,57 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
     private View headerView;
     private View mStateView;
 
-    public void init(View root) {
-        inject(root);
-        configure();
-    }
+    private String mTitle;
+    private View mRoot;
 
     public View getHeaderView() {
         return headerView;
     }
 
-    private void inject(View hasViews) {
-        mTitleView = ((TextView) hasViews.findViewById(R.id.title));
-        mOverlayView = hasViews.findViewById(R.id.overlay);
-        mToolbar = ((Toolbar) hasViews.findViewById(R.id.toolbar));
-        mImageView = hasViews.findViewById(R.id.image);
-        mRecyclerViewBackground = hasViews.findViewById(R.id.list_background);
-        mRecyclerView = ((ObservableRecyclerView) hasViews.findViewById(R.id.recycler));
-        mFab = ((FloatingActionButton) hasViews.findViewById(R.id.fab));
-        mStateView = hasViews.findViewById(android.R.id.empty);
+    public StationRecyclerHelper setup() {
+        return this;
+    }
+
+    public StationRecyclerHelper rootView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("Root view should not be empty");
+        }
+        mRoot = view;
+        return this;
+    }
+
+    public StationRecyclerHelper title(String title) {
+        if (TextUtils.isEmpty(title)) {
+            throw new IllegalArgumentException("Title should not be empty");
+        }
+        mTitle = title;
+        return this;
+    }
+
+    public void init() {
+        ensureDefaults();
+        injectViews();
+        configure();
+    }
+
+    private void ensureDefaults() {
+        if (mRoot == null) {
+            throw new IllegalStateException("Root view should not be null");
+        }
+        if (TextUtils.isEmpty(mTitle)) {
+            throw new IllegalStateException("Title should not be empty");
+        }
+    }
+
+    private void injectViews() {
+        mTitleView = ((TextView) mRoot.findViewById(R.id.title));
+        mOverlayView = mRoot.findViewById(R.id.overlay);
+        mToolbar = ((Toolbar) mRoot.findViewById(R.id.toolbar));
+        mImageView = mRoot.findViewById(R.id.image);
+        mRecyclerViewBackground = mRoot.findViewById(R.id.list_background);
+        mRecyclerView = ((ObservableRecyclerView) mRoot.findViewById(R.id.recycler));
+        mFab = ((FloatingActionButton) mRoot.findViewById(R.id.fab));
+        mStateView = mRoot.findViewById(android.R.id.empty);
     }
 
     private void configure() {
@@ -89,7 +123,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
 
         mToolbar.setBackgroundColor(Color.TRANSPARENT);
 
-        mTitleView.setText(activity.getTitle());
+        mTitleView.setText(mTitle);
         activity.setTitle(null);
 
         ViewHelper.setScaleX(mFab, 0);
@@ -259,5 +293,4 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
             mFabIsShown = false;
         }
     }
-
 }

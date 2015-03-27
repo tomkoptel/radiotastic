@@ -59,12 +59,13 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onStationSelected(String stationID, String streamUrl) {
+    public void onStationSelected(String stationID, String stationName, String streamUrl) {
         if (mTwoPane) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_content,
                             StationFragment_.builder()
                             .stationId(stationID)
+                            .stationName(stationName)
                             .streamUrl(streamUrl)
                             .build())
                     .commit();

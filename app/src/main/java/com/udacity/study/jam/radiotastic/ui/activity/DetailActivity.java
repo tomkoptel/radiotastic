@@ -22,6 +22,8 @@ public class DetailActivity extends BaseActivity {
     @Extra
     protected String stationId;
     @Extra
+    protected String stationName;
+    @Extra
     protected String streamUrl;
 
     @Override
@@ -33,6 +35,7 @@ public class DetailActivity extends BaseActivity {
                     .replace(R.id.content,
                             StationFragment_.builder()
                                     .stationId(stationId)
+                                    .stationName(stationName)
                                     .streamUrl(streamUrl)
                                     .build()
                     )

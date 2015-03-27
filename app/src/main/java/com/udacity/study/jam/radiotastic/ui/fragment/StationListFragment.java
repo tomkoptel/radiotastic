@@ -164,6 +164,7 @@ public class StationListFragment extends Fragment
             if (getActivity() instanceof Callback) {
                 ((Callback) getActivity()).onStationSelected(
                         String.valueOf(stationCursor.getStationId()),
+                        stationCursor.getName(),
                         stationCursor.getStreamurl());
             }
         }
@@ -178,7 +179,7 @@ public class StationListFragment extends Fragment
     }
 
     public interface Callback {
-        void onStationSelected(String stationID, String streamUrl);
+        void onStationSelected(String stationID, String stationName, String streamUrl);
     }
 
     private class ScrollListener extends RecyclerView.OnScrollListener {
