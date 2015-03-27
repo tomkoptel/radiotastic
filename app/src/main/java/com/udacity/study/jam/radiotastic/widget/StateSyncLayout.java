@@ -71,4 +71,8 @@ public class StateSyncLayout extends RelativeLayout {
                 break;
         }
     }
+
+    public void setStateText(int textResId) {
+        stateText.setText(textResId);
+    }
 }

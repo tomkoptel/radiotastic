@@ -174,6 +174,7 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Override
     public void showEmptyCase() {
         emptyImageView.setImageType(StateSyncLayout.Type.EMPTY);
+        emptyImageView.setStateText(R.string.no_songhistory);
     }
 
     @Override
