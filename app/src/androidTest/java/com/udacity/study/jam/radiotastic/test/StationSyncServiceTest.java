@@ -17,7 +17,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.udacity.study.jam.radiotastic.InjectIntentServiceTest;
 import com.udacity.study.jam.radiotastic.StationSyncServiceWrapper;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
-import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService;
+import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService_;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -78,10 +78,8 @@ public class StationSyncServiceTest extends InjectIntentServiceTest {
     }
 
     public void testAddAccount() throws InterruptedException {
-        Intent startIntent = new Intent();
-        startIntent.setClass(getContext(), StationSyncService.class);
-        startIntent.setAction(StationSyncService.ACTION);
-        startIntent.putExtra(StationSyncService.STATION_ID_ARG, "1");
+        Intent startIntent = StationSyncService_.intent(getContext())
+                .fetchStationMetaData("1").get();
         startService(startIntent);
 
         latch.await();

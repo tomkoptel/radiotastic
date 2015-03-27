@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.SongItem;
 import com.udacity.study.jam.radiotastic.player.PlayerIntentService;
+import com.udacity.study.jam.radiotastic.player.PlayerPref_;
 import com.udacity.study.jam.radiotastic.ui.adapter.SongsAdapter;
 import com.udacity.study.jam.radiotastic.ui.helper.StationRecyclerHelper;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationPresenter;
@@ -39,6 +40,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.List;
 
@@ -69,11 +71,15 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     @Bean
     protected StationRecyclerHelper recyclerHelper;
 
+    @Pref
+    protected PlayerPref_ playerPref;
+
     @AfterViews
     final void init() {
         ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
         recyclerHelper.init(getView());
 
+        mPlaying = playerPref.stationId().getOr("").equals(stationId);
         mFab.setImageResource(mPlaying ? R.drawable.ic_av_stop : R.drawable.ic_av_play_arrow);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,10 +93,12 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     final void togglePlayBack() {
         if (mPlaying) {
             mPlaying = false;
+            playerPref.clear();
             mFab.setImageResource(R.drawable.ic_av_play_arrow );
             PlayerIntentService.startActionStop(getActivity());
         } else {
             mPlaying = true;
+            playerPref.stationId().put(stationId);
             mFab.setImageResource(R.drawable.ic_av_stop);
             PlayerIntentService.startActionPlay(getActivity(), streamUrl);
         }
