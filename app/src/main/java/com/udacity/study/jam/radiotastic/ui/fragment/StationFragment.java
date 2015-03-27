@@ -162,6 +162,13 @@ public class StationFragment extends Fragment implements StationPresenter.View {
                         int mutedLight = palette.getLightMutedColor(0x000000);
                         stationImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         stationImageView.setBackgroundColor(mutedLight);
+
+                        int vibrantColor = palette.getVibrantColor(0x000000);
+                        int vibrantDarkColor = palette.getDarkVibrantColor(0x000000);
+                        int vibrantLightColor = palette.getLightVibrantColor(0x000000);
+                        mFab.setColorNormal(vibrantColor);
+                        mFab.setColorPressed(vibrantDarkColor);
+                        mFab.setColorRipple(vibrantLightColor);
                     }
                 });
     }
