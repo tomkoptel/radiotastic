@@ -93,6 +93,9 @@ public class PlayerIntentService extends Service
     private void handleActionPlay(String streamUrl) {
         Timber.i("User explicitly started play back");
         mStreamUrl = streamUrl;
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            handleActionStop();
+        }
         if (requestFocus()) {
             Timber.i("Audio focus was granted.");
             if (mMediaPlayer == null) {
