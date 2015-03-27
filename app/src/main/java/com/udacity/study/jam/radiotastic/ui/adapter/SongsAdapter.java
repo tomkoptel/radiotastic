@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.SongDate;
 import com.udacity.study.jam.radiotastic.SongItem;
 
@@ -47,7 +48,7 @@ public class SongsAdapter extends
             return new HeaderViewHolder(mHeaderView);
         } else {
             View itemView = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(android.R.layout.simple_list_item_2, viewGroup, false);
+                    .inflate(R.layout.song_line_list_item, viewGroup, false);
 
             return new ItemViewHolder(itemView);
         }
@@ -59,16 +60,17 @@ public class SongsAdapter extends
             ItemViewHolder holder = (ItemViewHolder) viewHolder;
             SongItem item = getItem(position - 1);
             SongDate date = item.getDate();
-            String title = item.getTitle();
             if (date != null) {
                 Date utcTime = new Date((long) (date.getSec() * TimeUnit.SECONDS.toMillis(1)));
                 long now = System.currentTimeMillis();
                 CharSequence result = DateUtils.getRelativeTimeSpanString(utcTime.getTime(),
                         now, DateUtils.SECOND_IN_MILLIS);
-                title = title + "\n" + result;
+                holder.dateTextView.setText(result);
+            } else {
+                holder.dateTextView.setVisibility(View.GONE);
             }
             holder.labelTextView.setText(item.getName());
-            holder.descTextView.setText(title);
+            holder.descTextView.setText(item.getTitle());
         }
     }
 
@@ -99,11 +101,13 @@ public class SongsAdapter extends
     public final static class ItemViewHolder extends RecyclerView.ViewHolder {
         private final TextView labelTextView;
         private final TextView descTextView;
+        private final TextView dateTextView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            labelTextView = (TextView) itemView.findViewById(android.R.id.text1);
-            descTextView = (TextView) itemView.findViewById(android.R.id.text2);
+            labelTextView = (TextView) itemView.findViewById(android.R.id.title);
+            descTextView = (TextView) itemView.findViewById(android.R.id.summary);
+            dateTextView = (TextView) itemView.findViewById(android.R.id.text1);
         }
     }
 
