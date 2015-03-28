@@ -20,6 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
+import com.kenny.snackbar.SnackBar;
+import com.kenny.snackbar.SnackBarItem;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -43,6 +45,8 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 @EFragment(R.layout.fragment_detail)
 public class StationFragment extends Fragment implements StationPresenter.View {
@@ -89,7 +93,8 @@ public class StationFragment extends Fragment implements StationPresenter.View {
                 .title(stationName)
                 .init();
 
-        mPlaying = playerPref.stationId().getOr("").equals(stationId);
+        String persisteId = playerPref.stationId().getOr("");
+        mPlaying = persisteId.equals(stationId);
         mFab.setImageResource(mPlaying ? R.drawable.ic_av_stop : R.drawable.ic_av_play_arrow);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -104,7 +109,7 @@ public class StationFragment extends Fragment implements StationPresenter.View {
         if (mPlaying) {
             mPlaying = false;
             playerPref.clear();
-            mFab.setImageResource(R.drawable.ic_av_play_arrow );
+            mFab.setImageResource(R.drawable.ic_av_play_arrow);
             PlayerIntentService.startActionStop(getActivity());
         } else {
             mPlaying = true;
@@ -112,6 +117,7 @@ public class StationFragment extends Fragment implements StationPresenter.View {
             mFab.setImageResource(R.drawable.ic_av_stop);
             PlayerIntentService.startActionPlay(getActivity(), streamUrl);
         }
+        Timber.i("togglePlayBack() ", playerPref.stationId().get());
     }
 
     @Override
@@ -181,6 +187,15 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     }
 
     @Override
+    public void showPlayerErrorMessage() {
+        SnackBarItem sbi = new SnackBarItem.Builder()
+                .setMessage("Failed to play back station!")
+                .setDuration(5000)
+                .build();
+        SnackBar.show(getActivity(), sbi);
+    }
+
+    @Override
     public void showEmptyCase() {
         emptyImageView.setImageType(StateSyncLayout.Type.EMPTY);
         emptyImageView.setStateText(R.string.no_songhistory);
@@ -192,8 +207,7 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     }
 
     @Override
-    public boolean isAlreadyLoaded() {
-        return false;
+    public void showPlayControl() {
+        mFab.setImageResource(R.drawable.ic_av_play_arrow);
     }
-
 }

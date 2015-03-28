@@ -35,12 +35,8 @@ public class PlayerIntentService extends Service
     private AudioManager mAudioManager;
     private String mStreamUrl;
 
-    /**
-     * Starts this service to perform action Play with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see android.app.IntentService
-     */
+    protected PlayerPref_ playerPref;
+
     public static void startActionPlay(Context context, String streamUrl) {
         Intent intent = new Intent(context, PlayerIntentService.class);
         intent.setAction(ACTION_PLAY);
@@ -48,12 +44,6 @@ public class PlayerIntentService extends Service
         context.startService(intent);
     }
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see android.app.IntentService
-     */
     public static void startActionStop(Context context) {
         Intent intent = new Intent(context, PlayerIntentService.class);
         intent.setAction(ACTION_STOP);
@@ -68,6 +58,7 @@ public class PlayerIntentService extends Service
         super.onCreate();
         Timber.tag(LOG_TAG);
 
+        playerPref = new PlayerPref_(this);
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
@@ -180,6 +171,7 @@ public class PlayerIntentService extends Service
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             Timber.e(e, "Failed setup data source");
+            resetPreferences();
         }
     }
 
@@ -194,6 +186,7 @@ public class PlayerIntentService extends Service
         Timber.e("Something bad happened with MediaPlayer \n What: " + what + " \n Extra: " + extra);
         Timber.i("Resetting media player");
         player.reset();
+        resetPreferences();
         return false;
     }
 
@@ -215,4 +208,9 @@ public class PlayerIntentService extends Service
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
                 mAudioManager.abandonAudioFocus(this);
     }
+
+    private void resetPreferences() {
+        playerPref.stationId().put("-1");
+    }
+
 }

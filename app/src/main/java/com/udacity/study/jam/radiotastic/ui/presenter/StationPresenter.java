@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.ui.presenter;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,13 +23,18 @@ import com.udacity.study.jam.radiotastic.StationDetails;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColumns;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataCursor;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataSelection;
+import com.udacity.study.jam.radiotastic.player.PlayerPref_;
 import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService_;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class StationPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StationPresenter extends Presenter
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int LOAD_STATION = 300;
+
+    private final PlayerPref_ playerPref;
     private final Fragment mFragment;
     private final View mView;
     private String stationId;
@@ -38,6 +44,8 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
     public StationPresenter(Fragment mFragment, View mView) {
         this.mFragment = mFragment;
         this.mView = mView;
+
+        playerPref = new PlayerPref_(mFragment.getActivity());
     }
 
     @Override
@@ -58,10 +66,12 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
     @Override
     public void resume() {
+        playerPref.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void pause() {
+        playerPref.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public void setStationId(String stationId) {
@@ -133,6 +143,16 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(playerPref.stationId().key())) {
+            if ("-1".equals(playerPref.stationId().get())) {
+                mView.showPlayControl();
+                mView.showPlayerErrorMessage();
+            }
+        }
+    }
+
     public interface View {
         void hideLoading();
 
@@ -144,11 +164,12 @@ public class StationPresenter extends Presenter implements LoaderManager.LoaderC
 
         void showConnectionErrorMessage();
 
+        void showPlayerErrorMessage();
+
         void showEmptyCase();
 
         boolean isReady();
 
-        boolean isAlreadyLoaded();
-
+        void showPlayControl();
     }
 }
