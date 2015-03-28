@@ -8,6 +8,7 @@
 
 package com.udacity.study.jam.radiotastic.ui.presenter;
 
+import android.content.SharedPreferences;
 import android.content.SyncStatusObserver;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,11 +24,14 @@ import com.udacity.study.jam.radiotastic.db.station.StationSelection;
 import com.udacity.study.jam.radiotastic.domain.ImmediateSyncCase;
 import com.udacity.study.jam.radiotastic.domain.ObserveSyncStateCase;
 import com.udacity.study.jam.radiotastic.sync.SyncStationsCaseImpl;
+import com.udacity.study.jam.radiotastic.ui.UiPref_;
 import com.udacity.study.jam.radiotastic.util.NetworkStateManager;
 
 import javax.inject.Inject;
 
-public class StationsPresenter extends Presenter implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
+public class StationsPresenter extends Presenter
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SwipeRefreshLayout.OnRefreshListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int LOAD_STATIONS = 200;
     private static final String[] ALL_COLUMNS = {
@@ -43,6 +47,7 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
     };
 
     private final Fragment mFragment;
+    private final UiPref_ uiPref;
     private String categoryId;
     private boolean mSyncIsActive;
     private View mView;
@@ -57,6 +62,7 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
     public StationsPresenter(Fragment fragment, View view) {
         mFragment = fragment;
         mView = view;
+        uiPref = new UiPref_(fragment.getActivity());
     }
 
     public void setCategoryId(String categoryId) {
@@ -73,11 +79,13 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
 
     @Override
     public void resume() {
+        uiPref.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         observeSyncCase.resume();
     }
 
     @Override
     public void pause() {
+        uiPref.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         observeSyncCase.pause();
     }
 
@@ -90,7 +98,7 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
                 ALL_COLUMNS,
                 selection.sel(),
                 new String[]{categoryId},
-                StationColumns.NAME + " ASC");
+                uiPref.sortOption().get() + " " + uiPref.sortOrder().get());
     }
 
     @Override
@@ -185,6 +193,13 @@ public class StationsPresenter extends Presenter implements LoaderManager.Loader
 
     private void runOnUiThread(Runnable runnable) {
         mFragment.getActivity().runOnUiThread(runnable);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(uiPref.sortOption().key())) {
+            mFragment.getLoaderManager().restartLoader(LOAD_STATIONS, null, this);
+        }
     }
 
     public interface View {

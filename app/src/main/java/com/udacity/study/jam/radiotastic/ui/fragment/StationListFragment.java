@@ -25,17 +25,21 @@ import com.udacity.study.jam.radiotastic.db.station.StationCursor;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyCursorRecyclerAdapter;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyViewHolder;
 import com.udacity.study.jam.radiotastic.ui.adapter.holder.StationViewHolder;
+import com.udacity.study.jam.radiotastic.ui.dialog.SortDialogFragment;
 import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
+@OptionsMenu(R.menu.station_page_menu)
 @EFragment(R.layout.fragment_entity_list)
 public class StationListFragment extends Fragment
-        implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
+        implements StationsPresenter.View, EasyViewHolder.OnItemClickListener{
 
     private EasyCursorRecyclerAdapter mAdapter;
     private StationsPresenter stationsPresenter;
@@ -51,6 +55,12 @@ public class StationListFragment extends Fragment
     protected String categoryId;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -61,6 +71,11 @@ public class StationListFragment extends Fragment
         initRecyclerView();
         initAdapter();
         initSwipeRefresh();
+    }
+
+    @OptionsItem(R.id.sort)
+    final void sortStations() {
+        SortDialogFragment.show(getFragmentManager());
     }
 
     @Override

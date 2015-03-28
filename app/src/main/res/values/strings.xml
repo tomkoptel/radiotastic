@@ -23,4 +23,8 @@
     <string name="track">Track</string>
     <string name="played_at">Played</string>
     <string name="no_songhistory">No song history</string>
+    <string name="sort_stations">Sort stations</string>
+    <string name="sort_by_title">Title</string>
+    <string name="sort_by_bitrate">Bitrate</string>
+    <string name="sort_dialog_title">Sort by</string>
 </resources>
