@@ -27,4 +27,5 @@
     <string name="sort_by_title">Title</string>
     <string name="sort_by_bitrate">Bitrate</string>
     <string name="sort_dialog_title">Sort by</string>
+    <string name="main_categories">Main categories</string>
 </resources>

@@ -197,7 +197,7 @@ public class StationsPresenter extends Presenter
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(uiPref.sortOption().key())) {
+        if (key.equals(uiPref.sortOption().key()) || key.equals(uiPref.sortOrder().key())) {
             mFragment.getLoaderManager().restartLoader(LOAD_STATIONS, null, this);
         }
     }

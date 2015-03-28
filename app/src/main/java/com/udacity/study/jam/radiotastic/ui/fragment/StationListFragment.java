@@ -14,14 +14,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.kenny.snackbar.SnackBar;
 import com.kenny.snackbar.SnackBarItem;
 import com.udacity.study.jam.radiotastic.R;
 import com.udacity.study.jam.radiotastic.db.station.StationCursor;
+import com.udacity.study.jam.radiotastic.ui.UiPref_;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyCursorRecyclerAdapter;
 import com.udacity.study.jam.radiotastic.ui.adapter.easy.EasyViewHolder;
 import com.udacity.study.jam.radiotastic.ui.adapter.holder.StationViewHolder;
@@ -34,12 +39,14 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 @OptionsMenu(R.menu.station_page_menu)
 @EFragment(R.layout.fragment_entity_list)
 public class StationListFragment extends Fragment
-        implements StationsPresenter.View, EasyViewHolder.OnItemClickListener{
+        implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
 
     private EasyCursorRecyclerAdapter mAdapter;
     private StationsPresenter stationsPresenter;
@@ -53,6 +60,18 @@ public class StationListFragment extends Fragment
 
     @FragmentArg
     protected String categoryId;
+    @FragmentArg
+    protected String categoryName;
+
+    @OptionsMenuItem(R.id.sortOrder)
+    protected MenuItem sortOrderMenuItem;
+    @OptionsMenuItem(R.id.sortOption)
+    protected MenuItem sortOptionMenuItem;
+
+    @Pref
+    protected UiPref_ uiPref;
+
+    protected boolean isMenuVisible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,14 +92,39 @@ public class StationListFragment extends Fragment
         initSwipeRefresh();
     }
 
-    @OptionsItem(R.id.sort)
+    @OptionsItem(R.id.sortOption)
     final void sortStations() {
         SortDialogFragment.show(getFragmentManager());
+    }
+
+    @OptionsItem(R.id.sortOrder)
+    final void sortOrderStations() {
+        String sortOrder = uiPref.sortOrder().get();
+        boolean isAsc = "asc".equals(sortOrder);
+        uiPref.sortOrder().put(isAsc ? "desc" : "asc");
+        toggleOrderIcon();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        sortOptionMenuItem.setVisible(isMenuVisible);
+        sortOrderMenuItem.setVisible(isMenuVisible);
+        toggleOrderIcon();
+    }
+
+    private void toggleOrderIcon() {
+        String sortOrder = uiPref.sortOrder().get();
+        boolean isAsc = "asc".equals(sortOrder);
+        int icon = isAsc ? R.drawable.ic_sort_descending_white_36dp :
+                R.drawable.ic_sort_ascending_white_36dp;
+        sortOrderMenuItem.setIcon(icon);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(categoryName);
         stationsPresenter.resume();
     }
 
@@ -104,6 +148,8 @@ public class StationListFragment extends Fragment
 
     @Override
     public void renderStations(Cursor data) {
+        isMenuVisible = true;
+        getActivity().supportInvalidateOptionsMenu();
         mAdapter.swapCursor(data);
     }
 
@@ -199,7 +245,7 @@ public class StationListFragment extends Fragment
 
     private class ScrollListener extends RecyclerView.OnScrollListener {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             int topRowVerticalPosition =
                     (recyclerView == null || recyclerView.getChildCount() == 0)
                             ? 0 : recyclerView.getChildAt(0).getTop();

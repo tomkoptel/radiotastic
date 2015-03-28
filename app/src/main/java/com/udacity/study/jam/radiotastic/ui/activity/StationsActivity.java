@@ -23,6 +23,8 @@ public class StationsActivity extends BaseActivity implements StationListFragmen
 
     @Extra
     protected String categoryId;
+    @Extra
+    protected String categoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class StationsActivity extends BaseActivity implements StationListFragmen
                             StationListFragment_
                                     .builder()
                                     .categoryId(categoryId)
+                                    .categoryName(categoryName)
                                     .build())
                     .commit();
         }

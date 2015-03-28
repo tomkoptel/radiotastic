@@ -44,17 +44,22 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onCategorySelected(String categoryID) {
+    public void onCategorySelected(String categoryID, String categoryName) {
         if (mTwoPane) {
+            getSupportActionBar().setTitle(categoryName);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.master_content,
                             StationListFragment_.builder()
                                     .categoryId(categoryID)
+                                    .categoryName(categoryName)
                                     .build())
                     .addToBackStack(null)
                     .commit();
         } else {
-            StationsActivity_.intent(this).categoryId(categoryID).start();
+            StationsActivity_.intent(this)
+                    .categoryId(categoryID)
+                    .categoryName(categoryName)
+                    .start();
         }
     }
 

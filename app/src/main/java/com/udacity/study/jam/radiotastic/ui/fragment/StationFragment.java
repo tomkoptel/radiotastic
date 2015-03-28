@@ -78,7 +78,11 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
     @AfterViews
     final void init() {
-        ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
+        boolean twoPane = (getActivity().findViewById(R.id.detail_content) != null);
+        if (!twoPane) {
+            ((ActionBarActivity) getActivity()).setSupportActionBar(mToolbar);
+        }
+
         recyclerHelper
                 .setup()
                 .rootView(getView())
@@ -90,8 +94,6 @@ public class StationFragment extends Fragment implements StationPresenter.View {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(false);
-
-        boolean twoPane = (getActivity().findViewById(R.id.detail_content) != null);
 
         mAdapter = new SongsAdapter(recyclerHelper.getHeaderView(), twoPane);
         mRecyclerView.setAdapter(mAdapter);

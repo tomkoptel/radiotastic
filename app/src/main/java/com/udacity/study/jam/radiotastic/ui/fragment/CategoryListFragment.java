@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -60,6 +61,8 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     @Override
     public void onResume() {
         super.onResume();
+        ((ActionBarActivity) getActivity())
+                .getSupportActionBar().setTitle(R.string.main_categories);
         categoriesPresenter.resume();
     }
 
@@ -165,12 +168,13 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
             CategoryCursor categoryCursor = new CategoryCursor(cursor);
             if (getActivity() instanceof Callback) {
                 ((Callback) getActivity()).onCategorySelected(
-                        String.valueOf(categoryCursor.getCategoryId()));
+                        String.valueOf(categoryCursor.getCategoryId()),
+                        categoryCursor.getName());
             }
         }
     }
 
     public interface Callback {
-        void onCategorySelected(String categoryID);
+        void onCategorySelected(String categoryID, String categoryName);
     }
 }
