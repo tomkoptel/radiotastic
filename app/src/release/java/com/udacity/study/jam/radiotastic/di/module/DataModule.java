@@ -9,6 +9,7 @@
 package com.udacity.study.jam.radiotastic.di.module;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.udacity.study.jam.radiotastic.api.ApiEndpoint;
 
@@ -18,8 +19,10 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit.Endpoint;
 
-@Module
+@Module(includes = RadioApiModule.class)
 public class DataModule {
+
+    private final Bundle extras;
 
     public DataModule(Bundle extras) {
         this.extras = extras;

@@ -37,8 +37,8 @@ public interface SyncComponent {
 
     final public static class Initializer {
         static public SyncComponent init(Context context,
-                                         Bundle extras,
                                          SyncResult syncResult,
+                                         Bundle extras,
                                          boolean mockMode) {
             return Dagger_SyncComponent.builder()
                     .systemServicesModule(new SystemServicesModule(

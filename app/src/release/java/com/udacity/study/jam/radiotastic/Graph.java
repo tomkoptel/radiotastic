@@ -13,6 +13,10 @@ import android.content.Context;
 import com.udacity.study.jam.radiotastic.di.module.AccountModule;
 import com.udacity.study.jam.radiotastic.di.module.DataModule;
 import com.udacity.study.jam.radiotastic.di.module.SystemServicesModule;
+import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService;
+import com.udacity.study.jam.radiotastic.ui.activity.MainActivity;
+import com.udacity.study.jam.radiotastic.ui.presenter.CategoriesPresenter;
+import com.udacity.study.jam.radiotastic.ui.presenter.StationsPresenter;
 
 import javax.inject.Singleton;
 
@@ -33,9 +37,9 @@ public interface Graph {
      */
     final static class Initializer {
         public static Graph init(Context context, boolean mockMode) {
-            return Dagger_ApplicationComponent.builder()
+            return Dagger_Graph.builder()
                     .systemServicesModule(new SystemServicesModule(
-                            MainApplication.get(context)))
+                            App.get(context)))
                     .build();
         }
 
