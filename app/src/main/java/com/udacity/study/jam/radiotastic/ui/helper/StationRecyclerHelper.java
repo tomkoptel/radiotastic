@@ -129,22 +129,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
         ViewHelper.setScaleX(mFab, 0);
         ViewHelper.setScaleY(mFab, 0);
 
-        mOverlayView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // Ensure you call it only once :
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    mOverlayView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    mOverlayView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                // Translate FAB
-                float fabTranslationY = translateFab(0);
-                // Show/hide FAB
-                toggleFab(fabTranslationY);
-                ViewHelper.setTranslationY(mStateView, mFlexibleSpaceImageHeight + mFabMargin);
-            }
-        });
+        translateFabButtonOnStart();
 
         final View contentView = activity.getWindow().getDecorView()
                 .findViewById(android.R.id.content);
@@ -180,6 +165,29 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
         });
     }
 
+    private void translateFabButtonOnStart() {
+        mOverlayView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Ensure you call it only once :
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    mOverlayView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    removeOnGlobalLayoutListener();
+                }
+                // Translate FAB
+                float fabTranslationY = translateFab(0);
+                // Show/hide FAB
+                toggleFab(fabTranslationY);
+                ViewHelper.setTranslationY(mStateView, mFlexibleSpaceImageHeight + mFabMargin);
+            }
+
+            @TargetApi(16)
+            private void removeOnGlobalLayoutListener() {
+                mOverlayView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+    }
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
