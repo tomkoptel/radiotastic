@@ -63,7 +63,10 @@ public class SortDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        return builder.create();
+
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
 }
