@@ -24,6 +24,8 @@
     <string name="played_at">Played</string>
     <string name="no_songhistory">No song history</string>
     <string name="sort_stations">Sort stations</string>
+    <string name="sort_asc">Sort ascending</string>
+    <string name="sort_desc">Sort descending</string>
     <string name="sort_by_title">Title</string>
     <string name="sort_by_bitrate">Bitrate</string>
     <string name="sort_dialog_title">Sort by</string>

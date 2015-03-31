@@ -116,9 +116,11 @@ public class StationListFragment extends Fragment
     private void toggleOrderIcon() {
         String sortOrder = uiPref.sortOrder().get();
         boolean isAsc = "asc".equals(sortOrder);
-        int icon = isAsc ? R.drawable.ic_sort_descending_white_36dp :
+        int resIcon = isAsc ? R.drawable.ic_sort_descending_white_36dp :
                 R.drawable.ic_sort_ascending_white_36dp;
-        sortOrderMenuItem.setIcon(icon);
+        int resTitle = isAsc ? R.string.sort_desc : R.string.sort_asc;
+        sortOrderMenuItem.setIcon(resIcon);
+        sortOrderMenuItem.setTitle(resTitle);
     }
 
     @Override

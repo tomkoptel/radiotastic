@@ -6,7 +6,7 @@
     <item
         android:id="@+id/sortOrder"
         android:icon="@drawable/ic_sort_ascending_white_36dp"
-        android:title="@string/sort_stations"
+        android:title="@string/sort_asc"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/sortOption"
