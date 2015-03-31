@@ -30,7 +30,7 @@
         },
         {
             "name": "bitrate",
-            "type": "String",
+            "type": "Integer",
             "nullable": false
         },
         {

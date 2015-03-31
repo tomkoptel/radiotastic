@@ -63,7 +63,7 @@ public class StationViewHolder extends EasyViewHolder<Cursor> {
 
         TextDrawable textDrawable = TextDrawable.builder()
                 .buildRoundRect(
-                        item.getBitrate(),
+                        String.valueOf(item.getBitrate()),
                         textDrawableColor,
                         px);
         iconView.setImageDrawable(textDrawable);

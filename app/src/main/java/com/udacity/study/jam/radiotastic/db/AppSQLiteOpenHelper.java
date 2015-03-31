@@ -44,7 +44,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
             + StationColumns.CATEGORY_ID + " INTEGER NOT NULL, "
             + StationColumns.STATUS + " INTEGER NOT NULL, "
             + StationColumns.NAME + " TEXT NOT NULL, "
-            + StationColumns.BITRATE + " TEXT NOT NULL, "
+            + StationColumns.BITRATE + " INTEGER NOT NULL, "
             + StationColumns.STREAMURL + " TEXT NOT NULL, "
             + StationColumns.COUNTRY + " TEXT NOT NULL, "
             + StationColumns.WEBSITE + " TEXT, "

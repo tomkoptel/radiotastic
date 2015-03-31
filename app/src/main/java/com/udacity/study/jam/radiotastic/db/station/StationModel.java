@@ -38,10 +38,8 @@ public interface StationModel extends BaseModel {
 
     /**
      * Get the {@code bitrate} value.
-     * Cannot be {@code null}.
      */
-    @NonNull
-    String getBitrate();
+    int getBitrate();
 
     /**
      * Get the {@code streamurl} value.

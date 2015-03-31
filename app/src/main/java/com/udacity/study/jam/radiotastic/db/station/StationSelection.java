@@ -153,33 +153,33 @@ public class StationSelection extends AbstractSelection<StationSelection> {
         return this;
     }
 
-    public StationSelection bitrate(String... value) {
-        addEquals(StationColumns.BITRATE, value);
+    public StationSelection bitrate(int... value) {
+        addEquals(StationColumns.BITRATE, toObjectArray(value));
         return this;
     }
 
-    public StationSelection bitrateNot(String... value) {
-        addNotEquals(StationColumns.BITRATE, value);
+    public StationSelection bitrateNot(int... value) {
+        addNotEquals(StationColumns.BITRATE, toObjectArray(value));
         return this;
     }
 
-    public StationSelection bitrateLike(String... value) {
-        addLike(StationColumns.BITRATE, value);
+    public StationSelection bitrateGt(int value) {
+        addGreaterThan(StationColumns.BITRATE, value);
         return this;
     }
 
-    public StationSelection bitrateContains(String... value) {
-        addContains(StationColumns.BITRATE, value);
+    public StationSelection bitrateGtEq(int value) {
+        addGreaterThanOrEquals(StationColumns.BITRATE, value);
         return this;
     }
 
-    public StationSelection bitrateStartsWith(String... value) {
-        addStartsWith(StationColumns.BITRATE, value);
+    public StationSelection bitrateLt(int value) {
+        addLessThan(StationColumns.BITRATE, value);
         return this;
     }
 
-    public StationSelection bitrateEndsWith(String... value) {
-        addEndsWith(StationColumns.BITRATE, value);
+    public StationSelection bitrateLtEq(int value) {
+        addLessThanOrEquals(StationColumns.BITRATE, value);
         return this;
     }
 

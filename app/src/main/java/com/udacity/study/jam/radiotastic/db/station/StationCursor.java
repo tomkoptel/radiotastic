@@ -72,11 +72,9 @@ public class StationCursor extends AbstractCursor implements StationModel {
 
     /**
      * Get the {@code bitrate} value.
-     * Cannot be {@code null}.
      */
-    @NonNull
-    public String getBitrate() {
-        String res = getStringOrNull(StationColumns.BITRATE);
+    public int getBitrate() {
+        Integer res = getIntegerOrNull(StationColumns.BITRATE);
         if (res == null)
             throw new NullPointerException("The value of 'bitrate' in the database was null, which is not allowed according to the model definition");
         return res;

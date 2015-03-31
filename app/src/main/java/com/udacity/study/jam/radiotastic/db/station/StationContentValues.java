@@ -63,8 +63,7 @@ public class StationContentValues extends AbstractContentValues {
     }
 
 
-    public StationContentValues putBitrate(@NonNull String value) {
-        if (value == null) throw new IllegalArgumentException("bitrate must not be null");
+    public StationContentValues putBitrate(int value) {
         mContentValues.put(StationColumns.BITRATE, value);
         return this;
     }

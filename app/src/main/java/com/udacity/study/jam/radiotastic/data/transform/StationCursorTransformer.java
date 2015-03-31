@@ -15,7 +15,7 @@ public class StationCursorTransformer {
     public StationItem transform(StationCursor stationCursor) {
         return new StationItem()
                 .withId(stationCursor.getStationId())
-                .withBitrate(stationCursor.getBitrate())
+                .withBitrate(String.valueOf(stationCursor.getBitrate()))
                 .withCountry(stationCursor.getCountry())
                 .withName(stationCursor.getName())
                 .withWebsite(stationCursor.getWebsite())
