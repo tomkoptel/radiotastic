@@ -126,7 +126,7 @@ public class StationDbTest extends AndroidTestCase {
                 .putName("name")
                 .putStatus(StationStatus.DOWN)
                 .putStreamurl("stream")
-                .putBitrate("bitrate")
+                .putBitrate(320)
                 .putCountry("USA");
 
         return stationItemContentValues.values();

@@ -24,7 +24,7 @@ import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataColum
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataCursor;
 import com.udacity.study.jam.radiotastic.db.stationmetadata.StationMetaDataSelection;
 import com.udacity.study.jam.radiotastic.player.PlayerPref_;
-import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService_;
+import com.udacity.study.jam.radiotastic.sync.internal.StationSyncService;
 
 import java.util.Calendar;
 import java.util.List;
@@ -104,9 +104,7 @@ public class StationPresenter extends Presenter
             showStation(data);
         } else {
             mView.showLoading();
-            StationSyncService_.intent(mFragment.getActivity())
-                    .fetchStationMetaData(stationId)
-                    .start();
+            StationSyncService.performSync(mFragment.getActivity(), stationId);
         }
     }
 

@@ -34,10 +34,6 @@ public class StationMetaDataTest extends AndroidTestCase {
         assertThat(cursor.getCount(), is(0));
     }
 
-    public void testMetaFieldShouldNotAcceptNull() {
-        assertFieldToBeNotNull(StationMetaDataColumns.META);
-    }
-
     public void testCreatedAtFieldShouldNotAcceptNull() {
         assertFieldToBeNotNull(StationMetaDataColumns.CREATED_AT);
     }

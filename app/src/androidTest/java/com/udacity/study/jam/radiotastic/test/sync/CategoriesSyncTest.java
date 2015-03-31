@@ -25,15 +25,13 @@ import com.udacity.study.jam.radiotastic.sync.SyncTask;
 import com.udacity.study.jam.radiotastic.test.util.CursorAssert;
 import com.udacity.study.jam.radiotastic.test.util.TestResource;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CategoriesSyncTest extends AndroidTestCase {
@@ -48,16 +46,14 @@ public class CategoriesSyncTest extends AndroidTestCase {
     private static final String UPDATE_BUCKET_SRC = "categories_updated";
     private static final String DELETE_BUCKET_SRC = "categories_deleted";
 
-    @Mock
-    RadioApi mockApi;
+    private RadioApi mockApi;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         System.setProperty("dexmaker.dexcache",
                 getContext().getCacheDir().getPath());
-
-        MockitoAnnotations.initMocks(this);
+        mockApi = mock(RadioApi.class);
         contentResolver = getContext().getContentResolver();
         contentResolver.delete(CONTENT_URI, null, null);
     }
