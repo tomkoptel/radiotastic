@@ -44,6 +44,7 @@ package com.udacity.study.jam.radiotastic.ui.adapter.easy;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -58,10 +59,12 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
     private int mRowIdColumn;
 
     private final BaseEasyViewHolderFactory viewHolderFactory = new BaseEasyViewHolderFactory();
-    private final List<Class> valueClassTypes = new ArrayList<>();
+    private final List<Class<? extends Cursor>> valueClassTypes = new ArrayList<Class<? extends Cursor>>();
     private DataSetObserver mDataSetObserver;
     private EasyViewHolder.OnItemClickListener itemClickListener = EasyViewHolder.NULL_CLICK_LISTENER;
     private EasyViewHolder.OnItemLongClickListener longClickListener = EasyViewHolder.NULL_LONG_CLICK_LISTENER;
+
+    private final SparseBooleanArray selectedItems = new SparseBooleanArray();
 
     public EasyCursorRecyclerAdapter() {
         this(null);
@@ -104,7 +107,7 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
 
     @Override
     public EasyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        EasyViewHolder easyViewHolder = viewHolderFactory.create(valueClassTypes.get(viewType), parent);
+        EasyViewHolder<? extends Object> easyViewHolder = viewHolderFactory.create(valueClassTypes.get(viewType), parent);
         bindListeners(easyViewHolder);
         return easyViewHolder;
     }
@@ -125,6 +128,19 @@ public class EasyCursorRecyclerAdapter extends RecyclerView.Adapter<EasyViewHold
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
         holder.bindTo(mCursor);
+        holder.itemView.setActivated(selectedItems.get(position, false));
+    }
+
+    public void setSelected(int pos) {
+        selectedItems.put(pos, true);
+        notifyItemChanged(pos);
+    }
+
+    public void clearSelection(int pos) {
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+        }
+        notifyItemChanged(pos);
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
@@ -49,7 +50,9 @@ public class StationListFragment extends Fragment
         implements StationsPresenter.View, EasyViewHolder.OnItemClickListener {
 
     private EasyCursorRecyclerAdapter mAdapter;
+    private LinearLayoutManager linearLayoutManager;
     private StationsPresenter stationsPresenter;
+    protected boolean isMenuVisible;
 
     @ViewById
     protected RecyclerView recyclerView;
@@ -71,7 +74,8 @@ public class StationListFragment extends Fragment
     @Pref
     protected UiPref_ uiPref;
 
-    protected boolean isMenuVisible;
+    @InstanceState
+    protected int mPosition = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,6 +157,7 @@ public class StationListFragment extends Fragment
         isMenuVisible = true;
         getActivity().supportInvalidateOptionsMenu();
         mAdapter.swapCursor(data);
+        linearLayoutManager.scrollToPosition(mPosition != -1 ? mPosition : 0);
     }
 
     @Override
@@ -187,9 +192,8 @@ public class StationListFragment extends Fragment
     }
 
     private void initRecyclerView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        linearLayoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(
                 new HorizontalDividerItemDecoration.Builder(getActivity())
@@ -206,6 +210,10 @@ public class StationListFragment extends Fragment
         mAdapter.bind(StationViewHolder.class);
         mAdapter.setOnClickListener(this);
         recyclerView.setAdapter(mAdapter);
+
+        if (mPosition != -1) {
+            mAdapter.setSelected(mPosition);
+        }
     }
 
     private void initSwipeRefresh() {
@@ -222,6 +230,7 @@ public class StationListFragment extends Fragment
     public void onItemClick(int position, View view) {
         Cursor cursor = mAdapter.getCursor();
         if (cursor != null) {
+            updateSelection(position);
             cursor.moveToPosition(position);
             StationCursor stationCursor = new StationCursor(cursor);
             if (getActivity() instanceof Callback) {
@@ -231,6 +240,14 @@ public class StationListFragment extends Fragment
                         stationCursor.getStreamurl());
             }
         }
+    }
+
+    private void updateSelection(int position) {
+        if (mPosition != -1) {
+            mAdapter.clearSelection(mPosition);
+        }
+        mPosition = position;
+        mAdapter.setSelected(mPosition);
     }
 
     @Override

@@ -31,12 +31,14 @@ import com.udacity.study.jam.radiotastic.widget.StateSyncLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_entity_list)
 public class CategoryListFragment extends Fragment implements CategoriesPresenter.View, EasyViewHolder.OnItemClickListener {
 
     private CategoriesPresenter categoriesPresenter;
+    private LinearLayoutManager linearLayoutManager;
     private EasyCursorRecyclerAdapter mAdapter;
 
     @ViewById
@@ -45,6 +47,9 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     protected StateSyncLayout emptyImageView;
     @ViewById(R.id.refreshLayout)
     protected SwipeRefreshLayout swipeRefreshLayout;
+
+    @InstanceState
+    protected int mPosition = -1;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -87,6 +92,7 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     @Override
     public void renderCategories(Cursor data) {
         mAdapter.swapCursor(data);
+        linearLayoutManager.scrollToPosition(mPosition != -1 ? mPosition : 0);
     }
 
     @Override
@@ -121,9 +127,8 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     }
 
     private void initRecyclerView() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        linearLayoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(
@@ -148,6 +153,10 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
         mAdapter.bind(CategoryViewHolder.class);
         mAdapter.setOnClickListener(this);
         recyclerView.setAdapter(mAdapter);
+
+        if (mPosition != -1) {
+            mAdapter.setSelected(mPosition);
+        }
     }
 
     private void initSwipeRefresh() {
@@ -164,6 +173,8 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
     public void onItemClick(int position, View view) {
         Cursor cursor = mAdapter.getCursor();
         if (cursor != null) {
+            updateSelection(position);
+
             cursor.moveToPosition(position);
             CategoryCursor categoryCursor = new CategoryCursor(cursor);
             if (getActivity() instanceof Callback) {
@@ -172,6 +183,14 @@ public class CategoryListFragment extends Fragment implements CategoriesPresente
                         categoryCursor.getName());
             }
         }
+    }
+
+    private void updateSelection(int position) {
+        if (mPosition != -1) {
+            mAdapter.clearSelection(mPosition);
+        }
+        mPosition = position;
+        mAdapter.setSelected(mPosition);
     }
 
     public interface Callback {

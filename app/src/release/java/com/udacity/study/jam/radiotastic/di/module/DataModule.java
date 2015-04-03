@@ -24,6 +24,10 @@ public class DataModule {
 
     private final Bundle extras;
 
+    public DataModule() {
+        this.extras = new Bundle();
+    }
+
     public DataModule(Bundle extras) {
         this.extras = extras;
     }

@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import static android.view.View.OnClickListener;
 import static android.view.View.OnLongClickListener;
 
-public abstract class EasyViewHolder<V> extends RecyclerView.ViewHolder implements OnLongClickListener,
-        OnClickListener {
+public abstract class EasyViewHolder<V> extends RecyclerView.ViewHolder
+        implements OnLongClickListener, OnClickListener {
 
     public static final OnItemClickListener NULL_CLICK_LISTENER = new OnItemClickListener() {
         @Override
