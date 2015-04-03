@@ -37,6 +37,10 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 apt {
@@ -67,9 +71,7 @@ dependencies {
     // Client consuming engine
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     // OkHttp for client tune up configuration
-    compile("com.squareup.okhttp:okhttp-urlconnection:2.1.0") {
-        exclude group: 'com.squareup.okio', module: 'okio'
-    }
+    compile("com.squareup.okhttp:okhttp-urlconnection:2.3.0")
     // Network library for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
 
@@ -103,7 +105,7 @@ dependencies {
     debugCompile 'com.google.dexmaker:dexmaker:1.0'
     debugCompile 'org.mockito:mockito-core:1.10.17'
 
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.1.0'
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.3.0'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support'
     }
