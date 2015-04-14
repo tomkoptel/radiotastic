@@ -210,4 +210,10 @@ public class StationFragment extends Fragment implements StationPresenter.View {
     public void showPlayControl() {
         mFab.setImageResource(R.drawable.ic_av_play_arrow);
     }
+
+    @Override
+    public void onDestroyView() {
+        recyclerHelper.destroy();
+        super.onDestroyView();
+    }
 }

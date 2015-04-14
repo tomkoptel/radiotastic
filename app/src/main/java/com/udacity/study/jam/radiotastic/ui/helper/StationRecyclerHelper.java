@@ -57,6 +57,15 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
     private String mTitle;
     private View mRoot;
 
+    private final Runnable updateHeaderViewTask = new Runnable() {
+        @Override
+        public void run() {
+            if (headerView != null && headerView.getLayoutParams() != null) {
+                headerView.getLayoutParams().height = mFlexibleSpaceImageHeight;
+            }
+        }
+    };
+
     public View getHeaderView() {
         return headerView;
     }
@@ -114,12 +123,7 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
 
         headerView = LayoutInflater.from(activity)
                 .inflate(R.layout.recycler_header, null);
-        headerView.post(new Runnable() {
-            @Override
-            public void run() {
-                headerView.getLayoutParams().height = mFlexibleSpaceImageHeight;
-            }
-        });
+        headerView.post(updateHeaderViewTask);
 
         mToolbar.setBackgroundColor(Color.TRANSPARENT);
 
@@ -300,5 +304,9 @@ public class StationRecyclerHelper implements ObservableScrollViewCallbacks {
             ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
             mFabIsShown = false;
         }
+    }
+
+    public void destroy() {
+        headerView.removeCallbacks(updateHeaderViewTask);
     }
 }
