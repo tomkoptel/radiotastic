@@ -40,7 +40,7 @@ public interface SyncComponent {
                                          SyncResult syncResult,
                                          Bundle extras,
                                          boolean mockMode) {
-            return Dagger_SyncComponent.builder()
+            return DaggerSyncComponent.builder()
                     .systemServicesModule(new SystemServicesModule(
                             App.get(context)))
                     .syncModule(new SyncModule(syncResult))

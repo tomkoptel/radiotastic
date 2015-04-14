@@ -36,7 +36,7 @@ public interface Graph {
 
     final static class Initializer {
         public static Graph init(Context context, boolean mockMode) {
-            return Dagger_Graph.builder()
+            return DaggerGraph.builder()
                     .debugDataModule(new DebugDataModule(mockMode))
                     .systemServicesModule(new SystemServicesModule(
                             App.get(context)))
