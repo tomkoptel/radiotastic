@@ -1,6 +1,8 @@
 package com.app.radiotastic.data.entity;
 
 import com.app.radiotastic.data.db.station.StationColumns;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
@@ -18,10 +20,13 @@ public class DirbleStation {
     Long id;
 
     @NotNull
+    @Expose
+    @SerializedName("id")
     @StorIOSQLiteColumn(name = StationColumns.STATION_ID)
     Long stationId;
 
     @NotNull
+    @Expose
     @StorIOSQLiteColumn(name = StationColumns.NAME)
     String name;
 

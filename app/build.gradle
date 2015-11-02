@@ -35,5 +35,7 @@ dependencies {
 
     compile 'com.intellij:annotations:12.0'
 
+    compile 'com.google.code.gson:gson:2.4'
+
     testCompile 'junit:junit:4.12'
 }
