@@ -1,8 +1,0 @@
-{
-    "description": "Represents song time fields.",
-    "type": "object",
-    "properties": {
-        "sec": { "type": "number" },
-        "usec": { "type": "number" }
-    }
-}

@@ -1,9 +1,0 @@
-{
-    "description": "Represents song detailed info.",
-    "type": "object",
-    "properties": {
-        "name": { "type": "string" },
-        "title": { "type": "string" },
-        "image": { "$ref": "songImage.json"}
-    }
-}

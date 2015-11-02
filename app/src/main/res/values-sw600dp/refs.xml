@@ -1,5 +1,0 @@
-<resources>
-    <item type="layout" name="activity_main">@layout/activity_main_tablet</item>
-    <item type="layout" name="song_line_list_item">@layout/song_line_list_item_tablet</item>
-    <item type="layout" name="fragment_detail">@layout/fragment_detail_tablet</item>
-</resources>

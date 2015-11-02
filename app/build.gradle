@@ -1,112 +1,28 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId PACKAGE_NAME
-        testApplicationId TEST_PACKAGE_NAME
+        applicationId "com.app.radiotastic"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner INSTRUMENTATION_RUNNER
     }
-
-    if (project.hasProperty('RADIOTASTIC_STORE_FILE')) {
-        signingConfigs {
-            release {
-                storeFile file(RADIOTASTIC_STORE_FILE)
-                storePassword RADIOTASTIC_STORE_PASSWORD
-                keyAlias RADIOTASTIC_KEY_ALIAS
-                keyPassword RADIOTASTIC_KEY_PASSWORD
-            }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                signingConfig signingConfigs.release
-            }
-        }
-    }
-
-    packagingOptions {
-        exclude 'LICENSE.txt'
-    }
-
-    lintOptions {
-        warning 'InvalidPackage'
-    }
-}
-
-apt {
-    arguments {
-        androidManifestFile variant.outputs[0].processResources.manifestFile
-        resourcePackageName PACKAGE_NAME
-        logLevel "WARN"
     }
 }
 
 dependencies {
-    compile(project(':pojo')) {
-        exclude group: 'com.google.code.gson'
-    }
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.android.support:palette-v7:22.0.0'
-    compile 'com.android.support:cardview-v7:22.0.0'
-    compile('com.android.support:recyclerview-v7:22.0.0') {
-        exclude group: 'com.android.support'
-    }
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
 
-    // DI framework
-    compile 'com.google.dagger:dagger:2.0'
-    apt "com.google.dagger:dagger-compiler:2.0"
-    provided 'javax.annotation:jsr250-api:1.0'
+    testCompile 'junit:junit:4.12'
 
-    // Network libraries
-    // Client consuming engine
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    // OkHttp for client tune up configuration
-    compile("com.squareup.okhttp:okhttp-urlconnection:2.3.0")
-    // Network library for image loading
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-    // Logging
-    compile 'com.jakewharton.timber:timber:2.5.1'
-    compile 'com.orhanobut:logger:1.3'
-
-    // UI support libraries
-    // Simplifies scroll interaction with scrollable views
-    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
-    // Custom implementation of floating action button
-    compile 'com.melnykov:floatingactionbutton:1.2.0'
-    // Supporting animator on 10 API
-    compile 'com.nineoldandroids:library:2.4.0'
-    // Custom toasts
-    compile 'com.github.kennyc1012:snackbar:1.1-SNAPSHOT:api8Release@aar'
-    // Android library providing simple way to control divider items of RecyclerView
-    compile 'com.yqritc:recyclerview-flexibledivider:1.1.0'
-    // This light-weight library provides images with letter/text like the Gmail app
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-    // Annotation dependencies
-    compile "org.androidannotations:androidannotations-api:3.2"
-    apt "org.androidannotations:androidannotations:3.2"
-
-    testCompile('junit:junit:4.12') {
-        exclude group: 'org.hamcrest'
-    }
-
-    debugCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
-    debugCompile 'com.google.dexmaker:dexmaker:1.0'
-    debugCompile 'org.mockito:mockito-core:1.10.17'
-
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.3.0'
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
-        exclude group: 'com.android.support'
-    }
 }

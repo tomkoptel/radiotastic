@@ -1,105 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.udacity.study.jam.radiotastic">
-
-    <!--Network events permissions-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Permissions required by the sync adapter -->
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <!-- Permissions required by the authenticator adapter -->
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    package="com.app.radiotastic" >
 
     <application
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-
+        android:supportsRtl="true"
+        android:theme="@style/RadiotasticTheme" >
         <activity
-            android:name=".ui.activity.MainActivity_"
-            android:theme="@style/AppTheme.Toolbar"
-            android:label="@string/app_name">
+            android:name=".presentation.StartupPage"
+            android:label="@string/title_activity_startup_page"
+            android:theme="@style/RadiotasticTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.activity.StationsActivity_"
-            android:label="@string/stations_activity_title"
-            android:parentActivityName=".ui.activity.MainActivity_" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.MainActivity_" />
-        </activity>
-
-        <activity
-            android:name=".ui.activity.DetailActivity_"
-            android:theme="@style/AppTheme.Toolbar"
-            android:label="@string/station_activity_title"
-            android:parentActivityName=".ui.activity.StationsActivity_" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.StationsActivity_" />
-        </activity>
-
-        <service
-            android:name=".player.PlayerIntentService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.udacity.study.jam.radiotastic.player.action.PLAY" />
-                <action android:name="com.udacity.study.jam.radiotastic.player.action.STOP" />
-            </intent-filter>
-        </service>
-
-        <provider
-            android:name="com.udacity.study.jam.radiotastic.db.AppProvider"
-            android:authorities="com.udacity.study.jam.radiotastic.db.provider"
-            android:exported="false" />
-
-        <!-- Authenticator -->
-        <service
-            android:name=".sync.authenticator.RadiotasticAuthenticatorService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
-
-        <!-- Sync -->
-        <service
-            android:name=".sync.internal.RadiotasticSyncService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
-        </service>
-
-        <service
-            android:name=".sync.internal.StationSyncService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.udacity.study.jam.radiotastic.SyncStation" />
-            </intent-filter>
-        </service>
-
     </application>
 
 </manifest>

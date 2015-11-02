@@ -1,33 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Radiotastic</string>
-
-    <!--API constants-->
-    <string name="api_endpoint">http://api.dirble.com/v1</string>
-    <string name="api_key">3179ce3b92882458ecc077f99c64e053b25fef2d</string>
-
-    <!--In app constants-->
-    <string name="sync_account_type">com.udacity.study.jam.radiotastic</string>
-    <string name="content_authority">com.udacity.study.jam.radiotastic.db.provider</string>
-
-    <!--Station list item description-->
-    <string name="format_station_desc">Country: <xliff:g id="country">
-        %1$s</xliff:g> Bit rate: <xliff:g id="bit_rate">%2$s</xliff:g></string>
-    <!--Activity titles-->
-    <string name="stations_activity_title">Stations</string>
-    <string name="station_activity_title">Station details</string>
-    <string name="not_available">NA</string>
-    <string name="error">Failed get info</string>
-    <string name="no_data">No synced data</string>
-    <string name="loading">Loading data</string>
-    <string name="author">Author</string>
-    <string name="track">Track</string>
-    <string name="played_at">Played</string>
-    <string name="no_songhistory">No song history</string>
-    <string name="sort_stations">Sort stations</string>
-    <string name="sort_asc">Sort ascending</string>
-    <string name="sort_desc">Sort descending</string>
-    <string name="sort_by_title">Title</string>
-    <string name="sort_by_bitrate">Bitrate</string>
-    <string name="sort_dialog_title">Sort by</string>
-    <string name="main_categories">Main categories</string>
+<resources>
+    <string name="app_name">radiotastic</string>
+    <string name="title_activity_startup_page">StartupPage</string>
 </resources>
