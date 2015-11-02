@@ -1,0 +1,13 @@
+{
+  "syntaxVersion": 3,
+  "projectPackageId": "com.app.radiotastic",
+  "authority": "com.app.radiotastic.data.db.provider",
+  "providerJavaPackage": "com.app.radiotastic.data.db",
+  "providerClassName": "AppProvider",
+  "sqliteOpenHelperClassName": "AppSQLiteOpenHelper",
+  "sqliteOpenHelperCallbacksClassName": "AppSQLiteOpenHelperCallbacks",
+  "databaseFileName": "radiotastic.db",
+  "databaseVersion": 1,
+  "enableForeignKeys": true,
+  "useAnnotations": true
+}

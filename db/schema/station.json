@@ -1,0 +1,23 @@
+{
+  "documentation": "General station info. This is basic set of data enough for client to playback.",
+  "fields": [
+    {
+      "documentation": "Represents id of object which resides on backend.",
+      "name": "station_id",
+      "type": "Long",
+      "nullable": false,
+      "index": true,
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": false
+    }
+  ],
+  "constraints": [
+    {
+      "name": "not_empty_station_name",
+      "definition": "CHECK(name <> '') ON CONFLICT IGNORE"
+    }
+  ]
+}

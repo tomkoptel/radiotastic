@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.app.radiotastic.data.db.AppProvider"
+            android:authorities="com.app.radiotastic.data.db.provider"
+            android:exported="false" />
     </application>
 
 </manifest>
