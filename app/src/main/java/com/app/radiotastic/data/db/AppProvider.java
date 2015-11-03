@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
+import com.app.radiotastic.App;
 import com.app.radiotastic.BuildConfig;
 import com.app.radiotastic.data.db.base.BaseContentProvider;
 import com.app.radiotastic.data.db.station.StationColumns;
@@ -38,7 +39,8 @@ public class AppProvider extends BaseContentProvider {
 
     @Override
     protected SQLiteOpenHelper createSqLiteOpenHelper() {
-        return AppSQLiteOpenHelper.getInstance(getContext());
+        App app = ((App) getContext().getApplicationContext());
+        return app.getComponent().openHelper();
     }
 
     @Override

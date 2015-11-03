@@ -23,7 +23,7 @@ public class DirbleStation {
     @Expose
     @SerializedName("id")
     @StorIOSQLiteColumn(name = StationColumns.STATION_ID)
-    Long stationId;
+    Long remoteId;
 
     @NotNull
     @Expose
@@ -52,11 +52,11 @@ public class DirbleStation {
     }
 
     @NotNull
-    public Long getStationId() {
-        return stationId;
+    public Long getRemoteId() {
+        return remoteId;
     }
 
-    public void setStationId(@NotNull Long stationId) {
-        this.stationId = stationId;
+    public void setRemoteId(@NotNull Long remoteId) {
+        this.remoteId = remoteId;
     }
 }
