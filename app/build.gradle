@@ -1,5 +1,5 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: "com.android.application"
+apply plugin: "com.neenbedankt.android-apt"
 
 android {
     compileSdkVersion 23
@@ -15,29 +15,33 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 }
 
 
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
+    compile "com.android.support:appcompat-v7:23.1.0"
+    compile "com.android.support:design:23.1.0"
 
-    compile 'io.reactivex:rxjava:1.0.15'
+    compile "io.reactivex:rxjava:1.0.15"
 
-    compile "com.squareup.retrofit:retrofit:2.0.0-beta2"
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile "com.squareup.retrofit:retrofit:${rootProject.ext.retrofit}"
+    compile "com.squareup.retrofit:converter-gson:${rootProject.ext.retrofit}"
+    compile "com.squareup.retrofit:adapter-rxjava:${rootProject.ext.retrofit}"
 
     compile "com.pushtorefresh.storio:sqlite:${rootProject.ext.storeio}"
     compile "com.pushtorefresh.storio:content-resolver:${rootProject.ext.storeio}"
     compile "com.pushtorefresh.storio:sqlite-annotations:${rootProject.ext.storeio}"
     apt "com.pushtorefresh.storio:sqlite-annotations-processor:${rootProject.ext.storeio}"
 
-    compile 'com.intellij:annotations:12.0'
+    compile "com.google.dagger:dagger:${rootProject.ext.dagger}"
+    apt "com.google.dagger:dagger-compiler:${rootProject.ext.dagger}"
+    provided "javax.annotation:jsr250-api:${rootProject.ext.javaxAnnotationVersion}"
 
-    testCompile 'junit:junit:4.12'
+    compile "com.intellij:annotations:12.0"
+    compile "com.intellij:annotations:12.0"
+
+    testCompile "junit:junit:4.12"
 }

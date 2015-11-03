@@ -20,6 +20,9 @@ allprojects {
 
 ext {
     storeio = '1.6.0'
+    retrofit = '2.0.0-beta2'
+    dagger = '2.0.1'
+    javaxAnnotationVersion = '1.0'
 }
 
 task clean(type: Delete) {
