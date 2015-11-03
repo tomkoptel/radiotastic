@@ -17,7 +17,6 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_FILE_NAME = "radiotastic.db";
     private static final int DATABASE_VERSION = 1;
-    private static AppSQLiteOpenHelper sInstance;
     private final Context mContext;
     private final AppSQLiteOpenHelperCallbacks mOpenHelperCallbacks;
 
@@ -33,19 +32,7 @@ public class AppSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE_INDEX_STATION_STATION_ID = "CREATE INDEX IDX_STATION_STATION_ID "
             + " ON " + StationColumns.TABLE_NAME + " ( " + StationColumns.STATION_ID + " );";
 
-    // @formatter:on
-
-    public static AppSQLiteOpenHelper getInstance(Context context) {
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
-        if (sInstance == null) {
-            sInstance = newInstance(context.getApplicationContext());
-        }
-        return sInstance;
-    }
-
-    private static AppSQLiteOpenHelper newInstance(Context context) {
+    public static AppSQLiteOpenHelper newInstance(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             return newInstancePreHoneycomb(context);
         }
