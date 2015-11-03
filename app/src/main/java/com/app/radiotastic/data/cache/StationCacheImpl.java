@@ -8,12 +8,14 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 
 /**
  * @author Tom Koptel
  */
+@Singleton
 public class StationCacheImpl implements StationCache {
 
     private final StorIOSQLite mStorIOSQLite;
@@ -35,5 +37,15 @@ public class StationCacheImpl implements StationCache {
     @Override
     public void put(List<DirbleStation> stations) {
         mStorIOSQLite.put().objects(stations).prepare().executeAsBlocking();
+    }
+
+    @Override
+    public boolean hasCache() {
+        Integer count = mStorIOSQLite.get()
+                .numberOfResults()
+                .withQuery(Query.builder().table(StationColumns.TABLE_NAME).build())
+                .prepare()
+                .executeAsBlocking();
+        return count > 0;
     }
 }

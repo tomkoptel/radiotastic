@@ -10,4 +10,5 @@ import java.util.List;
 public interface StationCache {
     rx.Observable<List<DirbleStation>> get();
     void put(List<DirbleStation> stations);
+    boolean hasCache();
 }
