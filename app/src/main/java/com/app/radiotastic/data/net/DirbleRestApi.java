@@ -3,6 +3,8 @@ package com.app.radiotastic.data.net;
 import android.net.Uri;
 
 import com.app.radiotastic.data.entity.DirbleStation;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -11,7 +13,9 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.List;
 
+import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 import retrofit.http.GET;
 
 /**
@@ -38,9 +42,15 @@ public interface DirbleRestApi {
                     return chain.proceed(resultRequest);
                 }
             });
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+            GsonConverterFactory converterFactory = GsonConverterFactory.create(gson);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://api.dirble.com/v2/")
                     .client(client)
+                    .addConverterFactory(converterFactory)
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
             return retrofit.create(DirbleRestApi.class);
         }
