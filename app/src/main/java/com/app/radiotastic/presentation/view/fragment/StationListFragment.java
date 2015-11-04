@@ -45,12 +45,6 @@ public final class StationListFragment extends BaseFragment implements StationLi
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getComponent(StationsComponent.class).inject(this);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
