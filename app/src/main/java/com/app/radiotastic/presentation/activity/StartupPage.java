@@ -1,12 +1,13 @@
-package com.app.radiotastic.presentation;
+package com.app.radiotastic.presentation.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.app.radiotastic.R;
+import com.app.radiotastic.internal.di.HasComponent;
+import com.app.radiotastic.internal.di.components.StationsComponent;
 
-public class StartupPage extends AppCompatActivity {
+public class StartupPage extends BaseActivity implements HasComponent<StationsComponent> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,4 +17,8 @@ public class StartupPage extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    @Override
+    public StationsComponent getComponent() {
+        throw new UnsupportedOperationException();
+    }
 }
