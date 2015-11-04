@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.app.radiotastic.App;
 import com.app.radiotastic.internal.di.components.AppComponent;
+import com.app.radiotastic.internal.di.modules.ActivityModule;
 
 /**
  * @author Tom Koptel
@@ -18,5 +19,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected AppComponent getAppComponent() {
         return ((App) getApplicationContext()).getComponent();
+    }
+
+    protected ActivityModule getActivityModule() {
+        return new ActivityModule(this);
     }
 }

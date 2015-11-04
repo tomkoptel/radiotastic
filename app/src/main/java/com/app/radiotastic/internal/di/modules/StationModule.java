@@ -6,12 +6,13 @@ import com.app.radiotastic.internal.di.PerActivity;
 
 import javax.inject.Named;
 
+import dagger.Module;
 import dagger.Provides;
 
 /**
  * @author Tom Koptel
- * @since 2.0
  */
+@Module
 public final class StationModule {
 
     @Provides
