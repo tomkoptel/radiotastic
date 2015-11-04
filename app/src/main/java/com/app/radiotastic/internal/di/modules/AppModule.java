@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.app.radiotastic.BackgroundThread;
+import com.app.radiotastic.UIThread;
 import com.app.radiotastic.data.cache.StationCache;
 import com.app.radiotastic.data.cache.StationCacheImpl;
 import com.app.radiotastic.data.db.AppSQLiteOpenHelper;
@@ -12,6 +14,8 @@ import com.app.radiotastic.data.entity.DirbleStationStorIOSQLiteDeleteResolver;
 import com.app.radiotastic.data.entity.DirbleStationStorIOSQLiteGetResolver;
 import com.app.radiotastic.data.entity.DirbleStationStorIOSQLitePutResolver;
 import com.app.radiotastic.data.repository.StationDataRepository;
+import com.app.radiotastic.domain.executor.PostExecutionThread;
+import com.app.radiotastic.domain.executor.PreExecutionThread;
 import com.app.radiotastic.domain.repository.StationRepository;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -70,5 +74,17 @@ public final class AppModule {
     @Singleton
     StationRepository provideStationRepository(StationDataRepository stationDataRepository) {
         return stationDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    PostExecutionThread providePostExecutionThread(UIThread uiThread) {
+        return uiThread;
+    }
+
+    @Provides
+    @Singleton
+    PreExecutionThread providePreExecutionThread(BackgroundThread backgroundThread) {
+        return backgroundThread;
     }
 }

@@ -1,7 +1,7 @@
 package com.app.radiotastic.domain.interactor;
 
 import com.app.radiotastic.domain.executor.PostExecutionThread;
-import com.app.radiotastic.domain.executor.ThreadExecutor;
+import com.app.radiotastic.domain.executor.PreExecutionThread;
 import com.app.radiotastic.domain.repository.StationRepository;
 
 import javax.inject.Inject;
@@ -17,9 +17,9 @@ public final class GetStationList extends UseCase {
 
     @Inject
     public GetStationList(StationRepository repository,
-                             ThreadExecutor threadExecutor,
-                             PostExecutionThread postExecutionThread) {
-        super(threadExecutor, postExecutionThread);
+                          PreExecutionThread preExecutionThread,
+                          PostExecutionThread postExecutionThread) {
+        super(preExecutionThread, postExecutionThread);
         mStationRepository = repository;
     }
 

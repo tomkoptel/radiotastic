@@ -1,10 +1,9 @@
 package com.app.radiotastic.domain.interactor;
 
 import com.app.radiotastic.domain.executor.PostExecutionThread;
-import com.app.radiotastic.domain.executor.ThreadExecutor;
+import com.app.radiotastic.domain.executor.PreExecutionThread;
 
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 /**
  * @author Tom Koptel
@@ -12,12 +11,12 @@ import rx.schedulers.Schedulers;
  */
 public abstract class UseCase {
 
-    private final ThreadExecutor mThreadExecutor;
+    private final PreExecutionThread mPreExecutionThread;
     private final PostExecutionThread mPostExecutionThread;
     private Subscription mSubscription;
 
-    protected UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
-        mThreadExecutor = threadExecutor;
+    protected UseCase(PreExecutionThread threadExecutor, PostExecutionThread postExecutionThread) {
+        mPreExecutionThread = threadExecutor;
         mPostExecutionThread = postExecutionThread;
     }
 
@@ -26,7 +25,7 @@ public abstract class UseCase {
     @SuppressWarnings("unchecked")
     public void execute(rx.Subscriber useCaseSubscriber) {
         mSubscription = buildUseCaseObservable()
-                .subscribeOn(Schedulers.from(mThreadExecutor))
+                .subscribeOn(mPreExecutionThread.getScheduler())
                 .observeOn(mPostExecutionThread.getScheduler())
                 .subscribe(useCaseSubscriber);
     }
