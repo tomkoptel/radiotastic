@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/RadiotasticTheme" >
         <activity
-            android:name=".presentation.activity.StartupPage"
+            android:name=".presentation.view.activity.StartupPage"
             android:label="@string/title_activity_startup_page"
             android:theme="@style/RadiotasticTheme" >
             <intent-filter>

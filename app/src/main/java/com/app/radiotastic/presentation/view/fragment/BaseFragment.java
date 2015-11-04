@@ -1,4 +1,4 @@
-package com.app.radiotastic.presentation.fragment;
+package com.app.radiotastic.presentation.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

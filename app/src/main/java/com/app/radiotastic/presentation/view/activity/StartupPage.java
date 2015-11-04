@@ -1,4 +1,4 @@
-package com.app.radiotastic.presentation.activity;
+package com.app.radiotastic.presentation.view.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;

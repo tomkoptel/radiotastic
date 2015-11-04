@@ -1,7 +1,7 @@
-package com.app.radiotastic.mappers;
+package com.app.radiotastic.presentation.mappers;
 
 import com.app.radiotastic.domain.Station;
-import com.app.radiotastic.model.StationModel;
+import com.app.radiotastic.presentation.model.StationModel;
 
 import java.util.ArrayList;
 import java.util.Collection;

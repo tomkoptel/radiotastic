@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.app.radiotastic.domain.repository.StationRepository;
 import com.app.radiotastic.internal.di.modules.AppModule;
-import com.app.radiotastic.presentation.activity.BaseActivity;
+import com.app.radiotastic.presentation.view.activity.BaseActivity;
 
 import javax.inject.Singleton;
 

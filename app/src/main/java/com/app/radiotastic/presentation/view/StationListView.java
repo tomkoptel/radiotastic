@@ -1,6 +1,6 @@
-package com.app.radiotastic.presentation;
+package com.app.radiotastic.presentation.view;
 
-import com.app.radiotastic.model.StationModel;
+import com.app.radiotastic.presentation.model.StationModel;
 
 import java.util.Collection;
 

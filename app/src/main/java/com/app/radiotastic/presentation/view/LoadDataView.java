@@ -1,4 +1,4 @@
-package com.app.radiotastic.presentation;
+package com.app.radiotastic.presentation.view;
 
 /**
  * @author Tom Koptel

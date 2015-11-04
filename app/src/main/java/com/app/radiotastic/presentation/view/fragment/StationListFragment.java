@@ -1,4 +1,4 @@
-package com.app.radiotastic.presentation.fragment;
+package com.app.radiotastic.presentation.view.fragment;
 
 /**
  * @author Tom Koptel
