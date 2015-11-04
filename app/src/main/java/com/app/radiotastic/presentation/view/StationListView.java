@@ -8,6 +8,6 @@ import java.util.Collection;
  * @author Tom Koptel
  * @since 2.0
  */
-public interface StationListView {
+public interface StationListView extends LoadDataView {
     void renderStationList(Collection<StationModel> stationModels);
 }

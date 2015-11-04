@@ -1,6 +1,7 @@
 package com.app.radiotastic.presentation.mappers;
 
 import com.app.radiotastic.domain.Station;
+import com.app.radiotastic.internal.di.PerActivity;
 import com.app.radiotastic.presentation.model.StationModel;
 
 import java.util.ArrayList;
@@ -8,12 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * @author Tom Koptel
  */
-@Singleton
+@PerActivity
 public final class StationModelDataMapper {
     @Inject
     public StationModelDataMapper() {}
