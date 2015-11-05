@@ -34,8 +34,10 @@ public class StationDataMapper {
     public Station transform(DirbleStation dirbleStation) {
         Station station = null;
         if (dirbleStation != null) {
-            station = new Station(dirbleStation.getRemoteId());
-            station.setName(dirbleStation.getName());
+            station = Station.builder()
+                    .setId(dirbleStation.getRemoteId())
+                    .setName(dirbleStation.getName())
+                    .create();
         }
         return station;
     }

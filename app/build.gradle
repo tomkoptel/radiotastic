@@ -47,4 +47,5 @@ dependencies {
     compile "com.intellij:annotations:12.0"
 
     testCompile "junit:junit:4.12"
+    testCompile "nl.jqno.equalsverifier:equalsverifier:1.7.5"
 }

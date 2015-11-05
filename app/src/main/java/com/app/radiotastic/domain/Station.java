@@ -1,14 +1,17 @@
 package com.app.radiotastic.domain;
 
+import com.google.common.base.Preconditions;
+
 /**
  * @author Tom Koptel
  */
-public class Station {
+public final class Station {
     private final long id;
-    private String name;
+    private final String name;
 
-    public Station(long id) {
+    public Station(long id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     public long getId() {
@@ -17,10 +20,6 @@ public class Station {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String label) {
-        this.name = label;
     }
 
     @Override
@@ -48,5 +47,34 @@ public class Station {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private long mId;
+        private String mName;
+
+        private Builder() {}
+
+        public Builder setId(long id) {
+            Preconditions.checkNotNull(id);
+            mId = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            Preconditions.checkNotNull(name);
+            mName = name;
+            return this;
+        }
+
+        public Station create() {
+            Preconditions.checkNotNull(mId);
+            Preconditions.checkNotNull(mName);
+            return new Station(mId, mName);
+        }
     }
 }
