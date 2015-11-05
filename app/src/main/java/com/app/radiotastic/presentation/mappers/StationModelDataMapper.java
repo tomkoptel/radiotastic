@@ -33,8 +33,10 @@ public final class StationModelDataMapper {
     public StationModel transform(Station station) {
         StationModel stationModel = null;
         if (station != null) {
-            stationModel = new StationModel(station.getId());
-            stationModel.setName(station.getName());
+            stationModel = StationModel.builder()
+                    .setId(station.getId())
+                    .setName(station.getName())
+                    .create();
         }
         return stationModel;
     }

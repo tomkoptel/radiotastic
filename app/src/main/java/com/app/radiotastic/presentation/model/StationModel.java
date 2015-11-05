@@ -1,23 +1,22 @@
 package com.app.radiotastic.presentation.model;
 
+import com.google.common.base.Preconditions;
+
 /**
  * @author Tom Koptel
  * @since 2.0
  */
 public final class StationModel {
     private final long id;
-    private String name;
+    private final String name;
 
-    public StationModel(long id) {
+    public StationModel(long id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String label) {
-        this.name = label;
     }
 
     @Override
@@ -42,5 +41,34 @@ public final class StationModel {
     @Override
     public String toString() {
         return name;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private long mId;
+        private String mName;
+
+        private Builder() {}
+
+        public Builder setId(long id) {
+            Preconditions.checkNotNull(id);
+            mId = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            Preconditions.checkNotNull(name);
+            mName = name;
+            return this;
+        }
+
+        public StationModel create() {
+            Preconditions.checkNotNull(mId);
+            Preconditions.checkNotNull(mName);
+            return new StationModel(mId, mName);
+        }
     }
 }
