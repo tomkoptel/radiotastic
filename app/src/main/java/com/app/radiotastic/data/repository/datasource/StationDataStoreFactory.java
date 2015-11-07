@@ -30,7 +30,7 @@ public class StationDataStoreFactory {
         } else {
             String token = mContext.getString(R.string.dirble_api_key);
             DirbleRestApi restClient = DirbleRestApi.Factory.create(token);
-            return new CloudStationDataSource(restClient);
+            return new CloudStationDataSource(mStationCache, restClient);
         }
     }
 }
