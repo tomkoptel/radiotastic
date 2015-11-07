@@ -1,10 +1,9 @@
 package com.app.radiotastic.data.net;
 
-import android.net.Uri;
-
 import com.app.radiotastic.data.entity.DirbleStation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -32,12 +31,11 @@ public interface DirbleRestApi {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request request = chain.request();
-                    Uri uri = Uri.parse(request.url().toString())
-                            .buildUpon()
-                            .appendQueryParameter("token", token)
+                    HttpUrl tokenUrl = request.httpUrl().newBuilder()
+                            .addQueryParameter("token", token)
                             .build();
                     Request resultRequest = request.newBuilder()
-                            .url(uri.toString())
+                            .url(tokenUrl)
                             .build();
                     return chain.proceed(resultRequest);
                 }
